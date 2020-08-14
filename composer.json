@@ -1,0 +1,31 @@
+{
+  "name": "wizzy/search-magento-2",
+  "type": "magento2-module",
+  "description": "Wizzy Search integration for Magento 2",
+  "keywords": ["search","analytics","personalisation","merchandising"],
+  "homepage": "https://wizzy.ai",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Wizzy",
+      "email": "team@wizzy.si",
+      "homepage": "https://wizzy.ai",
+    }
+  ],
+  "require": {
+    "php": "~7.0|~7.1|~7.2|~7.3|~7.4",
+    "magento/framework": "@stable",
+    "magento/module-backend": "@stable",
+    "magento/module-store": "@stable",
+    "magento/module-catalog": "@stable"
+  },
+  "version": "1.0.0",
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Wizzy\\Search\\": ""
+    }
+  }
+}
