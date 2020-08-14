@@ -1,0 +1,14 @@
+<script type="text/template" id="wizzy-facet-range-above-item">
+   <li class="wizzy-facet-list-item facet-aboveRange-item {{#isSelected}}active{{/isSelected}}" data-key="{{ key }}" data-term="{{ value }}{{{symbol}}} &amp; above">
+       <span class="wizzy-facet-list-item-label">
+        <span class="wizzy-facet-list-item-checkbox">
+            <input type="checkbox" {{#isSelected}}checked{{/isSelected}} />
+            <div class="checkbox-indicator"></div>
+        </span>
+        {{ value }}{{{symbol}}} {{{sText}}}
+      </span>
+       <span class="wizzy-facet-list-item-count">
+       ({{ count }})
+      </span>
+   </li>
+</script>

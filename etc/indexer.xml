@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Indexer/etc/indexer.xsd">
+    <indexer id="wizzy_products_indexer" view_id="wizzy_products_indexer" class="Wizzy\Search\Model\Indexer\Products">
+        <title translate="true">Wizzy Search Products</title>
+        <description translate="true">
+            Rebuild products index for Wizzy Search.
+        </description>
+    </indexer>
+
+    <indexer id="wizzy_pages_indexer" view_id="wizzy_pages_indexer" class="Wizzy\Search\Model\Indexer\Pages">
+        <title translate="true">Wizzy Search Pages</title>
+        <description translate="true">
+            Rebuild pages index for Wizzy Search.
+        </description>
+    </indexer>
+
+    <indexer id="wizzy_currencies_indexer" view_id="wizzy_currencies_indexer" class="Wizzy\Search\Model\Indexer\Currencies">
+        <title translate="true">Wizzy Search Currencies</title>
+        <description translate="true">
+            Rebuild currencies index for Wizzy Search.
+        </description>
+    </indexer>
+
+    <indexer id="wizzy_sync_queue_runner_indexer" view_id="wizzy_sync_queue_runner_indexer" class="Wizzy\Search\Model\Indexer\SyncQueueRunner">
+        <title translate="true">Wizzy Sync Queue Runner</title>
+        <description translate="true">
+            Execute the Wizzy Sync Jobs to sync your store data on Wizzy's server.
+        </description>
+    </indexer>
+
+</config>

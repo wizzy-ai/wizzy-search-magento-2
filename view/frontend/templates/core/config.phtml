@@ -1,0 +1,7 @@
+<?php
+    $configs = $this->getConfigs();
+?>
+
+<script type="text/javascript">
+    window.wizzyConfig = JSON.parse('<?php echo json_encode($configs) ?>');
+</script>

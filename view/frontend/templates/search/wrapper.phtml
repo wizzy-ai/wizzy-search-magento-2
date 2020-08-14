@@ -1,0 +1,94 @@
+<?php
+$configs = $this->getConfigs();
+$addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidget']['add'];
+?>
+<script type="text/template" id="wizzy-search-wrapper">
+
+   <div class="wizzy-search-wrapper {{#inOnCategoryPage}}wizzy-category-page{{/inOnCategoryPage}} {{#hasFacets}}has-facets{{/hasFacets}} {{#hasLeftFacets}}has-left-facets{{/hasLeftFacets}} {{#hasTopFacets}}has-top-facets{{/hasTopFacets}}">
+
+      <div class="wizzy-search-summary-wrapper">
+         {{#summary}}
+            {{{summary}}}
+         {{/summary}}
+      </div>
+
+      <div class="wizzy-search-results-wrapper">
+          {{#hasFacets}}
+                <a href="#" class="wizzy-filters-mobile-entry">Filters</a>
+          {{/hasFacets}}
+
+         {{#hasLeftFacets}}
+             <div class="wizzy-search-filters-left">
+
+                 <div class="wizzy-filters-bg"></div>
+                 <div class="wizzy-filters-close-btn"></div>
+                 <div class="wizzy-filters-header">
+                     <p class="header-title">Filters</p>
+                     {{#hasFilters}}
+                        <a href="#" class="wizzy-filters-clear-all">Clear All</a>
+                     {{/hasFilters}}
+                 </div>
+
+                 <div class="wizzy-search-filters-left-wrapper">
+                     {{#leftFacets}}
+                        {{{html}}}
+                     {{/leftFacets}}
+
+                     <div class="wizzy-search-filters-left-mobile-extra">
+                     </div><!-- ending of wizzy-search-filters-left-mobile-extra -->
+                 </div>
+
+             </div><!-- ending of wizzy-search-filters-->
+          {{/hasLeftFacets}}
+
+         <div class="wizzy-search-results-container">
+
+            <div class="wizzy-search-filters-top">
+
+               <div class="search-filters-top-wrapper">
+                   <div class="wizzy-search-filters-list-top">
+                       {{#topFacets}}
+                            {{{html}}}
+                       {{/topFacets}}
+
+                   </div><!-- ending of wizzy-search-filters-list-top -->
+
+                   <div class="wizzy-search-sort-wrapper">
+                       {{#sort}}
+                            {{{sort}}}
+                       {{/sort}}
+                   </div><!-- ending of wizzy-search-sort-wrapper -->
+               </div><!-- ending of search-filters-top-wrapper-->
+
+                <div class="filters-list-top-values-wrapper">
+
+                </div><!-- ending of filters-list-top-values-wrapper -->
+
+                <div class="wizzy-selected-filters">
+                    {{{selectedFacets}}}
+                </div><!-- ending of wizzy-selected-filters -->
+
+            </div><!-- ending of wizzy-search-filters-->
+
+            <div class="wizzy-search-results">
+                {{{ products }}}
+            </div><!-- ending of wizzy-search-filters-->
+
+             <div class="wizzy-search-pagination">
+                 {{{ pagination }}}
+             </div>
+
+         </div><!-- ending of wizzy-search-results-->
+
+      </div><!-- ending of wizzy-search-results-container -->
+   </div><!-- ending of wizzy-search-wrapper-->
+
+   <?php if ($addMoveToTopWidget) {  ?>
+        <div class="wizzy-scroll-to-top-wrapper">
+            <div class="wizzy-scroll-to-top-button">
+
+            </div><!-- ending of wizzy-scroll-to-top-button -->
+        </div><!-- ending of wizzy-scroll-to-top-wrapper -->
+    <?php } ?>
+
+</script>

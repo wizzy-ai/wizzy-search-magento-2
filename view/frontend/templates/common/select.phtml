@@ -1,0 +1,27 @@
+<script type="text/template" id="wizzy-common-select">
+   <div class="wizzy-common-select-wrapper">
+      <div class="wizzy-common-select-container">
+
+         <div class="wizzy-common-select-selector">
+             <span class="wizzy-common-select-label">
+                 {{#label}}
+                    {{{label}}}
+                 {{/label}}
+             </span>
+             <span class="wizzy-common-select-selectedItem">
+                 {{{selectedItem}}}
+             </span>
+         </div>
+
+
+          <div class="wizzy-common-select-options">
+              {{#items}}
+                <div class="wizzy-common-select-option {{#isSelected}}selected{{/isSelected}}" title="{{{label}}}">
+                    {{{label}}}
+                </div>
+              {{/items}}
+          </div>
+
+      </div>
+   </div>
+</script>

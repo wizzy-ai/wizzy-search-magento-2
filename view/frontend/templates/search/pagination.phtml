@@ -1,0 +1,13 @@
+<script type="text/template" id="wizzy-search-pagination">
+
+   <div class="wizzy-pagination-container">
+      <ul class="wizzy-pagination-list">
+         <li class="{{^isPrevActive}}inactive{{/isPrevActive}} pagination-arrow previous-arrow"><a href="#"><span class="text">&laquo;</span></a></li>
+            {{#items}}
+          <li class="{{#isSelected}}active{{/isSelected}}" title="{{ value }}" data-page="{{value}}"><a href="#"><span class="text">{{ value }}</span></a></li>
+            {{/items}}
+         <li class="{{^isNextActive}}inactive{{/isNextActive}} pagination-arrow next-arrow"><a href="#"><span class="text">&raquo;</span><span class="text-mobile">Show More</span></a></li>
+      </ul>
+   </div>
+
+</script>

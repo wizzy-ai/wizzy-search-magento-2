@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Wizzy_Search::modules/instantSearch.js"/>
+        <css src="Wizzy_Search::core/wizzySearch.css" />
+        <css src="Wizzy_Search::lib/css/nouislider.min.css" />
+    </head>
+    <body>
+        <referenceBlock name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template" name="wizzySearch.common.progress" template="Wizzy_Search::common/progress.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" name="wizzySearch.common.select" template="Wizzy_Search::common/select.phtml"/>
+            <block class="Wizzy\Search\Block\Search\Summary" name="wizzySearch.results.summary" template="Wizzy_Search::search/summary.phtml"/>
+            <block class="Wizzy\Search\Block\Search\Sort" name="wizzySearch.results.sort" template="Wizzy_Search::search/sort.phtml"/>
+            <block class="Wizzy\Search\Block\Search\Pagination" name="wizzySearch.results.pagination" template="Wizzy_Search::search/pagination.phtml"/>
+            <block class="Wizzy\Search\Block\Search\Wrapper" name="wizzySearch.results.wrapper" template="Wizzy_Search::search/wrapper.phtml"/>
+            <block class="Wizzy\Search\Block\Search\Results" name="wizzySearch.results.results" template="Wizzy_Search::search/results.phtml"/>
+            <block class="Wizzy\Search\Block\Search\Results" name="wizzySearch.results.product" template="Wizzy_Search::search/product.phtml"/>
+            <block class="Wizzy\Search\Block\Search\Results" name="wizzySearch.empty.results" template="Wizzy_Search::search/empty-results.phtml"/>
+
+            <block class="Wizzy\Search\Block\Filters\Facet" name="wizzySearch.results.facets.block" template="Wizzy_Search::filters/facet.phtml"/>
+            <block class="Wizzy\Search\Block\Filters\Facet" name="wizzySearch.results.facets.block.item" template="Wizzy_Search::filters/facet-item.phtml"/>
+            <block class="Wizzy\Search\Block\Filters\Facet" name="wizzySearch.results.facets.block.selected.item" template="Wizzy_Search::filters/facet-selected-item.phtml"/>
+            <block class="Wizzy\Search\Block\Filters\Facet" name="wizzySearch.results.facets.selected.block" template="Wizzy_Search::filters/selected-facets.phtml"/>
+            <block class="Wizzy\Search\Block\Filters\Facet" name="wizzySearch.results.facets.categories" template="Wizzy_Search::filters/category-item.phtml"/>
+            <block class="Wizzy\Search\Block\Filters\Facet" name="wizzySearch.results.facets.range" template="Wizzy_Search::filters/range-item.phtml"/>
+            <block class="Wizzy\Search\Block\Filters\Facet" name="wizzySearch.results.facets.rangeAbove" template="Wizzy_Search::filters/range-above-item.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

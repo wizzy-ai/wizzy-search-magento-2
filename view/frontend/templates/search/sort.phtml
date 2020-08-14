@@ -1,0 +1,15 @@
+<?php
+$configs = $this->getConfigs();
+?>
+
+<script type="text/template" id="wizzy-search-sort">
+
+   <div class="wizzy-sort-container">
+       <select class="wizzy-sort-select" id="wizzy-sort-select">
+         {{#options}}
+            <option value="{{ field }}" data-order="{{order}}" {{#isSelected}}selected{{/isSelected}}>{{ label }}</option>
+         {{/options}}
+      </select>
+   </div>
+
+</script>

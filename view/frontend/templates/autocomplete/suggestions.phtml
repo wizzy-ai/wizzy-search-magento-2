@@ -1,0 +1,45 @@
+<?php
+    $configs = $this->getConfigs();
+    $noResultsText = $configs['autocomplete']['menu']['noResultsText'];
+?>
+
+
+<script type="text/template" id="wizzy-autocomplete-suggestions">
+    <div class="wizzy-autocomplete-suggestions">
+        {{#hasSuggestions}}
+            <ul class="autocomplete-suggestions-list">
+                {{#suggestions}}
+                    {{#isHead}}
+                        {{#label}}
+                            <li class="autocomplete-item-head" data-index="{{index}}">
+                                {{{label}}}
+                            </li><!-- ending of autocomplete-item-head -->
+                        {{/label}}
+                    {{/isHead}}
+                    {{^isHead}}
+                        <li class="autocomplete-item">
+                            <a data-selectable="true" data-searchterm="{{{searchTerm}}}" href="#" class="autocomplete-link" data-index="{{index}}">
+                                {{{label}}}
+                                {{#hasLabelPath}}
+                                    <ul class="autocomplete-item-path">
+                                        <li>in</li>
+                                        {{#labelPath}}
+                                            <li>{{{label}}}</li>
+                                        {{/labelPath}}
+                                    </ul>
+                                {{/hasLabelPath}}
+                                <span class="autocomplete-text-wrapper"></span>
+                            </a><!-- ending of autocomplete-link -->
+                        </li><!-- ending of autocomplete-item -->
+                    {{/isHead}}
+                {{/suggestions}}
+            </ul>
+        {{/hasSuggestions}}
+        {{^hasSuggestions}}
+            <div class="autocomplete-no-results">
+                <p><?php echo $block->escapeHtmlAttr($noResultsText); ?></p>
+            </div>
+        {{/hasSuggestions}}
+    </div><!-- ending of autocomplete-suggestions -->
+
+</script>

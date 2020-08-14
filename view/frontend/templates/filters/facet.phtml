@@ -1,0 +1,28 @@
+<script type="text/template" id="wizzy-facet-block">
+   <div class="wizzy-filters-facet-block facet-block-{{ divKey }} facet-block-{{#isLeft}}left{{/isLeft}}{{^isLeft}}top{{/isLeft}}" data-key="{{ key }}" {{#parentKey}}data-parentKey="{{parentKey}}"{{/parentKey}}>
+      <div class="wizzy-facet-head facet-head-{{divKey}}" title="{{{ title }}}">
+          <span class="facet-head-title">
+              {{{ title }}}
+          </span>
+          <span class="facet-head-right">
+
+          </span>
+      </div>
+      <div class="wizzy-facet-body facet-body-{{divKey}}">
+        <div class="facet-search-wrapper">
+            <input type="text" class="facet-head-search-input" placeholder="Search {{ title }}" />
+            {{#withSearch}}
+                <div class="facet-head-search">
+                    <a href="#" class="facet-head-search-icon" title="Search {{ title }}"></a>
+                </div>
+            {{/withSearch}}
+        </div>
+
+         <ul class="wizzy-facet-list">
+             {{#items}}
+                {{{html}}}
+             {{/items}}
+         </ul>
+      </div>
+   </div>
+</script>

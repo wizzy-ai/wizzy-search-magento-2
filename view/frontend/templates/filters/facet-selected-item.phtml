@@ -1,0 +1,9 @@
+<script type="text/template" id="wizzy-selected-facet-item-common">
+   <li class="wizzy-selected-facet-list-item {{#isSwatch}}facet-has-swatch{{/isSwatch}}" data-facetKey="{{facetKey}}" data-key="{{ key }}" data-term="{{{ label }}}" title="{{{ label }}}">
+      <span class="wizzy-selected-facet-list-item-label">
+        <?php echo $this->getLayout()->createBlock('Magento\Framework\View\Element\Template')->setTemplate('Wizzy_Search::common/swatch.phtml')->toHtml(); ?>
+        <span class="facet-item-label-value">{{{ label }}}</span>
+      </span>
+      <span class="wizzy-selected-facet-delete"></span>
+   </li>
+</script>

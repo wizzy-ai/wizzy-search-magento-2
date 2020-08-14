@@ -1,0 +1,12 @@
+{{#isSwatch}}
+   <span class="wizzy-facet-item-swatch-wrapper {{#isVisualSwatch}}facet-visual-swatch{{/isVisualSwatch}} {{^isVisualSwatch}}facet-text-swatch{{/isVisualSwatch}}">
+       <span class="wizzy-facet-item-swatch {{#isVisualSwatch}}facet-visual-swatch{{/isVisualSwatch}} {{^isVisualSwatch}}facet-text-swatch{{/isVisualSwatch}}" style="{{#isVisualSwatch}}{{#isURLSwatch}}background-image:url({{swatchValue}});{{/isURLSwatch}}{{^isURLSwatch}}background-color:{{swatchValue}};{{/isURLSwatch}}{{/isVisualSwatch}}">
+           {{#value}}
+                <span class="wizzy-facet-swatch-individual-value">{{value}}</span>
+           {{/value}}
+           {{^isVisualSwatch}}
+                <span class="wizzy-facet-swatch-value">{{swatchValue}}</span>
+           {{/isVisualSwatch}}
+       </span>
+   </span>
+{{/isSwatch}}

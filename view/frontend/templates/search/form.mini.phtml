@@ -1,0 +1,41 @@
+<?php
+   /** @var $block \Magento\Framework\View\Element\Template */
+   /** @var $helper \Magento\Search\Helper\Data */
+   $helper = $this->helper(\Magento\Search\Helper\Data::class);
+    $configs = $this->getConfigs();
+    $placeholder = $configs['search']['input']['placeholder'];
+
+?>
+<div class="block block-search wizzy-search-mini-block">
+   <div class="block block-title"><strong><?= $block->escapeHtml(__('Search')) ?></strong></div>
+   <div class="block block-content">
+      <form class="form minisearch" id="search_mini_form" action="<?= $block->escapeUrl($helper->getResultUrl()) ?>" method="get">
+         <div class="wizzy-search-form-wrapper">
+             <div class="wizzy-search-form-mobile-wrapper"></div>
+             <div class="wizzy-search-form">
+                 <label for="search"><?= $block->escapeHtml(__('Search')) ?></label>
+
+                 <input id="search"
+                        type="text"
+                        name="<?= $block->escapeHtmlAttr($helper->getQueryParamName()) ?>"
+                        placeholder="<?= $block->escapeHtmlAttr($placeholder) ?>"
+                        class="input-text wizzy-search-input"
+                        spellcheck="false"
+                        autocomplete="off"
+                        autocorrect="off"
+                        autocapitalize="off" />
+
+                 <a href="#" class="wizzy-search-glass">
+                     <span class="wizzy-icon"></span>
+                 </a>
+                 <a href="#" class="wizzy-search-back">
+                     <span class="wizzy-icon"></span>
+                 </a>
+                 <a href="#" class="wizzy-search-clear">
+                     <span class="wizzy-icon"></span>
+                 </a>
+             </div>
+         </div>
+      </form>
+   </div>
+</div>

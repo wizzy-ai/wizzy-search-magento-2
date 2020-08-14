@@ -1,0 +1,103 @@
+@import '../core/colors';
+
+.wizzy-search-wrapper {
+  .wizzy-search-filters-left {
+    .wizzy-facet-body {
+      &.facet-body-sizes {
+        .wizzy-facet-list {
+          .wizzy-facet-list-item {
+            &.facet-has-swatch {
+              display: inline-block;
+
+              .wizzy-facet-list-item-label {
+                .wizzy-facet-list-item-checkbox {
+                  display: none;
+                }
+
+                .facet-item-label-value {
+                  display: none;
+                }
+              }
+
+              .wizzy-facet-list-item-count {
+                display: none;
+              }
+
+              &.active {
+                .wizzy-facet-item-swatch {
+                  &.facet-text-swatch {
+                    background-color: $themeColor;
+                    color: white;
+                    border: solid 1px $themeColor;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.page-main>.page-title-wrapper .page-title {
+  margin-bottom: 15px;
+}
+
+.column {
+  &.main {
+    padding-top: 0px !important;
+  }
+}
+
+@media(max-width: 768px) {
+
+  .columns {
+    padding-top: 0 !important;
+  }
+
+  .logo, .nav-toggle {
+    z-index: 0;
+  }
+
+  .wizzy-search-wrapper {
+
+    .wizzy-search-filters-left {
+      .wizzy-facet-body {
+        &.facet-body-colors {
+          .wizzy-facet-list {
+            .wizzy-facet-list-item {
+              &.facet-has-swatch {
+                display: inline-block;
+
+                .wizzy-facet-list-item-label {
+                  .wizzy-facet-list-item-checkbox {
+                    display: none;
+                  }
+
+                  .facet-item-label-value {
+                    display: none;
+                  }
+                }
+
+                .wizzy-facet-list-item-count {
+                  display: none;
+                }
+
+                &.active {
+                  .wizzy-facet-item-swatch {
+                    &.facet-text-swatch {
+                      background-color: $themeColor;
+                      color: white;
+                      border: solid 1px $themeColor;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

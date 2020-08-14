@@ -1,0 +1,550 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="wizzy_config" translate="label" sortOrder="130">
+            <label>Wizzy</label>
+        </tab>
+        <section id="wizzy_store_credentials" translate="label" sortOrder="130" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Store Credentials</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="store_credentials" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Store Credentials</label>
+                <field id="store_id" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Store Id</label>
+                    <comment>Story Id uniquely identify the store on Wizzy.</comment>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="store_secret" translate="label" type="password" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Store Secret</label>
+                    <comment>Store Secret is a unique secret code to communicate with Wizzy.</comment>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="api_key" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>API Key</label>
+                    <comment>Paste API key from Wizzy.</comment>
+                    <validate>required-entry</validate>
+                </field>
+            </group>
+        </section>
+
+        <section id="wizzy_general_configuration" translate="label" sortOrder="140" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>General Setup</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="general_configuration" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>General Configuration</label>
+                <field id="enable_sync" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Enable Sync?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Enable/Disable Sync with Wizzy.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enable_autocomplete" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Enable Autocomplete?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Enable/Disable Wizzy's autocomplete functionality on Store.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enable_instant_search" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Enable Instant Search?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Enable/Disable Wizzy's instant search functionality on Store.<br>
+                            <em>If Autocomplete is turned on, Search as-you-type is disabled by default and replaced with search on enter/form submission.</em>
+                        ]]>
+                    </comment>
+                </field>
+                <field id="instant_search_behavior" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Instant Search Behaviour</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\InstantSearchBehaviours</source_model>
+                    <depends>
+                        <field id="enable_autocomplete">0</field>
+                        <field id="enable_instant_search">1</field>
+                    </depends>
+                </field>
+                <field id="replace_category_page" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Replace Category Page?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <depends>
+                        <field id="enable_instant_search">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                            Replace default Magento category page with Wizzy's results page.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
+
+        <section id="wizzy_catalogue_configuration" translate="label" sortOrder="150" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Catalogue Index</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="catalogue_configuration_genders" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Age Group / Genders Configuration</label>
+                <field id="has_miltiple_gender_products" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>
+                        <![CDATA[
+                            Do you sell products <br>for multiple age group/genders?
+                        ]]>
+                    </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If yes, please set the following configuration for Wizzy to identify Age Group/Genders from your catalogue's data.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="genders_identifiable_by" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Identified Using?</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\IdentityValueBy</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select how genders/age groups can be identified using your catalogue's data.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="has_miltiple_gender_products">1</field>
+                    </depends>
+                </field>
+
+                <field id="genders_identifiable_by_categories" translate="label" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories Identity Configuration</label>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\GenderIdentificationCategories</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Select how individual gender/age group can be identified using your categories data.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="has_miltiple_gender_products">1</field>
+                        <field id="genders_identifiable_by">categories</field>
+                    </depends>
+                </field>
+
+                <field id="genders_identifiable_by_categories_parent_consideration" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>
+                        Parent Categories Consideration
+                    </label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you want Wizzy to look non-assigned parent categories of product ?
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="has_miltiple_gender_products">1</field>
+                        <field id="genders_identifiable_by">categories</field>
+                    </depends>
+                </field>
+
+                <field id="genders_identifiable_by_attributes" translate="label" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Attributes Identity Configuration</label>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\GenderIdentificationAttributes</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Select how individual gender/age group can be identified using your attributes data.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="has_miltiple_gender_products">1</field>
+                        <field id="genders_identifiable_by">attributes</field>
+                    </depends>
+                </field>
+
+            </group>
+
+            <group id="catalogue_configuration_brands" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Brands Configuration</label>
+                <field id="is_multi_brand_store" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Is it multi brand store?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Do you sell multiple brand/manufacturer products ?<br><br>
+                            If yes, please set the following configuration for Wizzy to identify a Brand from your catalogue's data.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="brand_identifiable_by" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Identified Using?</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\IdentityValueBy</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select how brands can be identified using your catalogue's data.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_multi_brand_store">1</field>
+                    </depends>
+                </field>
+                <field id="brand_identifiable_categories_way" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Identity</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\IdentityCategoriesBy</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select how Wizzy picks the category values as brands.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_multi_brand_store">1</field>
+                        <field id="brand_identifiable_by">categories</field>
+                    </depends>
+                </field>
+                <field id="brand_identifiable_categories_level" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Category Level</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoryLevels</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select category Level Wizzy should use as Brand.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_multi_brand_store">1</field>
+                        <field id="brand_identifiable_by">categories</field>
+                        <field id="brand_identifiable_categories_way">categories-level</field>
+                    </depends>
+                </field>
+                <field id="brand_identifiable_categories_selection" translate="label" type="multiselect" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories List</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoriesList</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select all categories which Wizzy should use as a Brand.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_multi_brand_store">1</field>
+                        <field id="brand_identifiable_by">categories</field>
+                        <field id="brand_identifiable_categories_way">categories-list</field>
+                    </depends>
+                </field>
+                <field id="brand_identifiable_attribute_selection" translate="label" type="select" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Attribute</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\AttributesList</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select a attribute which Wizzy should use as a Brand.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_multi_brand_store">1</field>
+                        <field id="brand_identifiable_by">attributes</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="catalogue_configuration_colors" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Colors Configuration</label>
+                <field id="has_color_variable_products" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Do you sell color variable products?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If yes, please set the following configuration for Wizzy to identify Colors from your catalogue's data.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="colors_identifiable_attributes_selection" translate="label" type="multiselect" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Attributes</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\AttributesList</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select attribute(s) which Wizzy should use as colors.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="has_color_variable_products">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="catalogue_configuration_sizes" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Sizes Configuration</label>
+                <field id="has_size_variable_products" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Do you sell size variable products?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If yes, please set the following configuration for Wizzy to identify product Sizes from your catalogue's data.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="sizes_identifiable_attributes_selection" translate="label" type="multiselect" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Attributes</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\AttributesList</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select attribute(s) which Wizzy should use as sizes.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="has_size_variable_products">1</field>
+                    </depends>
+                </field>
+            </group>
+
+        </section>
+
+        <section id="wizzy_search_form_configuration" translate="label" sortOrder="160" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Search Form</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="search_input_configuration" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Search Input</label>
+                <field id="search_input_placeholder" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Placeholder</label>
+                    <comment>Placeholder text for search input textbox.</comment>
+                    <validate>required-entry</validate>
+                </field>
+            </group>
+        </section>
+
+        <section id="wizzy_search_configuration" translate="label" sortOrder="170" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Search Results Page</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+
+            <group id="search_results_general_configuration" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>General</label>
+                <field id="dom_selector" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>DOM Selector</label>
+                    <comment>DOM Selector on theme template to display search results</comment>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="search_endpoint" translate="label" type="text" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>URL Endpoint</label>
+                    <comment>Search URL endpoint to display search results. Update this only when you have overridden the search route configured by this extension.</comment>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="no_of_products" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Products Per Page</label>
+                    <comment>Number of products to display in a single page.</comment>
+                    <validate>required-entry validate-not-negative-number</validate>
+                </field>
+                <field id="include_out_of_stock_products" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Include out of stock products?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select yes if out of stock products needs to be displayed in search results. If selected as yes, It's advisable to add Availability facet for user to filter out the results as per needs.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+
+            <group id="search_results_facets_configuration" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Facets</label>
+                <field id="facets_configuration" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Facets</label>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\FacetsSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Label and Position is ignored for All fields and label is ignored for All attributes.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="category_facet_display_method" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories Rendering Method</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoriesRenderSelection</source_model>
+                    <comment>
+                        <![CDATA[
+                            The way category facet needs to be rendered on search results page.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                </field>
+
+            </group>
+
+            <group id="search_results_sorts_configuration" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Sorts</label>
+                <field id="sorts_configuration" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Sort Options</label>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\SortOptionsSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
+
+            <group id="search_results_pagination_configuration" translate="label" type="text" sortOrder="40" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Pagination</label>
+                <field id="pagination_type" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Pagination Type</label>
+                    <comment>Select the type of pagination for search results page.</comment>
+                    <source_model>Wizzy\Search\Model\Admin\Source\PaginationType</source_model>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="pagination_move_to_top_widget" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Add move to top Widget?</label>
+                    <comment>Recommended to set it as Yes if pagination type is infinite scrolling.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <validate>required-entry</validate>
+                </field>
+            </group>
+
+            <group id="search_results_swatches_configuration" translate="label" type="text" sortOrder="50" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Swatches</label>
+                <field id="swatches_configuration" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Swatch Options</label>
+                    <comment>Select the swatches you want to display on search results page. First swatch is considered as primary swatch and other swatches are rendered based on that. Maximum 2 swatches is advisable to display in search results page.</comment>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\SwatchOptionsSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
+
+        </section>
+
+        <section id="wizzy_autocomplete_configuration" translate="label" sortOrder="180" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Autocomplete Menu</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+
+            <group id="autocomplete_menu" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Autocomplete Menu</label>
+                <field id="suggestions_count" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Suggestions Count</label>
+                    <comment>
+                        <![CDATA[
+                            Enter number of suggestions to display in autocomplete menu.<br>
+                            This must be between 1 and 20. Any other value will break the functionality of suggestion menu.
+                        ]]>
+                    </comment>
+                    <validate>required-entry validate-not-negative-number</validate>
+                </field>
+
+                <field id="alignment" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Alignment</label>
+                    <comment>
+                        <![CDATA[
+                            Select alignment of the autocomplete menu beneath search input.
+                        ]]>
+                    </comment>
+                    <source_model>Wizzy\Search\Model\Admin\Source\AlignmentList</source_model>
+                    <validate>required-entry</validate>
+                </field>
+
+                <field id="categories_title" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories Title</label>
+                    <comment>Title to display for categories section in menu.</comment>
+                </field>
+
+                <field id="others_title" translate="label" type="text" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Others Title</label>
+                    <comment>Title to display for others section in menu.</comment>
+                </field>
+
+                <field id="no_results_behaviour" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>No Results Behaviour</label>
+                    <comment>Select behaviour when there are no products or suggestions to display in menu.</comment>
+                    <source_model>Wizzy\Search\Model\Admin\Source\NoResultsSelection</source_model>
+                    <validate>required-entry</validate>
+                </field>
+
+                <field id="no_results_text" translate="label" type="text" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>No Results Text</label>
+                    <comment>Text to display when there are no products or suggestions to display in menu.</comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="no_results_behaviour">show_no_results_message</field>
+                    </depends>
+                </field>
+
+            </group>
+
+            <group id="autocomplete_top_products" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Top Products</label>
+                <field id="show_products_suggestions" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Suggest Top Products?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Enable/Disable top products display in autocomplete menu.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="top_products_title" translate="label" type="text" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Top Products Title</label>
+                    <comment>Title text for top products section in autocomplete menu.</comment>
+                    <depends>
+                        <field id="show_products_suggestions">1</field>
+                    </depends>
+                </field>
+                <field id="top_products_count" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Number of products to display</label>
+                    <comment>Enter number of products to display in autocomplete menu, This can not be more then 10.</comment>
+                    <validate>required-entry validate-not-negative-number</validate>
+                    <depends>
+                        <field id="show_products_suggestions">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="autocomplete_pages" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Pages</label>
+                <field id="pages_title" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Pages Title</label>
+                    <comment>Title text for pages section in autocomplete menu.</comment>
+                    <validate></validate>
+                </field>
+                <field id="exclude_pages" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Exclude Pages</label>
+                    <comment>Select pages to exclude in suggestions.</comment>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\PagesSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
+
+            <group id="autocomplete_attributes_configuration" translate="label" type="text" sortOrder="40" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Attributes to add in Autocomplete</label>
+                <comment>
+                    <![CDATA[
+                            Select user defined attributes you want to appear in autocomplete along with category.<br><br>
+                            <em>Leather[Attribute] Shoes[Category]<br>
+                            Gifts[Category] for[Glue] Mom[Attribute]<br></em><br><br>
+
+                            1. In first example position of the attribute is front.<br>
+                            2. In second example position of the attribute is back with glue value.<br><br>
+
+                            <em>(glue is non-mandatory field, and can be left blank if not required)</em>
+                        ]]>
+                </comment>
+                <field id="autocomplete_attributes" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Attributes</label>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\AutocompleteAttributeSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+            </group>
+
+        </section>
+
+    </system>
+</config>

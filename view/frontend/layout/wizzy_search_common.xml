@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="Wizzy_Search::core/page.js"/>
+        <css src="Wizzy_Search::core/wizzyCommon.css" />
+        <css src="Wizzy_Search::store/wizzyStore.css" />
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block class="Wizzy\Search\Block\Core\Config" name="wizzySearch.config" template="Wizzy_Search::core/config.phtml"/>
+        </referenceBlock>
+
+        <referenceBlock name="before.body.end">
+            <block class="Magento\Framework\View\Element\Template" name="wizzySearch.beforebody.end" template="Wizzy_Search::core/beforebodyend.phtml"/>
+        </referenceBlock>
+    </body>
+</page>

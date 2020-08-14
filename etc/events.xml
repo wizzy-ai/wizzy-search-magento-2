@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="admin_system_config_changed_section_wizzy_store_credentials">
+        <observer name="custom_admin_system_config_changed_section_wizzy_store_credentials" instance="Wizzy\Search\Model\Observer\AdminConfigs\WizzyStoreCredentialsChanged"/>
+    </event>
+    <event name="cms_page_prepare_save">
+        <observer name="custom_cms_page_prepare_save" instance="Wizzy\Search\Model\Observer\AdminForms\OnCMSPagesSave"/>
+    </event>
+    <event name="admin_system_config_changed_section_wizzy_catalogue_configuration">
+        <observer name="custom_admin_system_config_changed_section_wizzy_catalogue_configuration" instance="Wizzy\Search\Model\Observer\AdminConfigs\WizzyCatalogueConfigurationChanged"/>
+    </event>
+    <event name="admin_system_config_changed_section_wizzy_autocomplete_configuration">
+        <observer name="custom_admin_system_config_changed_section_wizzy_autocomplete_configuration" instance="Wizzy\Search\Model\Observer\AdminConfigs\WizzyAutocompleteConfigurationChanged"/>
+    </event>
+    <event name="admin_system_config_changed_section_currency">
+        <observer name="custom_admin_system_config_changed_section_currency" instance="Wizzy\Search\Model\Observer\AdminConfigs\CurrencyOptionsUpdated"/>
+    </event>
+    <event name="controller_action_postdispatch_adminhtml_system_currency_saveRates">
+        <observer name="custom_controller_action_postdispatch_adminhtml_system_currency_saveRates" instance="Wizzy\Search\Model\Observer\AdminForms\CurrencyRatesUpdated"/>
+    </event>
+</config>

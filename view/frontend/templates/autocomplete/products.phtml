@@ -1,0 +1,40 @@
+<?php
+    $configs = $this->getConfigs();
+    $title = $configs['autocomplete']['topProducts']['title'];
+
+    $currency = $configs['store']['currency']['symbol'];
+?>
+
+<script type="text/template" id="wizzy-autocomplete-topproducts">
+
+    <div class="wizzy-autocomplete-top-products">
+        <?php if ($title != "") { ?>
+            <p class="top-products-title"><?= $block->escapeHtmlAttr($title) ?></p>
+        <?php } ?>
+        <ul class="autocomplete-top-products">
+            {{#products}}
+
+                <li class="topproduct-item" title="{{{ name }}}">
+                    <a href="{{{url}}}" class="topproduct-item-link">
+                        <div class="topproduct-item-image">
+                            <img src="{{ mainImage }}" class="topproduct-image" />
+                        </div><!-- ending of topproduct-item-image -->
+                        <div class="topproduct-item-info">
+                            <p class="topproduct-title">{{{ name }}}</p>
+                            {{#hasCategories}}
+                                <p class="topproduct-in-category">in {{{category}}}</p>
+                            {{/hasCategories}}
+                            <p class="topproduct-price"><?php echo $currency; ?>{{ sellingPrice }}<br>{{#price}}<span class="topproduct-original-price"><?php echo $currency; ?>{{ price }}</span>{{/price}}<span class="topproduct-item-discount">
+                                   {{#discountPercentage}}
+                                       ({{discountPercentage}}% off)
+                                   {{/discountPercentage}}
+                               </span></p>
+                        </div><!-- ending of topproduct-item-info -->
+                    </a><!-- ending of topproduct-item-link -->
+                </li><!-- ending of topproduct-item -->
+
+            {{/products}}
+        </ul><!-- ending of autocomplete-top-products -->
+    </div><!-- ending of top-products -->
+
+</script>
