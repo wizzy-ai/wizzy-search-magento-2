@@ -44,11 +44,11 @@ class InstallSchema implements InstallSchemaInterface {
       'wizzy_search_configuration/search_results_general_configuration/include_out_of_stock_products' => '0',
 
       'wizzy_search_configuration/search_results_facets_configuration/facets_configuration' => [
-         /*[
+         [
             'key' => 'all',
             'label' => 'All Fields',
             'position' => 'left',
-         ]*/
+         ]
       ],
       'wizzy_search_configuration/search_results_facets_configuration/category_facet_display_method' => 'hierarchy',
 
