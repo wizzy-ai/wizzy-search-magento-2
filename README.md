@@ -24,14 +24,14 @@ This module comes with following features including above for Magento 2.
 - Advance Data Structuring
 - Priority Support   
 
-##Instllation
+## Instllation
 
 Wizzy Search Magento 2 module can be installed following ways. 
 
 1. Using Composer
 2. From Magento Marketplace **(Not available for now)**  
 
-###Composer
+### Composer
 
 ````
 composer require wizzy/search-magento-2
@@ -45,14 +45,14 @@ php bin/console setup:upgrade
 php bin/console setup:static-content:deploy
 ````
 
-###Magento Marketplace **(Not available for now)**
+### Magento Marketplace **(Not available for now)**
 
 ~~Visit Magento Marketplace to install the module, follow the instructions on the marketplace for installation guide.~~
 
-##Demo Store
+## Demo Store
 Visit [Demo Store](http://magento.demostore.wizzy.ai) to check Autocomplete and Instnt Search functionality. To test the admin related functionalitites you must install this extension on your store try yourself.
 
-##Want to Contribute?
+## Want to Contribute?
 Found bug or improvement in the module and wants to contribute? We're glad you wants to, Please follow the process.
 
 1. Make sure you've latest changes in `dev` branch.
@@ -61,7 +61,7 @@ Found bug or improvement in the module and wants to contribute? We're glad you w
 4. Make sure the changes you made in code is of Magento2 PHPCS standard.
 5. Create PR. 
 
-##Found Bugs? Need Help? Have Questions? 
+## Found Bugs? Need Help? Have Questions? 
 If you’ve found any bug in the module, you can [create an issue](https://github.com/wizzy-ai/wizzy-search-magento-2/issues) in this Repository, and our team will look into it as quickly as possible.
 
 You can also contact us on [team@wizzy.ai](mailto:team@wizzy.ai)
