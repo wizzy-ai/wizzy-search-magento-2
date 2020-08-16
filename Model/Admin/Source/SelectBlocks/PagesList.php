@@ -7,14 +7,16 @@ use Magento\Framework\View\Element\Html\Select;
 use Magento\Framework\View\Element\Context;
 use Wizzy\Search\Services\Store\PagesManager;
 
-class PagesList extends Select {
+class PagesList extends Select
+{
 
-   private $pagesManager;
+    private $pagesManager;
 
-   public function __construct(Context $context, PagesManager $pagesManager, array $data = []) {
-      parent::__construct($context, $data);
-      $this->pagesManager = $pagesManager;
-   }
+    public function __construct(Context $context, PagesManager $pagesManager, array $data = [])
+    {
+        parent::__construct($context, $data);
+        $this->pagesManager = $pagesManager;
+    }
 
    /**
     * Set "name" for <select> element
@@ -22,9 +24,10 @@ class PagesList extends Select {
     * @param string $value
     * @return $this
     */
-   public function setInputName($value) {
-      return $this->setName($value);
-   }
+    public function setInputName($value)
+    {
+        return $this->setName($value);
+    }
 
    /**
     * Set "id" for <select> element
@@ -32,37 +35,40 @@ class PagesList extends Select {
     * @param $value
     * @return $this
     */
-   public function setInputId($value) {
-      return $this->setId($value);
-   }
+    public function setInputId($value)
+    {
+        return $this->setId($value);
+    }
 
    /**
     * Render block HTML
     *
     * @return string
     */
-   public function _toHtml(): string {
-      if (!$this->getOptions()) {
-         $this->setOptions($this->getSourceOptions());
-      }
-      return parent::_toHtml();
-   }
+    public function _toHtml(): string
+    {
+        if (!$this->getOptions()) {
+            $this->setOptions($this->getSourceOptions());
+        }
+        return parent::_toHtml();
+    }
 
-   private function getSourceOptions(): array {
-      $pages = $this->pagesManager->fetchAll();
-      $options = [];
-      $options[] = [
+    private function getSourceOptions(): array
+    {
+        $pages = $this->pagesManager->fetchAll();
+        $options = [];
+        $options[] = [
         'value' => '0',
         'label' => 'All Pages',
-      ];
+        ];
 
-      foreach ($pages as $page) {
-         $options[] = [
+        foreach ($pages as $page) {
+            $options[] = [
             'value' => $page->getId(),
             'label' => $page->getTitle(),
-         ];
-      }
+            ];
+        }
 
-      return $options;
-   }
+        return $options;
+    }
 }

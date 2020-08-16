@@ -1,11 +1,12 @@
 <script type="text/template" id="wizzy-facet-item-common">
-   <li class="wizzy-facet-list-item {{#isSwatch}}facet-has-swatch{{/isSwatch}} {{#isSelected}}active{{/isSelected}}" data-key="{{ key }}" data-term="{{{ label }}}" title="{{{ label }}}">
+    <li class="wizzy-facet-list-item {{#isSwatch}}facet-has-swatch{{/isSwatch}} {{#isSelected}}active{{/isSelected}}"
+        data-key="{{ key }}" data-term="{{{ label }}}" title="{{{ label }}}">
       <span class="wizzy-facet-list-item-label">
         <span class="wizzy-facet-list-item-checkbox">
             <input type="checkbox" {{#isSelected}}checked{{/isSelected}} />
             <div class="checkbox-indicator"></div>
         </span>
-          <?php echo $this->getLayout()->createBlock('Magento\Framework\View\Element\Template')->setTemplate('Wizzy_Search::common/swatch.phtml')->toHtml(); ?>
+         <?= $block->getReusableHTML('Wizzy_Search::common/swatch.phtml'); ?>
         <span class="facet-item-label-value">{{{ label }}}</span>
       </span>
       <span class="wizzy-facet-list-item-count">

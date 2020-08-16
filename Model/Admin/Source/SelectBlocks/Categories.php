@@ -7,14 +7,16 @@ use Magento\Framework\View\Element\Html\Select;
 use Magento\Framework\View\Element\Context;
 use Wizzy\Search\Services\Catalogue\CategoriesManager;
 
-class Categories extends Select {
+class Categories extends Select
+{
 
-  private $categoriesManager;
+    private $categoriesManager;
 
-  public function __construct(Context $context, CategoriesManager $categoriesManager, array $data = []) {
-    parent::__construct($context, $data);
-    $this->categoriesManager = $categoriesManager;
-  }
+    public function __construct(Context $context, CategoriesManager $categoriesManager, array $data = [])
+    {
+        parent::__construct($context, $data);
+        $this->categoriesManager = $categoriesManager;
+    }
 
   /**
    * Set "name" for <select> element
@@ -22,9 +24,10 @@ class Categories extends Select {
    * @param string $value
    * @return $this
    */
-  public function setInputName($value) {
-    return $this->setName($value . '[]');
-  }
+    public function setInputName($value)
+    {
+        return $this->setName($value . '[]');
+    }
 
   /**
    * Set "id" for <select> element
@@ -32,35 +35,38 @@ class Categories extends Select {
    * @param $value
    * @return $this
    */
-  public function setInputId($value) {
-    return $this->setId($value);
-  }
+    public function setInputId($value)
+    {
+        return $this->setId($value);
+    }
 
   /**
    * Render block HTML
    *
    * @return string
    */
-  public function _toHtml(): string {
-    if (!$this->getOptions()) {
-      $this->setOptions($this->getSourceOptions());
-    }
-    $this->setExtraParams('multiple="multiple"');
-    $this->setClass('admin__control-multiselect admin-dynamic-config-multiselect');
-    return parent::_toHtml();
-  }
-
-  private function getSourceOptions(): array {
-    $categories = $this->categoriesManager->fetchAllOfCurrentStore();
-    $options = [];
-
-    foreach ($categories as $category) {
-      $options[] = [
-        'value' => $category->getId(),
-        'label' => $category->getName()
-      ];
+    public function _toHtml(): string
+    {
+        if (!$this->getOptions()) {
+            $this->setOptions($this->getSourceOptions());
+        }
+        $this->setExtraParams('multiple="multiple"');
+        $this->setClass('admin__control-multiselect admin-dynamic-config-multiselect');
+        return parent::_toHtml();
     }
 
-    return $options;
-  }
+    private function getSourceOptions(): array
+    {
+        $categories = $this->categoriesManager->fetchAllOfCurrentStore();
+        $options = [];
+
+        foreach ($categories as $category) {
+            $options[] = [
+            'value' => $category->getId(),
+            'label' => $category->getName()
+            ];
+        }
+
+        return $options;
+    }
 }

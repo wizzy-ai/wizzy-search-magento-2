@@ -7,14 +7,16 @@ use Magento\Framework\View\Element\Html\Select;
 use Magento\Framework\View\Element\Context;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 
-class SwatchOptions extends Select {
+class SwatchOptions extends Select
+{
 
-   private $attributesManager;
+    private $attributesManager;
 
-   public function __construct(Context $context, AttributesManager $attributesManager, array $data = []) {
-      parent::__construct($context, $data);
-      $this->attributesManager = $attributesManager;
-   }
+    public function __construct(Context $context, AttributesManager $attributesManager, array $data = [])
+    {
+        parent::__construct($context, $data);
+        $this->attributesManager = $attributesManager;
+    }
 
    /**
     * Set "name" for <select> element
@@ -22,9 +24,10 @@ class SwatchOptions extends Select {
     * @param string $value
     * @return $this
     */
-   public function setInputName($value) {
-      return $this->setName($value);
-   }
+    public function setInputName($value)
+    {
+        return $this->setName($value);
+    }
 
    /**
     * Set "id" for <select> element
@@ -32,39 +35,43 @@ class SwatchOptions extends Select {
     * @param $value
     * @return $this
     */
-   public function setInputId($value) {
-      return $this->setId($value);
-   }
+    public function setInputId($value)
+    {
+        return $this->setId($value);
+    }
 
    /**
     * Render block HTML
     *
     * @return string
     */
-   public function _toHtml(): string {
-      if (!$this->getOptions()) {
-         $this->setOptions($this->getSourceOptions());
-      }
-      return parent::_toHtml();
-   }
+    public function _toHtml(): string
+    {
+        if (!$this->getOptions()) {
+            $this->setOptions($this->getSourceOptions());
+        }
+        return parent::_toHtml();
+    }
 
-   private function getSourceOptions(): array {
-      $attributes = $this->attributesManager->fetchAll();
+    private function getSourceOptions(): array
+    {
+        $attributes = $this->attributesManager->fetchAll();
 
-      $options = $this->getDefaultOptions();
+        $options = $this->getDefaultOptions();
 
-      foreach ($attributes as $attribute) {
-         $options[] = [
+        foreach ($attributes as $attribute) {
+            $options[] = [
             'value' => $attribute->getId(),
             'label' => $attribute->getStoreLabel() . " (" . $attribute->getName() . ")",
-         ];
-      }
+            ];
+        }
 
-      return $options;
-   }
+        return $options;
+    }
 
-   private function getDefaultOptions() {
-      return [
+    private function getDefaultOptions()
+    {
+        return [
          [
             'value' => 'colors',
             'label' => 'Colors',
@@ -73,6 +80,6 @@ class SwatchOptions extends Select {
             'value' => 'sizes',
             'label' => 'Sizes',
          ],
-      ];
-   }
+        ];
+    }
 }

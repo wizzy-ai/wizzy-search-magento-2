@@ -4,59 +4,64 @@ namespace Wizzy\Search\Services\Catalogue\Configurables;
 
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 
-class ColorConfigurable implements ConfigurableImpl {
+class ColorConfigurable implements ConfigurableImplInterface
+{
 
-  private $storeCatalogueConfig;
-  public function __construct(StoreCatalogueConfig $storeCatalogueConfig) {
-    $this->storeCatalogueConfig = $storeCatalogueConfig;
-  }
-
-  public function getValue(array $categories, array $attributes, $storeId) {
-    $this->storeCatalogueConfig->setStore($storeId);
-    $configuredAttributes = $this->getConfiguredAttributes($storeId);
-
-    $colors = [];
-
-    foreach ($configuredAttributes as $attributeId => $configuredAttribute) {
-      if (isset($attributes[$attributeId]) && $attributes[$attributeId]['value']) {
-         $colorsArr = [
-            'id'    => $attributeId,
-            'value' => $attributes[$attributeId]['value'],
-            'type'  => 'attribute',
-         ];
-
-         if (isset($attributes[$attributeId]['swatch'])) {
-            $colorsArr['swatch'] = $attributes[$attributeId]['swatch'];
-         }
-        $colors[$attributeId] = $colorsArr;
-      }
+    private $storeCatalogueConfig;
+    public function __construct(StoreCatalogueConfig $storeCatalogueConfig)
+    {
+        $this->storeCatalogueConfig = $storeCatalogueConfig;
     }
 
-    return $colors;
-  }
+    public function getValue(array $categories, array $attributes, $storeId)
+    {
+        $this->storeCatalogueConfig->setStore($storeId);
+        $configuredAttributes = $this->getConfiguredAttributes($storeId);
 
-  public function getConfiguredCategories($storeId) {
-     $this->storeCatalogueConfig->setStore($storeId);
-    return [];
-  }
+        $colors = [];
 
-  public function getConfiguredAttributes($storeId) {
-     $this->storeCatalogueConfig->setStore($storeId);
-    $attributes = [];
+        foreach ($configuredAttributes as $attributeId => $configuredAttribute) {
+            if (isset($attributes[$attributeId]) && $attributes[$attributeId]['value']) {
+                 $colorsArr = [
+                'id'    => $attributeId,
+                'value' => $attributes[$attributeId]['value'],
+                'type'  => 'attribute',
+                 ];
 
-    if ($this->storeCatalogueConfig->hasColorVariableProducts()) {
-      $mappedAttributes = $this->storeCatalogueConfig->colorIdentityAttributes();
-      if ($mappedAttributes) {
-        $mappedAttributes = explode(",", $mappedAttributes);
-
-        foreach ($mappedAttributes as $mappedAttribute) {
-          $attributes[$mappedAttribute] = [
-            'value' => $mappedAttribute,
-          ];
+                 if (isset($attributes[$attributeId]['swatch'])) {
+                     $colorsArr['swatch'] = $attributes[$attributeId]['swatch'];
+                 }
+                 $colors[$attributeId] = $colorsArr;
+            }
         }
-      }
+
+        return $colors;
     }
 
-    return $attributes;
-  }
+    public function getConfiguredCategories($storeId)
+    {
+        $this->storeCatalogueConfig->setStore($storeId);
+        return [];
+    }
+
+    public function getConfiguredAttributes($storeId)
+    {
+        $this->storeCatalogueConfig->setStore($storeId);
+        $attributes = [];
+
+        if ($this->storeCatalogueConfig->hasColorVariableProducts()) {
+            $mappedAttributes = $this->storeCatalogueConfig->colorIdentityAttributes();
+            if ($mappedAttributes) {
+                $mappedAttributes = explode(",", $mappedAttributes);
+
+                foreach ($mappedAttributes as $mappedAttribute) {
+                    $attributes[$mappedAttribute] = [
+                    'value' => $mappedAttribute,
+                    ];
+                }
+            }
+        }
+
+        return $attributes;
+    }
 }

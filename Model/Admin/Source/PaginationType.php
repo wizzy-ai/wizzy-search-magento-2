@@ -4,11 +4,12 @@ namespace Wizzy\Search\Model\Admin\Source;
 
 class PaginationType
 {
-   const INFINITE_SCROLL = 'infinite_scroll';
-   const NUMBERED_PAGINATION = 'numbered_pagination';
+    const INFINITE_SCROLL = 'infinite_scroll';
+    const NUMBERED_PAGINATION = 'numbered_pagination';
 
-   public function toOptionArray() {
-      return [
+    public function toOptionArray()
+    {
+        return [
          [
             'value' => self::INFINITE_SCROLL,
             'label' => __('Infinite Scroll')
@@ -17,6 +18,6 @@ class PaginationType
             'value' => self::NUMBERED_PAGINATION,
             'label' => __('Numbered Pagination')
          ],
-      ];
-   }
+        ];
+    }
 }

@@ -9,21 +9,23 @@ use Wizzy\Search\Services\Indexer\IndexerManager;
 use Wizzy\Search\Services\Queue\Processors\DeletePagesProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
 
-class OnCMSPagesSave implements ObserverInterface {
+class OnCMSPagesSave implements ObserverInterface
+{
 
-   private $request;
-   private $indexerManager;
+    private $request;
+    private $indexerManager;
 
-   public function __construct(
-      RequestInterface $request,
-      IndexerManager $indexerManager
-   ) {
-      $this->request = $request;
-      $this->indexerManager = $indexerManager;
-   }
+    public function __construct(
+        RequestInterface $request,
+        IndexerManager $indexerManager
+    ) {
+        $this->request = $request;
+        $this->indexerManager = $indexerManager;
+    }
 
-   public function execute(EventObserver $observer) {
-      $this->indexerManager->getPagesIndexer()->reindexList([]);
-      return $this;
-   }
+    public function execute(EventObserver $observer)
+    {
+        $this->indexerManager->getPagesIndexer()->reindexList([]);
+        return $this;
+    }
 }

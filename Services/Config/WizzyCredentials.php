@@ -4,14 +4,17 @@ namespace Wizzy\Search\Services\Config;
 
 use Wizzy\Search\Services\Indexer\IndexerManager;
 
-class WizzyCredentials {
+class WizzyCredentials
+{
 
-   private $indexerManager;
-   public function __construct(IndexerManager $indexerManager) {
-      $this->indexerManager = $indexerManager;
-   }
+    private $indexerManager;
+    public function __construct(IndexerManager $indexerManager)
+    {
+        $this->indexerManager = $indexerManager;
+    }
 
-   public function onCredentialsSet() {
-      $this->indexerManager->getCurrenciesIndexer()->reindexList([]);
-   }
+    public function onCredentialsSet()
+    {
+        $this->indexerManager->getCurrenciesIndexer()->reindexList([]);
+    }
 }

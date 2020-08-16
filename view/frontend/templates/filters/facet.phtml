@@ -1,5 +1,11 @@
+<?php
+$configs = $block->getConfigs();
+?>
 <script type="text/template" id="wizzy-facet-block">
-   <div class="wizzy-filters-facet-block facet-block-{{ divKey }} facet-block-{{#isLeft}}left{{/isLeft}}{{^isLeft}}top{{/isLeft}}" data-key="{{ key }}" {{#parentKey}}data-parentKey="{{parentKey}}"{{/parentKey}}>
+    <div class="wizzy-filters-facet-block
+    facet-block-{{ divKey }}
+    facet-block-{{#isLeft}}left{{/isLeft}}{{^isLeft}}top{{/isLeft}}"
+         data-key="{{ key }}" {{#parentKey}}data-parentKey="{{parentKey}}" {{/parentKey}}>
       <div class="wizzy-facet-head facet-head-{{divKey}}" title="{{{ title }}}">
           <span class="facet-head-title">
               {{{ title }}}

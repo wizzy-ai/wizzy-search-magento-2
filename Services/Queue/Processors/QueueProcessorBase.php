@@ -2,6 +2,7 @@
 
 namespace Wizzy\Search\Services\Queue\Processors;
 
-abstract class QueueProcessorBase {
-  public abstract function execute(array $data, $storeId);
+abstract class QueueProcessorBase
+{
+    abstract public function execute(array $data, $storeId);
 }

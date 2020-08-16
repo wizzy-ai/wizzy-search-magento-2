@@ -1,7 +1,7 @@
 <?php
-    $configs = $this->getConfigs();
+$configs = $block->getConfigs();
 ?>
 
 <script type="text/javascript">
-    window.wizzyConfig = JSON.parse('<?php echo json_encode($configs) ?>');
+    window.wizzyConfig = JSON.parse('<?= $block->escapeHtmlAttr(json_encode($configs)); ?>');
 </script>

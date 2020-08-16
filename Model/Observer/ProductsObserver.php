@@ -9,68 +9,80 @@ use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerManager;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
-class ProductsObserver {
+class ProductsObserver
+{
 
-   private $indexer;
-   private $productsManager;
-   private $configurable;
+    private $indexer;
+    private $productsManager;
+    private $configurable;
 
    /**
     * @param IndexerManager $indexerRegistry
     */
-   public function __construct(IndexerManager $indexerManager, Configurable $configurable, ProductsManager $productsManager) {
-      $this->indexer = $indexerManager->getProductsIndexer();
-      $this->configurable = $configurable;
-      $this->productsManager = $productsManager;
-   }
+    public function __construct(
+        IndexerManager $indexerManager,
+        Configurable $configurable,
+        ProductsManager $productsManager
+    ) {
+        $this->indexer = $indexerManager->getProductsIndexer();
+        $this->configurable = $configurable;
+        $this->productsManager = $productsManager;
+    }
 
    /**
     * @param ProductResourceModel $product
     * @param ProductResourceModel $result
     * @param ProductMainModel $product
-    *
     * @return ProductMainModel[]
     */
-   public function afterSave(ProductResourceModel $productResourceModel, ProductResourceModel $resourceModelResult, ProductMainModel $product) {
-      $productResourceModel->addCommitCallback(function () use ($product) {
-         if (!$this->indexer->isScheduled()) {
-            $productIds = $this->getProductIdsToIndex([$product->getId()]);
-            $this->indexer->reindexList($productIds);
-         }
-      });
+    public function afterSave(
+        ProductResourceModel $productResourceModel,
+        ProductResourceModel $resourceModelResult,
+        ProductMainModel $product
+    ) {
+        $productResourceModel->addCommitCallback(function () use ($product) {
+            if (!$this->indexer->isScheduled()) {
+                $productIds = $this->getProductIdsToIndex([$product->getId()]);
+                $this->indexer->reindexList($productIds);
+            }
+        });
 
-      return $resourceModelResult;
-   }
+        return $resourceModelResult;
+    }
 
-   private function getProductIdsToIndex($productIds) {
-      $productIdsToIndex = $productIds;
-      foreach ($productIds as $productId) {
-         $parentProductIds = $this->configurable->getParentIdsByChild($productId);
-         if (count($parentProductIds)) {
-            $productIdsToIndex = array_merge($productIdsToIndex, $parentProductIds);
-         }
-      }
+    private function getProductIdsToIndex($productIds)
+    {
+        $productIdsToIndex = $productIds;
+        foreach ($productIds as $productId) {
+            $parentProductIds = $this->configurable->getParentIdsByChild($productId);
+            if (is_array($parentProductIds) && count($parentProductIds)) {
+                array_push($productIdsToIndex, ...$parentProductIds);
+            }
+        }
 
-      return array_values(array_unique($productIdsToIndex));
-   }
+        return array_values(array_unique($productIdsToIndex));
+    }
 
    /**
     * @param ProductResourceModel $productResource
     * @param ProductResourceModel $result
     * @param ProductMainModel $product
-    *
     * @return ProductMainModel[]
     */
-   public function afterDelete(ProductResourceModel $productResource, ProductResourceModel $resourceModelResult, ProductMainModel $product) {
-      $productResource->addCommitCallback(function () use ($product) {
-         if (!$this->indexer->isScheduled()) {
-            $productIds = $this->getProductIdsToIndex([$product->getId()]);
-            $this->indexer->reindexList($productIds);
-         }
-      });
+    public function afterDelete(
+        ProductResourceModel $productResource,
+        ProductResourceModel $resourceModelResult,
+        ProductMainModel $product
+    ) {
+        $productResource->addCommitCallback(function () use ($product) {
+            if (!$this->indexer->isScheduled()) {
+                  $productIds = $this->getProductIdsToIndex([$product->getId()]);
+                  $this->indexer->reindexList($productIds);
+            }
+        });
 
-      return $resourceModelResult;
-   }
+        return $resourceModelResult;
+    }
 
    /**
     * @param Action $subject
@@ -79,14 +91,15 @@ class ProductsObserver {
     *
     * @return Action
     */
-   public function afterUpdateAttributes(Action $subject, Action $result = null, $productIds) {
-      if (!$this->indexer->isScheduled()) {
-         $productIds = $this->getProductIdsToIndex($productIds);
-         $this->indexer->reindexList($productIds);
-      }
+    public function afterUpdateAttributes(Action $subject, Action $result = null, $productIds)
+    {
+        if (!$this->indexer->isScheduled()) {
+            $productIds = $this->getProductIdsToIndex($productIds);
+            $this->indexer->reindexList($productIds);
+        }
 
-      return $result;
-   }
+        return $result;
+    }
 
    /**
     * @param Action $subject
@@ -95,12 +108,13 @@ class ProductsObserver {
     *
     * @return mixed
     */
-   public function afterUpdateWebsites(Action $subject, Action $result = null, array $productIds) {
-      if (!$this->indexer->isScheduled()) {
-         $productIds = $this->getProductIdsToIndex($productIds);
-         $this->indexer->reindexList($productIds);
-      }
+    public function afterUpdateWebsites(Action $subject, Action $result = null, array $productIds)
+    {
+        if (!$this->indexer->isScheduled()) {
+            $productIds = $this->getProductIdsToIndex($productIds);
+            $this->indexer->reindexList($productIds);
+        }
 
-      return $result;
-   }
+        return $result;
+    }
 }

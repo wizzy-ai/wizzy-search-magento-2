@@ -6,9 +6,9 @@
 </head>
 <body>
     <referenceBlock name="before.body.end">
-        <block class="Wizzy\Search\Block\Autocomplete\Product" name="wizzySearch.autocomplete.product" template="Wizzy_Search::autocomplete/products.phtml"/>
-        <block class="Wizzy\Search\Block\Autocomplete\Suggestion" name="wizzySearch.autocomplete.suggestion" template="Wizzy_Search::autocomplete/suggestions.phtml"/>
-        <block class="Wizzy\Search\Block\Core\Config" name="wizzySearch.autocomplete.wrapper" template="Wizzy_Search::autocomplete/wrapper.phtml"/>
+        <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.autocomplete.product" template="Wizzy_Search::autocomplete/products.phtml"/>
+        <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.autocomplete.suggestion" template="Wizzy_Search::autocomplete/suggestions.phtml"/>
+        <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.autocomplete.wrapper" template="Wizzy_Search::autocomplete/wrapper.phtml"/>
     </referenceBlock>
 </body>
 </page>

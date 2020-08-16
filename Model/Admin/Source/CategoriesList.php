@@ -6,22 +6,24 @@ use Wizzy\Search\Services\Catalogue\CategoriesManager;
 
 class CategoriesList
 {
-  private $categoriesManager;
+    private $categoriesManager;
 
-  public function __construct(CategoriesManager $categoriesManager) {
-    $this->categoriesManager = $categoriesManager;
-  }
-
-  public function toOptionArray() {
-    $categories = $this->categoriesManager->fetchAllOfCurrentStore();
-
-    foreach ($categories as $category) {
-      $options[] = [
-        'value' => $category->getId(),
-        'label' => $category->getName()
-      ];
+    public function __construct(CategoriesManager $categoriesManager)
+    {
+        $this->categoriesManager = $categoriesManager;
     }
 
-    return $options;
-  }
+    public function toOptionArray()
+    {
+        $categories = $this->categoriesManager->fetchAllOfCurrentStore();
+
+        foreach ($categories as $category) {
+            $options[] = [
+            'value' => $category->getId(),
+            'label' => $category->getName()
+            ];
+        }
+
+        return $options;
+    }
 }

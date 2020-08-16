@@ -5,7 +5,8 @@ namespace Wizzy\Search\Model\Admin\Source\SelectBlocks;
 
 use Magento\Framework\View\Element\Html\Select;
 
-class AutocompletePositions extends Select {
+class AutocompletePositions extends Select
+{
 
    /**
     * Set "name" for <select> element
@@ -13,9 +14,10 @@ class AutocompletePositions extends Select {
     * @param string $value
     * @return $this
     */
-   public function setInputName($value) {
-      return $this->setName($value);
-   }
+    public function setInputName($value)
+    {
+        return $this->setName($value);
+    }
 
    /**
     * Set "id" for <select> element
@@ -23,26 +25,29 @@ class AutocompletePositions extends Select {
     * @param $value
     * @return $this
     */
-   public function setInputId($value) {
-      return $this->setId($value);
-   }
+    public function setInputId($value)
+    {
+        return $this->setId($value);
+    }
 
    /**
     * Render block HTML
     *
     * @return string
     */
-   public function _toHtml(): string {
-      if (!$this->getOptions()) {
-         $this->setOptions($this->getSourceOptions());
-      }
-      return parent::_toHtml();
-   }
+    public function _toHtml(): string
+    {
+        if (!$this->getOptions()) {
+            $this->setOptions($this->getSourceOptions());
+        }
+        return parent::_toHtml();
+    }
 
-   private function getSourceOptions(): array {
-      return [
+    private function getSourceOptions(): array
+    {
+        return [
          ['label' => 'Front', 'value' => 'front'],
          ['label' => 'Back', 'value' => 'back'],
-      ];
-   }
+        ];
+    }
 }

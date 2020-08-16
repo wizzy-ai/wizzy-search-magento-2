@@ -12,44 +12,60 @@ use Wizzy\Search\Services\Store\StoreSearchConfig;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Wizzy\Search\Services\Store\StoreSearchFormConfig;
 
-class BaseBlock extends Template {
+class BaseBlock extends Template
+{
 
-   private $storeAutocompleteConfig;
-   private $storeSearchConfig;
-   private $storeCredentialsConfig;
-   private $storeManager;
-   private $storeGeneralConfig;
-   private $storeSearchFormConfig;
-   private $categoryRequestManager;
+    private $storeAutocompleteConfig;
+    private $storeSearchConfig;
+    private $storeCredentialsConfig;
+    private $storeManager;
+    private $storeGeneralConfig;
+    private $storeSearchFormConfig;
+    private $categoryRequestManager;
 
-   private $priceCurrency;
+    private $priceCurrency;
+    private $searchDataHelper;
 
-   public function __construct(Template\Context $context, CategoryManager $categoryRequestManager, array $data = [], StoreSearchFormConfig $storeSearchFormConfig, StoreManager $storeManager, StoreGeneralConfig $storeGeneralConfig, StoreCredentialsConfig $storeCredentialsConfig, StoreSearchConfig $storeSearchConfig, StoreAutocompleteConfig $storeAutocompleteConfig, PriceCurrencyInterface $priceCurrency) {
-      parent::__construct($context, $data);
+    public function __construct(
+        Template\Context $context,
+        CategoryManager $categoryRequestManager,
+        StoreSearchFormConfig $storeSearchFormConfig,
+        StoreManager $storeManager,
+        StoreGeneralConfig $storeGeneralConfig,
+        StoreCredentialsConfig $storeCredentialsConfig,
+        StoreSearchConfig $storeSearchConfig,
+        StoreAutocompleteConfig $storeAutocompleteConfig,
+        PriceCurrencyInterface $priceCurrency,
+        \Magento\Search\Helper\Data $searchDataHelper,
+        array $data = []
+    ) {
+        parent::__construct($context, $data);
 
-      $this->storeAutocompleteConfig = $storeAutocompleteConfig;
-      $this->storeSearchConfig = $storeSearchConfig;
-      $this->storeCredentialsConfig = $storeCredentialsConfig;
-      $this->storeManager = $storeManager;
-      $this->storeGeneralConfig = $storeGeneralConfig;
-      $this->storeSearchFormConfig = $storeSearchFormConfig;
+        $this->storeAutocompleteConfig = $storeAutocompleteConfig;
+        $this->storeSearchConfig = $storeSearchConfig;
+        $this->storeCredentialsConfig = $storeCredentialsConfig;
+        $this->storeManager = $storeManager;
+        $this->storeGeneralConfig = $storeGeneralConfig;
+        $this->storeSearchFormConfig = $storeSearchFormConfig;
 
-      $this->storeAutocompleteConfig->setStore($this->storeManager->getCurrentStoreId());
-      $this->storeSearchConfig->setStore($this->storeManager->getCurrentStoreId());
-      $this->storeCredentialsConfig->setStore($this->storeManager->getCurrentStoreId());
+        $this->storeAutocompleteConfig->setStore($this->storeManager->getCurrentStoreId());
+        $this->storeSearchConfig->setStore($this->storeManager->getCurrentStoreId());
+        $this->storeCredentialsConfig->setStore($this->storeManager->getCurrentStoreId());
 
-      $this->priceCurrency = $priceCurrency;
-      $this->categoryRequestManager = $categoryRequestManager;
-   }
+        $this->priceCurrency = $priceCurrency;
+        $this->categoryRequestManager = $categoryRequestManager;
+        $this->searchDataHelper = $searchDataHelper;
+    }
 
-   protected function getConfigs() {
-      $category = $this->categoryRequestManager->getCategory();
-      $isCategoryPage = $this->categoryRequestManager->isCategoryReplaceable();
-      $categoryKey = ($isCategoryPage) ? $category->getUrlKey() : '';
+    public function getConfigs()
+    {
+        $category = $this->categoryRequestManager->getCategory();
+        $isCategoryPage = $this->categoryRequestManager->isCategoryReplaceable();
+        $categoryKey = ($isCategoryPage) ? $category->getUrlKey() : '';
 
-      $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
+        $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
 
-      $configs = [
+        $configs = [
          'credentials' => [
             'apiKey' => $this->storeCredentialsConfig->getApiKey(),
             'storeId' => $this->storeCredentialsConfig->getStoreId(),
@@ -163,8 +179,22 @@ class BaseBlock extends Template {
                'symbol' => $this->priceCurrency->getCurrencySymbol(),
             ],
          ],
-      ];
+        ];
 
-      return $configs;
-   }
+        return $configs;
+    }
+
+    public function getSearchDataHelper()
+    {
+        return $this->searchDataHelper;
+    }
+
+    public function getReusableHTML($template)
+    {
+        return $this
+          ->getLayout()
+          ->createBlock(Magento\Framework\View\Element\Template::class)
+          ->setTemplate($template)
+          ->toHtml();
+    }
 }

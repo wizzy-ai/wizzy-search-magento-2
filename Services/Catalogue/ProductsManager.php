@@ -9,26 +9,35 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroup;
 use Magento\Framework\Api\Search\SearchCriteriaInterface;
 
-class ProductsManager {
+class ProductsManager
+{
 
-   private $productRepository;
-   private $searchCriteria;
-   private $filterGroup;
-   private $filterBuilder;
-   private $status;
-   private $visibility;
+    private $productRepository;
+    private $searchCriteria;
+    private $filterGroup;
+    private $filterBuilder;
+    private $status;
+    private $visibility;
 
-   public function __construct(ProductRepository $productRepository, SearchCriteriaInterface $searchCriteria, FilterGroup $filterGroup, FilterBuilder $filterBuilder, Status $status, Visibility $visibility) {
-      $this->productRepository = $productRepository;
-      $this->searchCriteria = $searchCriteria;
-      $this->filterGroup = $filterGroup;
-      $this->filterBuilder = $filterBuilder;
-      $this->status = $status;
-      $this->visibility = $visibility;
-   }
+    public function __construct(
+        ProductRepository $productRepository,
+        SearchCriteriaInterface $searchCriteria,
+        FilterGroup $filterGroup,
+        FilterBuilder $filterBuilder,
+        Status $status,
+        Visibility $visibility
+    ) {
+        $this->productRepository = $productRepository;
+        $this->searchCriteria = $searchCriteria;
+        $this->filterGroup = $filterGroup;
+        $this->filterBuilder = $filterBuilder;
+        $this->status = $status;
+        $this->visibility = $visibility;
+    }
 
-   public function fetchAll() {
-      $this->filterGroup->setFilters([
+    public function fetchAll()
+    {
+        $this->filterGroup->setFilters([
          $this->filterBuilder
             ->setField('status')
             ->setConditionType('in')
@@ -41,34 +50,37 @@ class ProductsManager {
                Visibility::VISIBILITY_BOTH, Visibility::VISIBILITY_IN_CATALOG, Visibility::VISIBILITY_IN_SEARCH
             ])
             ->create(),
-      ]);
+        ]);
 
-      $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-      $products = $this->productRepository->getList($this->searchCriteria);
-      $products = $products->getItems();
+        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
+        $products = $this->productRepository->getList($this->searchCriteria);
+        $products = $products->getItems();
 
-      return $products;
-   }
+        return $products;
+    }
 
-   public function getAllProductIds() {
-      $products = $this->fetchAll();
-      $products = $this->getProductIds($products);
+    public function getAllProductIds()
+    {
+        $products = $this->fetchAll();
+        $products = $this->getProductIds($products);
 
-      return $products;
-   }
+        return $products;
+    }
 
-   public function getProductIds($products) {
-      $productIds = [];
+    public function getProductIds($products)
+    {
+        $productIds = [];
 
-      foreach ($products as $product) {
-         $productIds[] = $product->getId();
-      }
+        foreach ($products as $product) {
+            $productIds[] = $product->getId();
+        }
 
-      return $productIds;
-   }
+        return $productIds;
+    }
 
-   public function getProductsByCategoryIds($categoryIDs, $storeId) {
-      $filters = [
+    public function getProductsByCategoryIds($categoryIDs, $storeId)
+    {
+        $filters = [
          $this->filterBuilder
             ->setField('category_id')
             ->setConditionType('in')
@@ -79,19 +91,20 @@ class ProductsManager {
             ->setConditionType('eq')
             ->setValue($storeId)
             ->create()
-      ];
+        ];
 
-      $this->filterGroup->setFilters($filters);
+        $this->filterGroup->setFilters($filters);
 
-      $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-      $products = $this->productRepository->getList($this->searchCriteria);
-      $products = $products->getItems();
+        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
+        $products = $this->productRepository->getList($this->searchCriteria);
+        $products = $products->getItems();
 
-      return $products;
-   }
+        return $products;
+    }
 
-   public function getProductsByIds($IDs, $storeId) {
-      $filters = [
+    public function getProductsByIds($IDs, $storeId)
+    {
+        $filters = [
          $this->filterBuilder
             ->setField('entity_id')
             ->setConditionType('in')
@@ -102,19 +115,20 @@ class ProductsManager {
             ->setConditionType('eq')
             ->setValue($storeId)
             ->create()
-      ];
+        ];
 
-      $this->filterGroup->setFilters($filters);
+        $this->filterGroup->setFilters($filters);
 
-      $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-      $products = $this->productRepository->getList($this->searchCriteria);
-      $products = $products->getItems();
+        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
+        $products = $this->productRepository->getList($this->searchCriteria);
+        $products = $products->getItems();
 
-      return $products;
-   }
+        return $products;
+    }
 
-   public function getProductsByAttribute($attributeCode, $storeId) {
-      $filters = [
+    public function getProductsByAttribute($attributeCode, $storeId)
+    {
+        $filters = [
          $this->filterBuilder
             ->setField($attributeCode)
             ->setConditionType('notnull')
@@ -124,15 +138,14 @@ class ProductsManager {
             ->setConditionType('eq')
             ->setValue($storeId)
             ->create()
-      ];
+        ];
 
-      $this->filterGroup->setFilters($filters);
+        $this->filterGroup->setFilters($filters);
 
-      $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-      $products = $this->productRepository->getList($this->searchCriteria);
-      $products = $products->getItems();
+        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
+        $products = $this->productRepository->getList($this->searchCriteria);
+        $products = $products->getItems();
 
-      return $products;
-   }
-
+        return $products;
+    }
 }

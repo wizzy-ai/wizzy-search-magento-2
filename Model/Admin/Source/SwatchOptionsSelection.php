@@ -7,29 +7,26 @@ use Magento\Framework\Exception\LocalizedException;
 
 use Wizzy\Search\Model\Admin\Source\SelectBlocks\SwatchOptions;
 
-/**
- * Class SwatchOptionsSelection
- */
 class SwatchOptionsSelection extends AbstractFieldArray
 {
    /**
     * @var SwatchOptions
     */
-   private $swatchOptionsRenderer;
+    private $swatchOptionsRenderer;
 
    /**
     * Prepare rendering the new field by adding all the needed columns
     */
-   protected function _prepareToRender()
-   {
-      $this->addColumn('key', [
+    protected function _prepareToRender()
+    {
+        $this->addColumn('key', [
          'label' => __('Field'),
          'renderer' => $this->getSwatchOptionRenderer(),
-      ]);
+        ]);
 
-      $this->_addAfter = false;
-      $this->_addButtonLabel = __('Add');
-   }
+        $this->_addAfter = false;
+        $this->_addButtonLabel = __('Add');
+    }
 
    /**
     * Prepare existing row data object
@@ -37,24 +34,25 @@ class SwatchOptionsSelection extends AbstractFieldArray
     * @param DataObject $row
     * @throws LocalizedException
     */
-   protected function _prepareArrayRow(DataObject $row): void
-   {
-      $options = [];
-      $row->setData('option_extra_attrs', $options);
-   }
+    protected function _prepareArrayRow(DataObject $row): void
+    {
+        $options = [];
+        $row->setData('option_extra_attrs', $options);
+    }
 
    /**
     * @return SwatchOptions
     * @throws LocalizedException
     */
-   private function getSwatchOptionRenderer() {
-      if (!$this->swatchOptionsRenderer) {
-         $this->swatchOptionsRenderer = $this->getLayout()->createBlock(
-            SwatchOptions::class,
-            '',
-            ['data' => ['is_render_to_js_template' => true]]
-         );
-      }
-      return $this->swatchOptionsRenderer;
-   }
+    private function getSwatchOptionRenderer()
+    {
+        if (!$this->swatchOptionsRenderer) {
+            $this->swatchOptionsRenderer = $this->getLayout()->createBlock(
+                SwatchOptions::class,
+                '',
+                ['data' => ['is_render_to_js_template' => true]]
+            );
+        }
+        return $this->swatchOptionsRenderer;
+    }
 }

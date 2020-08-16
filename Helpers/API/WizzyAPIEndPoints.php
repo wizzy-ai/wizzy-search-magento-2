@@ -2,74 +2,27 @@
 
 namespace Wizzy\Search\Helpers\API;
 
-class WizzyAPIEndPoints {
-  private static $baseEndPoint = "https://api.wizzy.ai/v1";
+class WizzyAPIEndPoints
+{
+    const BASE_END_POINT = "https://api.wizzy.ai/v1";
+    const STORES_BASE_AUTH = self::BASE_END_POINT.'/stores';
+    const PRODUCTS_BASE_AUTH = self::BASE_END_POINT.'/products';
+    const CURRENCIES_BASE_AUTH = self::BASE_END_POINT.'/currencies';
+    const PAGES_BASE_AUTH = self::BASE_END_POINT.'/pages';
 
-  public static function base(): string {
-    return self::$baseEndPoint;
-  }
+    const STORE_AUTH = self::STORES_BASE_AUTH . '/auth';
 
-  public static function storeAuth(): string {
-    return self::getStoresBase() . '/auth';
-  }
+    const SAVE_PRODUCTS = self::PRODUCTS_BASE_AUTH . '/save';
+    const DELETE_PRODUCTS = self::PRODUCTS_BASE_AUTH . '/delete';
 
-  public static function saveProducts(): string {
-    return self::getProductsBase() . '/save';
-  }
+    const SET_DEFAULT_CURRENCY = self::CURRENCIES_BASE_AUTH . '/default-currency';
+    const SET_DISPLAY_CURRENCY = self::CURRENCIES_BASE_AUTH . '/display-currency';
+    const SAVE_CURRENCIES = self::CURRENCIES_BASE_AUTH . '/';
+    const GET_CURRENCIES = self::CURRENCIES_BASE_AUTH . '/';
+    const SAVE_CURRENCIES_RATES = self::CURRENCIES_BASE_AUTH . '/rates';
+    const DELETE_CURRENCIES = self::CURRENCIES_BASE_AUTH . '/';
 
-  public static function deleteProducts(): string {
-    return self::getProductsBase() . '/delete';
-  }
-
-  public static function setDefaultCurrency(): string {
-     return self::getCurrenciesBase() . '/default-currency';
-  }
-
-  public static function setDisplayCurrency(): string {
-     return self::getCurrenciesBase() . '/display-currency';
-  }
-
-  public static function saveCurrencies(): string {
-     return self::getCurrenciesBase() . '/';
-  }
-
-  public static function savePages(): string {
-     return self::getPagesBase() . '/';
-  }
-
-  public static function saveCurrencyRates(): string {
-     return self::getCurrenciesBase() . '/rates';
-  }
-
-   public static function deleteCurrencies(): string {
-      return self::getCurrenciesBase() . '/';
-   }
-
-   public static function deletePages(): string {
-      return self::getPagesBase() . '/';
-   }
-
-   public static function getCurrencies(): string {
-      return self::getCurrenciesBase() . '/';
-   }
-
-   public static function getPages(): string {
-      return self::getPagesBase() . '/';
-   }
-
-  private static function getStoresBase() {
-    return self::base().'/stores';
-  }
-
-  private static function getProductsBase() {
-    return self::base().'/products';
-  }
-
-   private static function getCurrenciesBase() {
-      return self::base().'/currencies';
-   }
-
-   private static function getPagesBase() {
-      return self::base().'/pages';
-   }
+    const SAVE_PAGES = self::PAGES_BASE_AUTH . '/';
+    const GET_PAGES = self::PAGES_BASE_AUTH . '/';
+    const DELETE_PAGES = self::PAGES_BASE_AUTH . '/';
 }

@@ -4,23 +4,24 @@ namespace Wizzy\Search\Services\API\Wizzy\Modules;
 
 use Wizzy\Search\Services\API\Wizzy\WizzyAPIWrapper;
 
-class CurrencyRate {
+class CurrencyRate
+{
 
-   private $wizzyAPIWrapper;
+    private $wizzyAPIWrapper;
 
-   public function __construct(WizzyAPIWrapper $wizzyAPIWrapper) {
-      $this->wizzyAPIWrapper = $wizzyAPIWrapper;
-   }
+    public function __construct(WizzyAPIWrapper $wizzyAPIWrapper)
+    {
+        $this->wizzyAPIWrapper = $wizzyAPIWrapper;
+    }
 
-   public function save($currencyRates, $storeId) {
-      $response = $this->wizzyAPIWrapper->saveCurrencyRates($currencyRates, $storeId);
-      if ($response->getStatus()) {
-         return TRUE;
-      }
-      else {
-         // Log the error.
-         return FALSE;
-      }
-   }
-
+    public function save($currencyRates, $storeId)
+    {
+        $response = $this->wizzyAPIWrapper->saveCurrencyRates($currencyRates, $storeId);
+        if ($response->getStatus()) {
+            return true;
+        } else {
+           // Log the error.
+            return false;
+        }
+    }
 }

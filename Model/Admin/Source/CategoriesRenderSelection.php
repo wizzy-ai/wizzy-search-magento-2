@@ -4,11 +4,12 @@ namespace Wizzy\Search\Model\Admin\Source;
 
 class CategoriesRenderSelection
 {
-   const SIMPLE_LIST = 'list';
-   const HIERARCHY = 'hierarchy';
+    const SIMPLE_LIST = 'list';
+    const HIERARCHY = 'hierarchy';
 
-   public function toOptionArray() {
-      return [
+    public function toOptionArray()
+    {
+        return [
          [
             'value' => self::SIMPLE_LIST,
             'label' => __('Linear List')
@@ -17,6 +18,6 @@ class CategoriesRenderSelection
             'value' => self::HIERARCHY,
             'label' => __('Hierarchical')
          ],
-      ];
-   }
+        ];
+    }
 }

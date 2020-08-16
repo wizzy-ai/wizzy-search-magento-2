@@ -14,67 +14,89 @@ use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Wizzy\Search\Services\Store\StoreManager;
 
-class WizzyAutocompleteConfigurationChanged implements ObserverInterface {
-   private $request;
-   private $messageManager;
-   private $configManager;
-   private $queueManager;
-   private $storeManager;
-   private $wizzyCatalogueConfiguration;
+class WizzyAutocompleteConfigurationChanged implements ObserverInterface
+{
+    private $request;
+    private $messageManager;
+    private $configManager;
+    private $queueManager;
+    private $storeManager;
+    private $wizzyCatalogueConfiguration;
 
-   public function __construct(
-      RequestInterface $request,
-      FlashMessagesManager $flashMessagesManager,
-      ConfigManager $configManager,
-      QueueManager $queueManager,
-      StoreManager $storeManager,
-      WizzyCatalogueConfiguration $wizzyCatalogueConfiguration
-   ) {
-      $this->request = $request;
-      $this->wizzyCatalogueConfiguration = $wizzyCatalogueConfiguration;
-      $this->messageManager = $flashMessagesManager;
-      $this->configManager = $configManager;
-      $this->queueManager = $queueManager;
-      $this->storeManager = $storeManager;
-   }
+    public function __construct(
+        RequestInterface $request,
+        FlashMessagesManager $flashMessagesManager,
+        ConfigManager $configManager,
+        QueueManager $queueManager,
+        StoreManager $storeManager,
+        WizzyCatalogueConfiguration $wizzyCatalogueConfiguration
+    ) {
+        $this->request = $request;
+        $this->wizzyCatalogueConfiguration = $wizzyCatalogueConfiguration;
+        $this->messageManager = $flashMessagesManager;
+        $this->configManager = $configManager;
+        $this->queueManager = $queueManager;
+        $this->storeManager = $storeManager;
+    }
 
-   public function execute(EventObserver $observer) {
-      $storeAutocompleteConfigurations = $this->request->getParam('groups');
-      $this->reindexCatalogIfRequired($storeAutocompleteConfigurations);
-      $this->reindexPagesIfRequired($storeAutocompleteConfigurations);
-      return $this;
-   }
+    public function execute(EventObserver $observer)
+    {
+        $storeAutocompleteConfigurations = $this->request->getParam('groups');
+        $this->reindexCatalogIfRequired($storeAutocompleteConfigurations);
+        $this->reindexPagesIfRequired($storeAutocompleteConfigurations);
+        return $this;
+    }
 
-   private function reindexPagesIfRequired($storeAutocompleteConfigurations) {
-      $excludedPages = (isset($storeAutocompleteConfigurations['autocomplete_pages']['fields']['exclude_pages'])) ? $storeAutocompleteConfigurations['autocomplete_pages']['fields']['exclude_pages'] : [];
-      $storeAutocompleteConfigurations = json_encode($excludedPages);
+    private function reindexPagesIfRequired($storeAutocompleteConfigurations)
+    {
+        $excludedPages = (isset($storeAutocompleteConfigurations['autocomplete_pages']['fields']['exclude_pages'])) ?
+           $storeAutocompleteConfigurations['autocomplete_pages']['fields']['exclude_pages'] : [];
+        $storeAutocompleteConfigurations = json_encode($excludedPages);
 
-      $previousConfigurations = $this->configManager->getCustomStoreConfig(ConfigManager::PAGES_EXCLUDE_CONFIG, $this->storeManager->getCurrentStoreId());
-      if ($storeAutocompleteConfigurations != $previousConfigurations) {
-         $this->messageManager->warning('Pages configuration has been updated, Pages data has been added for sync again. Please execute the Queue Runner Indexer if you want to do it now!');
-         $this->queueManager->clear(0, IndexPagesProcessor::class);
-         $this->queueManager->enqueue(IndexPagesProcessor::class, 0, [
+        $previousConfigurations = $this->configManager->getCustomStoreConfig(
+            ConfigManager::PAGES_EXCLUDE_CONFIG,
+            $this->storeManager->getCurrentStoreId()
+        );
+        if ($storeAutocompleteConfigurations != $previousConfigurations) {
+            $this->messageManager->warning(
+                'Pages configuration has been updated, Pages data has been added for sync again. 
+                Please execute the Queue Runner Indexer if you want to do it now!'
+            );
+            $this->queueManager->clear(0, IndexPagesProcessor::class);
+            $this->queueManager->enqueue(IndexPagesProcessor::class, 0, [
 
-         ]);
-      }
+            ]);
+        }
 
-      $this->configManager->saveStoreConfig(ConfigManager::PAGES_EXCLUDE_CONFIG, $storeAutocompleteConfigurations);
-   }
+        $this->configManager->saveStoreConfig(ConfigManager::PAGES_EXCLUDE_CONFIG, $storeAutocompleteConfigurations);
+    }
 
-   private function reindexCatalogIfRequired($storeAutocompleteConfigurations) {
-      $autocompleteAttributes = (isset($storeAutocompleteConfigurations['autocomplete_attributes_configuration'])) ? $storeAutocompleteConfigurations['autocomplete_attributes_configuration'] : [];
-      $storeAutocompleteConfigurations = json_encode($autocompleteAttributes);
+    private function reindexCatalogIfRequired($storeAutocompleteConfigurations)
+    {
+        $autocompleteAttributes = (isset($storeAutocompleteConfigurations['autocomplete_attributes_configuration'])) ?
+          $storeAutocompleteConfigurations['autocomplete_attributes_configuration'] : [];
+        $storeAutocompleteConfigurations = json_encode($autocompleteAttributes);
 
-      $previousConfigurations = $this->configManager->getCustomStoreConfig(ConfigManager::AUTOCOMPLETE_ATTRIBUTES_CONFIG, $this->storeManager->getCurrentStoreId());
+        $previousConfigurations = $this->configManager->getCustomStoreConfig(
+            ConfigManager::AUTOCOMPLETE_ATTRIBUTES_CONFIG,
+            $this->storeManager->getCurrentStoreId()
+        );
 
-      if ($storeAutocompleteConfigurations != $previousConfigurations) {
-         $this->messageManager->warning('Autocomplete attributes configuration has been updated, Catalogue data has been added for sync again. Please execute the Queue Runner Indexer if you want to do it now!');
-         $this->wizzyCatalogueConfiguration->clearProductIndexingJobs($this->storeManager->getCurrentStoreId());
-         $this->queueManager->enqueue(CatalogueReindexer::class, $this->storeManager->getCurrentStoreId(), [
+        if ($storeAutocompleteConfigurations != $previousConfigurations) {
+            $this->messageManager->warning(
+                'Autocomplete attributes configuration has been updated, 
+                Catalogue data has been added for sync again. 
+                Please execute the Queue Runner Indexer if you want to do it now!'
+            );
+            $this->wizzyCatalogueConfiguration->clearProductIndexingJobs($this->storeManager->getCurrentStoreId());
+            $this->queueManager->enqueue(CatalogueReindexer::class, $this->storeManager->getCurrentStoreId(), [
 
-         ]);
-      }
+            ]);
+        }
 
-      $this->configManager->saveStoreConfig(ConfigManager::AUTOCOMPLETE_ATTRIBUTES_CONFIG, $storeAutocompleteConfigurations);
-   }
+        $this->configManager->saveStoreConfig(
+            ConfigManager::AUTOCOMPLETE_ATTRIBUTES_CONFIG,
+            $storeAutocompleteConfigurations
+        );
+    }
 }

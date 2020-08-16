@@ -1,10 +1,13 @@
 <?php
-$configs = $this->getConfigs();
+$configs = $block->getConfigs();
 $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidget']['add'];
 ?>
 <script type="text/template" id="wizzy-search-wrapper">
 
-   <div class="wizzy-search-wrapper {{#inOnCategoryPage}}wizzy-category-page{{/inOnCategoryPage}} {{#hasFacets}}has-facets{{/hasFacets}} {{#hasLeftFacets}}has-left-facets{{/hasLeftFacets}} {{#hasTopFacets}}has-top-facets{{/hasTopFacets}}">
+   <div class="wizzy-search-wrapper {{#inOnCategoryPage}}wizzy-category-page{{/inOnCategoryPage}}
+        {{#hasFacets}}has-facets{{/hasFacets}}
+        {{#hasLeftFacets}}has-left-facets{{/hasLeftFacets}}
+        {{#hasTopFacets}}has-top-facets{{/hasTopFacets}}">
 
       <div class="wizzy-search-summary-wrapper">
          {{#summary}}
@@ -83,7 +86,7 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
       </div><!-- ending of wizzy-search-results-container -->
    </div><!-- ending of wizzy-search-wrapper-->
 
-   <?php if ($addMoveToTopWidget) {  ?>
+    <?php if ($addMoveToTopWidget) {  ?>
         <div class="wizzy-scroll-to-top-wrapper">
             <div class="wizzy-scroll-to-top-button">
 

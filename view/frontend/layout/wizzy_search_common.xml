@@ -7,7 +7,7 @@
     </head>
     <body>
         <referenceBlock name="head.additional">
-            <block class="Wizzy\Search\Block\Core\Config" name="wizzySearch.config" template="Wizzy_Search::core/config.phtml"/>
+            <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.config" template="Wizzy_Search::core/config.phtml"/>
         </referenceBlock>
 
         <referenceBlock name="before.body.end">

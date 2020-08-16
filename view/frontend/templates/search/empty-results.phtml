@@ -2,15 +2,15 @@
 
    <div class="wizzy-search-empty-results-wrapper">
       <div class="wizzy-empty-results-summary">
-          <p><?php echo __('You searched for'); ?> <span class="wizzy-empty-searched-query">{{ query }}</span></p>
+          <p><?= $block->escapeHtmlAttr(__('You searched for')); ?> <span class="wizzy-empty-searched-query">{{ query }}</span></p>
       </div>
       <div class="wizzy-empty-results-icon"></div>
       <div class="wizzy-empty-results-content">
-          <h2><?php echo __('We couldn\'t find any matches!'); ?></h2>
-          <p><?php echo __('Please check the spelling or try searching for something else.'); ?></p>
+          <h2><?= $block->escapeHtmlAttr(__('We couldn\'t find any matches!')); ?></h2>
+          <p><?= $block->escapeHtmlAttr(__('Please check the spelling or try searching for something else.')); ?></p>
 
           {{#lastRequestId}}
-            <p class="wizzy-req-ref-id"><?php echo __('Ref ID:'); ?> {{ lastRequestId }}</p>
+            <p class="wizzy-req-ref-id"><?= $block->escapeHtmlAttr(__('Ref ID:')); ?> {{ lastRequestId }}</p>
           {{/lastRequestId}}
       </div>
    </div>

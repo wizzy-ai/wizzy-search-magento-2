@@ -1,6 +1,6 @@
 <?php
 \Magento\Framework\Component\ComponentRegistrar::register(
-  \Magento\Framework\Component\ComponentRegistrar::MODULE,
-  'Wizzy_Search',
-  __DIR__
+    \Magento\Framework\Component\ComponentRegistrar::MODULE,
+    'Wizzy_Search',
+    __DIR__
 );

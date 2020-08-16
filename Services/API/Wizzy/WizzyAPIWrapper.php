@@ -8,141 +8,217 @@ use Wizzy\Search\Helpers\API\WizzyAPIEndPoints;
 use Wizzy\Search\Model\API\Response;
 use Wizzy\Search\Services\Store\StoreManager;
 
-class WizzyAPIWrapper {
+class WizzyAPIWrapper
+{
 
-  private $storeManager;
-  private $wizzyApiConnector;
+    private $storeManager;
+    private $wizzyApiConnector;
 
-  private $responseBuilder;
+    private $responseBuilder;
+    private $authHeaders;
 
-  public function __construct(StoreManager $storeManager, WizzyAPIConnector $wizzyApiConnector, ResponseBuilder $responseBuilder) {
-    $this->storeManager = $storeManager;
-    $this->wizzyApiConnector = $wizzyApiConnector;
+    public function __construct(
+        StoreManager $storeManager,
+        WizzyAPIConnector $wizzyApiConnector,
+        ResponseBuilder $responseBuilder,
+        AuthHeaders $authHeaders
+    ) {
+        $this->storeManager = $storeManager;
+        $this->wizzyApiConnector = $wizzyApiConnector;
 
-    $this->responseBuilder = $responseBuilder;
-  }
-
-  public function saveProducts(array $products, $storeId): Response {
-    $credentials = $this->getStoreCredentials($storeId);
-
-    if ($credentials === FALSE) {
-      return $this->responseBuilder->error('Invalid store credentials.', []);
+        $this->responseBuilder = $responseBuilder;
+        $this->authHeaders = $authHeaders;
     }
 
-    return $this->wizzyApiConnector->send(WizzyAPIEndPoints::saveProducts(), 'POST', $products, AuthHeaders::headersFromArray($credentials, TRUE), TRUE);
-  }
+    public function saveProducts(array $products, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
 
-  public function deleteProducts(array $products, $storeId): Response {
-    $credentials = $this->getStoreCredentials($storeId);
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
 
-    if ($credentials === FALSE) {
-      return $this->responseBuilder->error('Invalid store credentials.', []);
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::SAVE_PRODUCTS,
+            'POST',
+            $products,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
     }
 
-    return $this->wizzyApiConnector->send(WizzyAPIEndPoints::deleteProducts(), 'DELETE', $products, AuthHeaders::headersFromArray($credentials, TRUE), TRUE);
-  }
+    public function deleteProducts(array $products, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
 
-  public function saveDefaultCurrency($currencyCode, $storeId): Response {
-     $credentials = $this->getStoreCredentials($storeId);
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
 
-     if ($credentials === FALSE) {
-        return $this->responseBuilder->error('Invalid store credentials.', []);
-     }
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::DELETE_PRODUCTS,
+            'DELETE',
+            $products,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
 
-     return $this->wizzyApiConnector->send(WizzyAPIEndPoints::setDefaultCurrency(), 'PUT', [
+    public function saveDefaultCurrency($currencyCode, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(WizzyAPIEndPoints::SET_DEFAULT_CURRENCY, 'PUT', [
         'code' => $currencyCode
-     ], AuthHeaders::headersFromArray($credentials, TRUE));
-  }
-
-   public function saveDisplayCurrency($currencyCode, $storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::setDisplayCurrency(), 'PUT', [
-         'code' => $currencyCode
-      ], AuthHeaders::headersFromArray($credentials, TRUE));
-   }
-
-   public function saveCurrencies($currencies, $storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::saveCurrencies(), 'POST', $currencies, AuthHeaders::headersFromArray($credentials, TRUE), TRUE);
-   }
-
-   public function savePages($pages, $storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::savePages(), 'POST', $pages, AuthHeaders::headersFromArray($credentials, TRUE), TRUE);
-   }
-
-   public function saveCurrencyRates($currencyRates, $storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::saveCurrencyRates(), 'POST', $currencyRates, AuthHeaders::headersFromArray($credentials, TRUE), TRUE);
-   }
-
-   public function deleteCurrencies($currencies, $storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::deleteCurrencies(), 'DELETE', $currencies, AuthHeaders::headersFromArray($credentials, TRUE), TRUE);
-   }
-
-   public function deletePages($pages, $storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::deletePages(), 'DELETE', $pages, AuthHeaders::headersFromArray($credentials, TRUE), TRUE);
-   }
-
-   public function getCurrencies($storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::getCurrencies(), 'GET', [], AuthHeaders::headersFromArray($credentials));
-   }
-
-   public function getPages($storeId): Response {
-      $credentials = $this->getStoreCredentials($storeId);
-
-      if ($credentials === FALSE) {
-         return $this->responseBuilder->error('Invalid store credentials.', []);
-      }
-
-      return $this->wizzyApiConnector->send(WizzyAPIEndPoints::getPages(), 'GET', [], AuthHeaders::headersFromArray($credentials, TRUE));
-   }
-
-  private function getStoreCredentials($storeId) {
-    $credentials = $this->storeManager->getCredentials($storeId);
-
-    if ($credentials == NULL || empty($credentials['storeId']) || empty($credentials['storeSecret']) || empty($credentials['apiKey'])) {
-      return FALSE;
+        ], $this->authHeaders->getFromArray($credentials, true));
     }
 
-    return $credentials;
-  }
+    public function saveDisplayCurrency($currencyCode, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(WizzyAPIEndPoints::SET_DISPLAY_CURRENCY, 'PUT', [
+         'code' => $currencyCode
+        ], $this->authHeaders->getFromArray($credentials, true));
+    }
+
+    public function saveCurrencies($currencies, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::SAVE_CURRENCIES,
+            'POST',
+            $currencies,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
+    public function savePages($pages, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::SAVE_PAGES,
+            'POST',
+            $pages,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
+    public function saveCurrencyRates($currencyRates, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::SAVE_CURRENCIES_RATES,
+            'POST',
+            $currencyRates,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
+    public function deleteCurrencies($currencies, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::DELETE_CURRENCIES,
+            'DELETE',
+            $currencies,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
+    public function deletePages($pages, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::DELETE_PAGES,
+            'DELETE',
+            $pages,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
+    public function getCurrencies($storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::GET_CURRENCIES,
+            'GET',
+            [],
+            $this->authHeaders->getFromArray($credentials)
+        );
+    }
+
+    public function getPages($storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::GET_PAGES,
+            'GET',
+            [],
+            $this->authHeaders->getFromArray($credentials, true)
+        );
+    }
+
+    private function getStoreCredentials($storeId)
+    {
+        $credentials = $this->storeManager->getCredentials($storeId);
+
+        if ($credentials == null ||
+           empty($credentials['storeId']) ||
+           empty($credentials['storeSecret']) ||
+           empty($credentials['apiKey'])
+        ) {
+            return false;
+        }
+
+        return $credentials;
+    }
 }

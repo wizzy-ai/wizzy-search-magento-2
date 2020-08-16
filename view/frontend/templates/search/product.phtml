@@ -1,11 +1,14 @@
 <?php
-$configs = $this->getConfigs();
+/** @var $block \Magento\Framework\View\Element\Template */
+$configs = $block->getConfigs();
 $currency = $configs['store']['currency']['symbol'];
 ?>
 
 <script type="text/template" id="wizzy-search-results-product">
 
-   <li class="wizzy-result-product wizzy-product-{{id}} {{#groupId}}has-variations wizzy-group-product-{{groupId}}{{/groupId}}" title="{{{ name }}}" data-id="{{id}}" {{#groupId}}data-groupId="{{groupId}}"{{/groupId}}>
+    <li class="wizzy-result-product wizzy-product-{{id}}
+        {{#groupId}}has-variations wizzy-group-product-{{groupId}}{{/groupId}}"
+            title="{{{ name }}}" data-id="{{id}}" {{#groupId}}data-groupId="{{groupId}}"{{/groupId}}>
 
       <span class="wizzy-product-variation-loader-bg"></span>
       <span class="wizzy-product-variation-loader"></span>
@@ -20,10 +23,15 @@ $currency = $configs['store']['currency']['symbol'];
             <p class="product-item-sub-title">{{{subTitle}}}</p>
             {{/subTitle}}
             {{#swatches}}
-            <div class="product-item-swatch-group {{#isPrimary}}swatch-group-primary{{/isPrimary}} swatch-group-{{key}}" data-swatchKey="{{key}}">
+             <div class="product-item-swatch-group
+             {{#isPrimary}}swatch-group-primary{{/isPrimary}} swatch-group-{{key}}"
+                  data-swatchKey="{{key}}">
                {{#values}}
-               <div data-variationId="{{variationId}}" title="{{#value}}{{value}}{{/value}}" class="product-item-swatch-item {{#isSelected}}swatch-selected{{/isSelected}} {{#inStock}}swatch-in-stock{{/inStock}}">
-                  <?php echo $this->getLayout()->createBlock('Magento\Framework\View\Element\Template')->setTemplate('Wizzy_Search::common/swatch.phtml')->toHtml(); ?>
+                 <div data-variationId="{{variationId}}" title="{{#value}}{{value}}{{/value}}"
+                      class="product-item-swatch-item
+                      {{#isSelected}}swatch-selected{{/isSelected}}
+                      {{#inStock}}swatch-in-stock{{/inStock}}">
+                    <?= $block->getReusableHTML('Wizzy_Search::common/swatch.phtml'); ?>
                </div>
                {{/values}}
             </div><!-- ending of product-item-swatch-group -->
@@ -32,16 +40,19 @@ $currency = $configs['store']['currency']['symbol'];
 
                <div class="wizzy-product-item-reviews">
                   {{#avgRatings}}
-                  <span class="product-item-reviews-avgRatings">{{avgRatings}}</span><span class="product-item-review-wrapper">&#x2605;</span>{{#totalReviews}}<span class="product-item-reviews-totalReviews">({{totalReviews}})</span>{{/totalReviews}}
+                   <span class="product-item-reviews-avgRatings">{{avgRatings}}</span><span
+                           class="product-item-review-wrapper">&#x2605;</span>{{#totalReviews}}<span
+                           class="product-item-reviews-totalReviews">({{totalReviews}})</span>{{/
+                   totalReviews}}
                   {{/avgRatings}}
                </div>
 
                <div class="wizzy-product-item-price {{#hasSwatches}}with-swatches{{/hasSwatches}}">
-                  <?php echo $currency; ?>{{ sellingPrice }}
+                    <?= $block->escapeHtmlAttr($currency); ?>{{ sellingPrice }}
                   {{#price}}
                   <br>
                   <span class="product-item-original-price">
-                                   <?php echo $currency; ?>{{ price }}
+                                    <?= $block->escapeHtmlAttr($currency); ?>{{ price }}
                                </span>
                   <span class="product-item-discount">
                                    {{#discountPercentage}}

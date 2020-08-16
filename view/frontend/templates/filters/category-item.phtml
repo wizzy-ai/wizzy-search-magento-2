@@ -1,5 +1,9 @@
+<?php
+$configs = $block->getConfigs();
+?>
 <script type="text/template" id="wizzy-facet-category-item">
-    <li class="wizzy-facet-list-item facet-category-hierarchy-item {{#isSelected}}active{{/isSelected}}" data-key="{{ key }}" data-term="{{{ label }}}" title="{{{ label }}}">
+    <li class="wizzy-facet-list-item facet-category-hierarchy-item {{#isSelected}}active{{/isSelected}}"
+        data-key="{{ key }}" data-term="{{{ label }}}" title="{{{ label }}}">
           <span class="wizzy-facet-list-item-label">
              <span class="wizzy-facet-list-item-checkbox">
                     <input type="checkbox" {{#isSelected}}checked{{/isSelected}} />

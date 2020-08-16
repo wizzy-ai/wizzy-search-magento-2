@@ -1,5 +1,5 @@
 <?php
-    $configs = $this->getConfigs();
+    $configs = $block->getConfigs();
     $noResultsText = $configs['autocomplete']['menu']['noResultsText'];
 ?>
 
@@ -18,8 +18,9 @@
                     {{/isHead}}
                     {{^isHead}}
                         <li class="autocomplete-item">
-                            <a data-selectable="true" data-searchterm="{{{searchTerm}}}" href="#" class="autocomplete-link" data-index="{{index}}">
-                                {{{label}}}
+                            <a data-selectable="true" data-searchterm="{{{searchTerm}}}" href="#"
+                               class="autocomplete-link" data-index="{{index}}">
+                            {{{label}}}
                                 {{#hasLabelPath}}
                                     <ul class="autocomplete-item-path">
                                         <li>in</li>
@@ -37,7 +38,7 @@
         {{/hasSuggestions}}
         {{^hasSuggestions}}
             <div class="autocomplete-no-results">
-                <p><?php echo $block->escapeHtmlAttr($noResultsText); ?></p>
+                <p><?= $block->escapeHtmlAttr($noResultsText); ?></p>
             </div>
         {{/hasSuggestions}}
     </div><!-- ending of autocomplete-suggestions -->
