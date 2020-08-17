@@ -5,7 +5,7 @@
     </head>
     <body>
         <referenceContainer name="header-wrapper">
-            <block class="Wizzy\Search\Block\Search\Form" name="top.search" as="topSearch" template="Wizzy_Search::search/form.mini.phtml" />
+            <block class="Wizzy\Search\Block\BaseBlock" name="top.search" as="topSearch" template="Wizzy_Search::search/form.mini.phtml" />
         </referenceContainer>
     </body>
 </page>

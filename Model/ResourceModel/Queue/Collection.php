@@ -17,6 +17,6 @@ class Collection extends AbstractCollection
    */
     protected function _construct()
     {
-        $this->_init(Wizzy\Search\Model\Queue::class, Wizzy\Search\Model\ResourceModel\Queue::class);
+        $this->_init(\Wizzy\Search\Model\Queue::class, \Wizzy\Search\Model\ResourceModel\Queue::class);
     }
 }

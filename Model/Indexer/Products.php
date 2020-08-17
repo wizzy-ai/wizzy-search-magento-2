@@ -103,13 +103,13 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
                 $this->queueManager->enqueue(IndexProductsProcessor::class, $storeId, [
                 'products' => $productIds,
                 ]);
-                $this->entitesSync->addEntitiesToSync($productIds, $storeId, 'product');
+                $this->entitesSync->addEntitiesToSync($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
             }
         }
     }
 
     private function getProductIdsToSync($productIds, $storeId)
     {
-        return $this->entitesSync->filterEntitiesYetToSync($productIds, $storeId, 'product');
+        return $this->entitesSync->filterEntitiesYetToSync($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
     }
 }

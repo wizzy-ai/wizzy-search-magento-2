@@ -11,7 +11,7 @@
         </referenceBlock>
 
         <referenceBlock name="before.body.end">
-            <block class="Magento\Framework\View\Element\Template" name="wizzySearch.beforebody.end" template="Wizzy_Search::core/beforebodyend.phtml"/>
+            <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.beforebody.end" template="Wizzy_Search::core/beforebodyend.phtml"/>
         </referenceBlock>
     </body>
 </page>

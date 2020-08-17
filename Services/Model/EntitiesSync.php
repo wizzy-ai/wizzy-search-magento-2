@@ -12,6 +12,7 @@ class EntitiesSync
 
     public static $ENTITY_IN_SYNC_STATUS = 0;
     public static $ENTITY_SYNCED_STATUS = 1;
+    const ENTITY_TYPE_PRODUCT = 0;
 
     private $entitiesSyncFactory;
     private $connectionManager;
@@ -22,7 +23,7 @@ class EntitiesSync
         $this->connectionManager = $connectionManager;
     }
 
-    public function filterEntitiesYetToSync($entityIds, $storeId, $entityType = 'product')
+    public function filterEntitiesYetToSync($entityIds, $storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
     {
         $entitesSync = $this->entitiesSyncFactory->create();
         $entitiesPresent = $entitesSync->getCollection()
@@ -46,7 +47,18 @@ class EntitiesSync
         return array_diff($entityIds, $entityIdsNotAllowedToSync);
     }
 
-    public function addEntitiesToSync($entityIds, $storeId, $entityType = 'product')
+    public function hasAnyEntitiesAddedInSync($storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
+    {
+        $entitesSync = $this->entitiesSyncFactory->create();
+        $entitiesPresent = $entitesSync->getCollection()
+           ->addFieldToFilter('entity_type', ['eq' => $entityType])
+           ->addFieldToFilter('store_id', ['eq' => $storeId])
+           ->getItems();
+
+        return (count($entitiesPresent) > 0);
+    }
+
+    public function addEntitiesToSync($entityIds, $storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
     {
         $recordsToInsert = [];
         foreach ($entityIds as $entityId) {
@@ -61,7 +73,7 @@ class EntitiesSync
         $this->connectionManager->insertMultiple(WizzyTables::$ENTITIES_SYNC_TABLE_NAME, $recordsToInsert);
     }
 
-    public function markEntitiesAsSynced($entityIds, $storeId, $entityType = 'product')
+    public function markEntitiesAsSynced($entityIds, $storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
     {
         $recordsToInsert = [];
 
@@ -77,7 +89,7 @@ class EntitiesSync
         $this->connectionManager->insertMultiple(WizzyTables::$ENTITIES_SYNC_TABLE_NAME, $recordsToInsert);
     }
 
-    public function markAllEntitiesSynced($storeId, $entityType = 'product')
+    public function markAllEntitiesSynced($storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
     {
         $entitesSync = $this->entitiesSyncFactory->create();
         $entitiesPresent = $entitesSync->getCollection()

@@ -21,7 +21,7 @@ class EntitiesSync extends AbstractModel implements IdentityInterface
 
     protected function _construct()
     {
-        $this->_init(Wizzy\Search\Model\ResourceModel\EntitiesSync::class);
+        $this->_init(\Wizzy\Search\Model\ResourceModel\EntitiesSync::class);
     }
 
     public function getDefaultValues()

@@ -7,6 +7,7 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\App\RequestInterface;
 use Wizzy\Search\Helpers\FlashMessagesManager;
 use Wizzy\Search\Services\Config\WizzyCatalogueConfiguration;
+use Wizzy\Search\Services\Model\EntitiesSync;
 use Wizzy\Search\Services\Queue\Processors\CatalogueReindexer;
 use Wizzy\Search\Services\Queue\QueueManager;
 use Wizzy\Search\Services\Store\ConfigManager;
@@ -20,6 +21,7 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
     private $queueManager;
     private $storeManager;
     private $wizzyCatalogueConfiguration;
+   private $entitiesSync;
 
     public function __construct(
         RequestInterface $request,
@@ -27,6 +29,7 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
         ConfigManager $configManager,
         QueueManager $queueManager,
         StoreManager $storeManager,
+        EntitiesSync $entitiesSync,
         WizzyCatalogueConfiguration $wizzyCatalogueConfiguration
     ) {
         $this->request = $request;
@@ -35,6 +38,7 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
         $this->queueManager = $queueManager;
         $this->storeManager = $storeManager;
         $this->wizzyCatalogueConfiguration = $wizzyCatalogueConfiguration;
+       $this->entitiesSync = $entitiesSync;
     }
 
     public function execute(EventObserver $observer)
@@ -47,7 +51,12 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
             $this->storeManager->getCurrentStoreId()
         );
 
-        if ($storeCatalogueConfigurations != $previousConfigurations) {
+        if ($storeCatalogueConfigurations != $previousConfigurations &&
+           $this->entitiesSync->hasAnyEntitiesAddedInSync(
+              $this->storeManager->getCurrentStoreId(),
+              EntitiesSync::ENTITY_TYPE_PRODUCT
+           )
+        ) {
             $this->messageManager->warning(
                 'Catalogue configuration has been updated, 
                 Catalogue data has been added for sync again. 

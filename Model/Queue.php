@@ -21,7 +21,7 @@ class Queue extends AbstractModel implements IdentityInterface
 
     protected function _construct()
     {
-        $this->_init(Wizzy\Search\Model\ResourceModel\Queue::class);
+        $this->_init(\Wizzy\Search\Model\ResourceModel\Queue::class);
     }
 
     public function getDefaultValues()

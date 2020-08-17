@@ -15,7 +15,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
         $this->queueManager = $queueManager;
 
       // This needs to be moved into module settings.
-        $this->maxQueueJobsToExecute = 5;
+        $this->maxQueueJobsToExecute = 7;
     }
 
   /*

@@ -3,7 +3,7 @@
     <body>
         <referenceBlock name="page.main.title" remove="true" />
         <referenceBlock name="content">
-            <block class="Magento\Framework\View\Element\Template" name="wizzy.search.progress" template="Wizzy_Search::common/activityIndicator.phtml" />
+            <block class="Wizzy\Search\Block\BaseBlock" name="wizzy.search.progress" template="Wizzy_Search::common/activityIndicator.phtml" />
         </referenceBlock>
     </body>
 </page>

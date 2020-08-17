@@ -40,9 +40,9 @@ composer require wizzy/search-magento-2
 Once the module is installed through composer execute following commands to enable it on Magento store.
 
 ````
-php bin/console module:enable Wizzy_Search
-php bin/console setup:upgrade
-php bin/console setup:static-content:deploy
+php bin/magento module:enable Wizzy_Search
+php bin/magento setup:upgrade
+php bin/magento setup:static-content:deploy
 ````
 
 ### Magento Marketplace **(Not available for now)**

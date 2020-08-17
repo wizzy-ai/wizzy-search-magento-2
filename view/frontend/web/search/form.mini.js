@@ -1,9 +1,11 @@
 requirejs(['jquery', 'wizzy/libs/searchUrlUtils'], function($, urlUtils) {
-    var enableFullScreen = (window.wizzyConfig.autocomplete.enabled || window.wizzyConfig.search.configs.general.behaviour === "search_as_you_type");
+    function hasToEnableFullScreen() {
+        return (window.wizzyConfig.autocomplete.enabled || window.wizzyConfig.search.configs.general.behaviour === "search_as_you_type");
+    }
 
     $('body').on('click', '.wizzy-search-glass, .wizzy-search-input', function(e) {
         e.preventDefault();
-        if (enableFullScreen) {
+        if (hasToEnableFullScreen()) {
             var windowWidth = $(window).width();
             if (windowWidth < 768) {
                 $(this).parents('.wizzy-search-form-wrapper').addClass('mobileTapped');
@@ -15,7 +17,7 @@ requirejs(['jquery', 'wizzy/libs/searchUrlUtils'], function($, urlUtils) {
     });
 
     $('body').on('click', '.wizzy-search-glass', function(e) {
-        if (!enableFullScreen) {
+        if (!hasToEnableFullScreen()) {
             $(this).parents('form').submit();
         }
     });

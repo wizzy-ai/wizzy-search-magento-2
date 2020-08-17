@@ -33,7 +33,7 @@ class CatalogueReindexer extends QueueProcessorBase
         if (!$this->storeGeneralConfig->isSyncEnabled()) {
             return true;
         }
-        $this->entitiesSync->markAllEntitiesSynced($storeId, 'product');
+        $this->entitiesSync->markAllEntitiesSynced($storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
         $productIds = $this->productsManager->getAllProductIds();
         $this->productsIndexer->reindexList($productIds);
 

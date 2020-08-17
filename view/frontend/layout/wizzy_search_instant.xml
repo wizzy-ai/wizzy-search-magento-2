@@ -7,8 +7,8 @@
     </head>
     <body>
         <referenceBlock name="before.body.end">
-            <block class="Magento\Framework\View\Element\Template" name="wizzySearch.common.progress" template="Wizzy_Search::common/progress.phtml"/>
-            <block class="Magento\Framework\View\Element\Template" name="wizzySearch.common.select" template="Wizzy_Search::common/select.phtml"/>
+            <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.common.progress" template="Wizzy_Search::common/progress.phtml"/>
+            <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.common.select" template="Wizzy_Search::common/select.phtml"/>
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.summary" template="Wizzy_Search::search/summary.phtml"/>
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.sort" template="Wizzy_Search::search/sort.phtml"/>
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.pagination" template="Wizzy_Search::search/pagination.phtml"/>

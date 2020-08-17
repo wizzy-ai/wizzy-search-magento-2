@@ -228,8 +228,8 @@ class ProductsMapper
                 $this->addProductVariationDetails($childColors, $child, $variationInStock);
                 $this->addProductVariationDetails($childSizes, $child, $variationInStock);
 
-                $colors = array_push($colors, ...$childColors);
-                $sizes = array_push($sizes, ...$childSizes);
+                array_push($colors, ...$childColors);
+                array_push($sizes, ...$childSizes);
 
                 $this->mapAttributes($child, $mappedProduct, $variationInStock, true);
             }
@@ -251,11 +251,11 @@ class ProductsMapper
             }
 
             if (count($colors)) {
-                $this->mapColors($mappedProduct, array_values(array_unique($colors)));
+                $this->mapColors($mappedProduct, $colors);
             }
 
             if (count($sizes)) {
-                $this->mapSizes($mappedProduct, array_values(array_unique($sizes)));
+                $this->mapSizes($mappedProduct, $sizes);
             }
         }
     }

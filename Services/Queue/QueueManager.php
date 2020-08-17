@@ -56,7 +56,7 @@ class QueueManager
         }
     }
 
-    public function dequeue($maxJobs = 5)
+    public function dequeue($maxJobs = 7)
     {
         $jobs = $this->queueFactory->create()->getCollection()
          ->addFieldToFilter('status', self::JOB_TO_EXECUTE_STATUS)

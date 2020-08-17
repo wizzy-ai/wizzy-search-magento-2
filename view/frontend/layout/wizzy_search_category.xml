@@ -5,7 +5,7 @@
             <referenceBlock name="category.products" remove="true" />
             <referenceBlock name="catalog.leftnav" remove="true" />
             <referenceBlock name="search.result" remove="true" />
-            <block class="Magento\Framework\View\Element\Template" name="wizzy.search.progress" template="Wizzy_Search::common/activityIndicator.phtml" />
+            <block class="Wizzy\Search\Block\BaseBlock" name="wizzy.search.progress" template="Wizzy_Search::common/activityIndicator.phtml" />
         </referenceContainer>
     </body>
 </page>

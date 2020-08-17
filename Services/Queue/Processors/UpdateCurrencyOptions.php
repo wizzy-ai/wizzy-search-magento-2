@@ -43,6 +43,10 @@ class UpdateCurrencyOptions extends QueueProcessorBase
             $supportedCurrencies = $this->getCurrencyDetails($supportedCurrencyCodes);
             $currenciesToDelete = $this->getCurrenciesToDelete($supportedCurrencyCodes, $storeId);
 
+            if (count($supportedCurrencies)) {
+                $this->currencyUpdater->save($supportedCurrencies, $storeId);
+            }
+
             if ($defaultCurrency) {
                 $this->currencyUpdater->saveDefaultCurrency($defaultCurrency, $storeId);
             }
@@ -50,9 +54,6 @@ class UpdateCurrencyOptions extends QueueProcessorBase
                 $this->currencyUpdater->saveDisplayCurrency($displayCurrency, $storeId);
             }
 
-            if (count($supportedCurrencies)) {
-                $this->currencyUpdater->save($supportedCurrencies, $storeId);
-            }
             if (count($currenciesToDelete)) {
                 $this->currencyUpdater->delete($currenciesToDelete, $storeId);
             }

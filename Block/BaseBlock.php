@@ -193,7 +193,7 @@ class BaseBlock extends Template
     {
         return $this
           ->getLayout()
-          ->createBlock(Magento\Framework\View\Element\Template::class)
+          ->createBlock(\Magento\Framework\View\Element\Template::class)
           ->setTemplate($template)
           ->toHtml();
     }
