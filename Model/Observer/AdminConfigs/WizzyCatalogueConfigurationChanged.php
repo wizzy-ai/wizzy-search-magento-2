@@ -21,7 +21,7 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
     private $queueManager;
     private $storeManager;
     private $wizzyCatalogueConfiguration;
-   private $entitiesSync;
+    private $entitiesSync;
 
     public function __construct(
         RequestInterface $request,
@@ -38,7 +38,7 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
         $this->queueManager = $queueManager;
         $this->storeManager = $storeManager;
         $this->wizzyCatalogueConfiguration = $wizzyCatalogueConfiguration;
-       $this->entitiesSync = $entitiesSync;
+        $this->entitiesSync = $entitiesSync;
     }
 
     public function execute(EventObserver $observer)
@@ -53,8 +53,8 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
 
         if ($storeCatalogueConfigurations != $previousConfigurations &&
            $this->entitiesSync->hasAnyEntitiesAddedInSync(
-              $this->storeManager->getCurrentStoreId(),
-              EntitiesSync::ENTITY_TYPE_PRODUCT
+               $this->storeManager->getCurrentStoreId(),
+               EntitiesSync::ENTITY_TYPE_PRODUCT
            )
         ) {
             $this->messageManager->warning(
