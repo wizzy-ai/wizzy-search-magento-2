@@ -29,7 +29,7 @@ This module comes with following features including above for Magento 2.
 Wizzy Search Magento 2 module can be installed following ways. 
 
 1. Using Composer
-2. From Magento Marketplace **(Not available for now)**  
+2. From Magento Marketplace 
 
 ### Composer
 
@@ -47,10 +47,10 @@ php bin/magento setup:static-content:deploy
 
 ### Magento Marketplace **(Not available for now)**
 
-~~Visit Magento Marketplace to install the module, follow the instructions on the marketplace for installation guide.~~
+[Click Here](https://marketplace.magento.com/wizzy-search-magento-2.html) to Visit Magento Marketplace and install the module, follow the instructions on the marketplace for installation guide.
 
 ## Demo Store
-Visit [Demo Store](http://magento.demostore.wizzy.ai) to check Autocomplete and Instnt Search functionality. To test the admin related functionalitites you must install this extension on your store try yourself.
+Visit [Demo Store](http://magento.demostore.wizzy.ai) to check Autocomplete and Instant Search functionality. To test the admin related functionalitites you must install this extension on your store try yourself.
 
 ## Want to Contribute?
 Found bug or improvement in the module and wants to contribute? We're glad you wants to, Please follow the process.
