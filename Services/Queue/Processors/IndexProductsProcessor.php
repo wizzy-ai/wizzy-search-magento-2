@@ -61,7 +61,7 @@ class IndexProductsProcessor extends QueueProcessorBase
 
         if ($saveResponse) {
             $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
-            $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, 'product');
+            $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
             return true;
         }
 

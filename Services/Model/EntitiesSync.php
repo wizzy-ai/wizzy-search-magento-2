@@ -12,7 +12,7 @@ class EntitiesSync
 
     public static $ENTITY_IN_SYNC_STATUS = 0;
     public static $ENTITY_SYNCED_STATUS = 1;
-    const ENTITY_TYPE_PRODUCT = 0;
+    const ENTITY_TYPE_PRODUCT = 'product';
 
     private $entitiesSyncFactory;
     private $connectionManager;
