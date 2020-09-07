@@ -7,6 +7,7 @@ use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
+use Wizzy\Search\Services\Store\ConfigManager;
 
 class ProductsMapper
 {
@@ -25,13 +26,15 @@ class ProductsMapper
 
     private $productReviews;
     private $orderItems;
+    private $configManager;
 
     public function __construct(
         Configurable $configurable,
         ProductsManager $productsManager,
         ConfigurableProductsData $configurableProductsData,
         AttributesManager $attributesManager,
-        StockRegistry $stockRegistry
+        StockRegistry $stockRegistry,
+        ConfigManager $configManager
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -41,6 +44,7 @@ class ProductsMapper
         $this->productsManager = $productsManager;
         $this->productReviews = [];
         $this->orderItems = [];
+        $this->configManager = $configManager;
     }
 
     private function resetEntitiesToIgnore()
@@ -487,6 +491,10 @@ class ProductsMapper
 
     private function mapBasicDetails($product, &$mappedProduct)
     {
+        $urlOptions = [
+           '_secure' => $this->configManager->hasToUseSecureUrls($this->storeId),
+           '_nosid' => true,
+        ];
         $stockItem = $this->stockRegistry->getStockItem($product->getId());
         $visibility = $product->getVisibility();
         $mappedProduct = [
@@ -494,7 +502,7 @@ class ProductsMapper
          'name' => $product->getName(),
          'sellingPrice' => $this->getFloatVal($product->getFinalPrice()),
          'description' => $product->getDescription(),
-         'url' => $product->getProductUrl(),
+         'url' => $product->getUrlModel()->getUrl($product, $urlOptions),
          'inStock' => ($stockItem && $stockItem->getIsInStock()),
          'stockQty' => ($stockItem) ? $stockItem->getQty() : 0,
          'createdAt' => $product->getCreatedAt(),

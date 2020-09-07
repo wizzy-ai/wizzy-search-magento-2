@@ -14,6 +14,8 @@ class ConfigManager
     const AUTOCOMPLETE_ATTRIBUTES_CONFIG = "autocomplete_attributes_config";
     const PAGES_EXCLUDE_CONFIG = "pages_exclude_config";
 
+    const HAS_TO_USE_SECURE_URLS = 'web/secure/use_in_frontend';
+
     private $configWriter;
     private $storeManager;
     private $scopeConfig;
@@ -68,5 +70,14 @@ class ConfigManager
     private function getHiddenKey($key)
     {
         return 'wizzy_custom_configs/' . $key;
+    }
+
+    public function hasToUseSecureUrls($storeId)
+    {
+        return $this->scopeConfig->isSetFlag(
+            self::HAS_TO_USE_SECURE_URLS,
+            ScopeInterface::SCOPE_STORE,
+            $storeId
+        );
     }
 }
