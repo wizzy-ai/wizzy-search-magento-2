@@ -467,7 +467,10 @@ class ProductsMapper
             $parentProducts = $this->productsManager->getProductsByIds([$parentProductId], $this->storeId);
             if (count($parentProducts)) {
                 foreach ($parentProducts as $parentProduct) {
-                    $mappedProduct['url'] = $parentProduct->getUrlModel()->getUrl($parentProduct, $this->getUrlOptions());
+                    $mappedProduct['url'] = $parentProduct->getUrlModel()->getUrl(
+                        $parentProduct,
+                        $this->getUrlOptions()
+                    );
                     $visibility = $parentProduct->getVisibility();
                     $mappedProduct['isSearchable'] = (
                        $visibility == Visibility::VISIBILITY_IN_SEARCH ||
@@ -492,10 +495,10 @@ class ProductsMapper
 
     private function getUrlOptions()
     {
-       return [
-          '_secure' => $this->configManager->hasToUseSecureUrls($this->storeId),
-          '_nosid' => true,
-       ];
+        return [
+           '_secure' => $this->configManager->hasToUseSecureUrls($this->storeId),
+           '_nosid' => true,
+        ];
     }
 
     private function mapBasicDetails($product, &$mappedProduct)
