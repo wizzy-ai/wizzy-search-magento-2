@@ -467,6 +467,7 @@ class ProductsMapper
             $parentProducts = $this->productsManager->getProductsByIds([$parentProductId], $this->storeId);
             if (count($parentProducts)) {
                 foreach ($parentProducts as $parentProduct) {
+                    $mappedProduct['url'] = $parentProduct->getUrlModel()->getUrl($parentProduct, $this->getUrlOptions());
                     $visibility = $parentProduct->getVisibility();
                     $mappedProduct['isSearchable'] = (
                        $visibility == Visibility::VISIBILITY_IN_SEARCH ||
@@ -489,12 +490,16 @@ class ProductsMapper
         return $value;
     }
 
+    private function getUrlOptions()
+    {
+       return [
+          '_secure' => $this->configManager->hasToUseSecureUrls($this->storeId),
+          '_nosid' => true,
+       ];
+    }
+
     private function mapBasicDetails($product, &$mappedProduct)
     {
-        $urlOptions = [
-           '_secure' => $this->configManager->hasToUseSecureUrls($this->storeId),
-           '_nosid' => true,
-        ];
         $stockItem = $this->stockRegistry->getStockItem($product->getId());
         $visibility = $product->getVisibility();
         $mappedProduct = [
@@ -502,7 +507,7 @@ class ProductsMapper
          'name' => $product->getName(),
          'sellingPrice' => $this->getFloatVal($product->getFinalPrice()),
          'description' => $product->getDescription(),
-         'url' => $product->getUrlModel()->getUrl($product, $urlOptions),
+         'url' => $product->getUrlModel()->getUrl($product, $this->getUrlOptions()),
          'inStock' => ($stockItem && $stockItem->getIsInStock()),
          'stockQty' => ($stockItem) ? $stockItem->getQty() : 0,
          'createdAt' => $product->getCreatedAt(),
