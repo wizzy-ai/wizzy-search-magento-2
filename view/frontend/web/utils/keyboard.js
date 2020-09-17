@@ -8,7 +8,7 @@ define([], function() {
     }
 
     function isNonAllowedSearchKey(code) {
-        if((code <= 90 && code >= 48) || (code >= 96 && code <= 105) || code == 8 || code == 46 || code == 32) {
+        if(((code <= 90 && code >= 48) || (code >= 96 && code <= 105) || code == 8 || code == 46 || code == 32) && code != 229) {
             return false;
         }
 
