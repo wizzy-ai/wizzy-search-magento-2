@@ -163,14 +163,12 @@ class ConfigurableProductsData
                     $categoriesAssoc[$parentCategory->getId()] = $parentCategoryArr;
 
                     $hasOneParentInMenu = $parentCategoryArr['includeInMenu'];
-                    $hasOneParentInSearch = $parentCategoryArr['isSearchable'];
                 }
             }
 
             $categoryArr = $this->getCategoryArray($category, $storeId);
 
             $categoryArr['includeInMenu'] = ($categoryArr['includeInMenu'] && $hasOneParentInMenu);
-            $categoryArr['isSearchable'] = ($categoryArr['isSearchable'] && $hasOneParentInSearch);
 
             $categoriesAssoc[$category->getId()] = $categoryArr;
         }
@@ -214,7 +212,7 @@ class ConfigurableProductsData
          'isActive'=> $category->getIsActive(),
          'includeInMenu' => ($category->getIncludeInMenu()) ? true : false,
          'pathIds' => $pathIds,
-         'isSearchable' => ($category->getIsExcludeCat() || !$category->getIsActive()) ? false : true,
+         'isSearchable' => (!$category->getIncludeInMenu() || !$category->getIsActive()) ? false : true,
          'parentId' => ($category->getParentCategory()) ? $category->getParentCategory()->getId() : '',
          'parentUrlKey' => ($category->getParentCategory()) ? $category->getParentCategory()->getUrlKey() : '',
         ];

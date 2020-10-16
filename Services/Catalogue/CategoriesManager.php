@@ -35,6 +35,9 @@ class CategoriesManager
 
     public function fetchByIds($categoryIds, $storeId)
     {
+        if (!$categoryIds || !count($categoryIds)) {
+            return [];
+        }
         $categories = $this->categoryColleection->create()
          ->addAttributeToSelect('*')
          ->addAttributeToFilter('level', ['gt' => 1])
