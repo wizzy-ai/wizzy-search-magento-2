@@ -11,12 +11,14 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/utils/url'], functi
 
             $('.page-title-wrapper').show();
             $('.breadcrumbs').show();
+            $('.category-view').show();
         }
     }
 
     function removeUnnecessaryBlocks() {
         $('.page-title-wrapper').hide();
         $('.breadcrumbs').hide();
+        $('.category-view').hide();
     }
 
     function setBeforeSearchDOM() {

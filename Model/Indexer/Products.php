@@ -26,8 +26,8 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         $this->productsManager = $productsManager;
         $this->queueManager = $queueManager;
 
-      // This needs to be moved into module settings.
-        $this->maxProductsInSingleQueue = 20000;
+      // This needs to be moved into module settings, Max it can be 2000.
+        $this->maxProductsInSingleQueue = 2000;
 
         $this->entitesSync = $entitiesSync;
         $this->storeManager = $storeManager;
