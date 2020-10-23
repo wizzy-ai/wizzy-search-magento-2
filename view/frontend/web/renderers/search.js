@@ -40,13 +40,16 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         domRenderer.revertDOM();
     }
 
-    function showIndicator(isForFilter) {
+    function showIndicator(isForFilter, removeBlocks) {
         var searchedResponse = pageStore.get(pageStore.keys.searchedResponse, null);
         var isPaginating = pageStore.get(pageStore.keys.isPaginating, false);
         var isCategoryPageRendered = pageStore.get(pageStore.keys.isCategoryPageRendered, false);
         var displayCategoryLoader = ((isOnCategoryPage() && isCategoryPageRendered) || !isOnCategoryPage());
 
         domRenderer.setBeforeSearchDOM();
+        if (removeBlocks) {
+            domRenderer.removeUnnecessaryBlocks();
+        }
         var isBlankSearchResponse = (searchedResponse === "" || searchedResponse === null || searchedResponse.length === 0);
 
         if (isBlankSearchResponse || isForFilter) {

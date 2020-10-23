@@ -21,7 +21,7 @@ class Currency
             return true;
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 
@@ -32,7 +32,7 @@ class Currency
             return true;
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 
@@ -43,7 +43,7 @@ class Currency
             return true;
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 
@@ -54,7 +54,7 @@ class Currency
             return $response['payload']['response']['payload']['currencies'];
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 
@@ -65,7 +65,7 @@ class Currency
             return true;
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 }

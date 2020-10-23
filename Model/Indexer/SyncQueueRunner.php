@@ -46,10 +46,10 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
                 try {
                     $job = Magento\Framework\App\ObjectManager::getInstance()->get($jobClass);
                     $jobResponse = $job->execute($data, $storeId);
-                    if ($jobResponse) {
+                    if ($jobResponse === TRUE) {
                         $this->queueManager->changeStatus([$jobData], QueueManager::JOB_PROCESSED_STATUS);
                     } else {
-                        $this->queueManager->changeStatus([$jobData], QueueManager::JOB_TO_EXECUTE_STATUS, '');
+                        $this->queueManager->changeStatus([$jobData], QueueManager::JOB_TO_EXECUTE_STATUS, (is_array($jobResponse)) ? json_encode($jobResponse) : $jobResponse);
                     }
                 } catch (\Exception $exception) {
                   // Log this exception for devs.

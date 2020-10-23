@@ -8,7 +8,15 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/utils/url'], functi
         var beforeSearchDOM = pageStore.get(pageStore.keys.beforeSearchDOM);
         if (beforeSearchDOM !== null && !commonUrlUtils.hasSearchEndPointInUrl(beforeSearchDOM.url)) {
             $(getDOMHandler()).html(beforeSearchDOM.html);
+
+            $('.page-title-wrapper').show();
+            $('.breadcrumbs').show();
         }
+    }
+
+    function removeUnnecessaryBlocks() {
+        $('.page-title-wrapper').hide();
+        $('.breadcrumbs').hide();
     }
 
     function setBeforeSearchDOM() {
@@ -34,6 +42,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/utils/url'], functi
         revertDOM: revertDOM,
         setBeforeSearchDOM: setBeforeSearchDOM,
         getDOMHandler: getDOMHandler,
+        removeUnnecessaryBlocks: removeUnnecessaryBlocks,
         updateResultsDOM: updateResultsDOM,
         appendDOM: appendDOM,
     };

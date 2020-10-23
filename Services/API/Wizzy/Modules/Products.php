@@ -21,7 +21,7 @@ class Products
             return true;
         } else {
           // Log the error.
-            return false;
+            return $response;
         }
     }
 
@@ -32,7 +32,7 @@ class Products
             return true;
         } else {
           // Log the error.
-            return false;
+            return $response;
         }
     }
 }

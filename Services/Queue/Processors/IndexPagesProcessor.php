@@ -60,7 +60,7 @@ class IndexPagesProcessor extends QueueProcessorBase
     {
         $addedPages = $this->pagesSaver->get($storeId);
         $pagesToDelete = [];
-        if ($addedPages !== false && count($pagesToSave)) {
+        if ($addedPages === TRUE && count($pagesToSave)) {
             $addedPages = array_column($addedPages, "id");
             $pagesToSave = array_column($pagesToSave, "id");
             $pagesToDelete = array_values(array_diff($addedPages, $pagesToSave));

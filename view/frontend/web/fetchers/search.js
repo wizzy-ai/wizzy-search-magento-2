@@ -2,6 +2,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/searc
     function execute(options) {
         var q = typeof options['q'] === "undefined" ? '' : options['q'];
         var sort = pageStore.get(pageStore.keys.selectedSortMethod, null);
+        var fS = typeof options['fS'] === "undefined" ? false : options['fS'];
 
         var payload = {
             q: q,
@@ -22,7 +23,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/searc
         }
         pageStore.set(pageStore.keys.isPaginating, false);
         if (q !== "") {
-            searchRenderer.showIndicator(false);
+            searchRenderer.showIndicator(false, fS);
             executeSearch(payload);
         }
         else {

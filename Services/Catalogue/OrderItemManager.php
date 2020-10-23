@@ -61,11 +61,7 @@ class OrderItemManager
 
         foreach ($orderItems as $orderItem) {
             if ($orderItem->getProductId() && isset($productOrdersSummry[$orderItem->getProductId()])) {
-                $qtyToMinus = $orderItem->getQtyToRefund();
-                if ($qtyToMinus < $orderItem->getQtyToCancel()) {
-                    $qtyToMinus = $orderItem->getQtyToCancel();
-                }
-                $qty = $orderItem->getQtyToInvoice() - $qtyToMinus;
+                $qty = $orderItem->getQtyToInvoice();
                 $productOrdersSummry[$orderItem->getProductId()]['orders'][$orderItem->getOrder()->getId()] = true;
                 $productOrdersSummry[$orderItem->getProductId()]['qty'] += $qty;
             }

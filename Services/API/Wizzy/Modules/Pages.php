@@ -21,7 +21,7 @@ class Pages
             return true;
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 
@@ -32,7 +32,7 @@ class Pages
             return $response['payload']['response']['payload']['pages'];
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 
@@ -43,7 +43,7 @@ class Pages
             return true;
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 }

@@ -21,7 +21,7 @@ class CurrencyRate
             return true;
         } else {
            // Log the error.
-            return false;
+            return $response;
         }
     }
 }

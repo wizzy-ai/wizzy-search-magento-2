@@ -48,7 +48,8 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
         var searchInputValue = pageStore.get(pageStore.keys.searchInputValue);
         if (searchInputValue.length >= 3 || searchInputValue.length === 0) {
             sF.execute({
-                q: searchInputValue
+                q: searchInputValue,
+                fS: true,
             });
             if (searchInputValue.length !== 0 && !isByTrigger) {
                 urlUtils.updateQuery(searchInputValue);

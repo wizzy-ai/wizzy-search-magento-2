@@ -59,13 +59,13 @@ class IndexProductsProcessor extends QueueProcessorBase
         $products = $this->productsMapper->mapAll($products, $productReviews, $orderItems, $storeId);
         $saveResponse = $this->submitSaveProductsRequest($products, $storeId);
 
-        if ($saveResponse) {
+        if ($saveResponse === TRUE) {
             $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
             $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
             return true;
         }
 
-        return false;
+        return $saveResponse;
     }
 
    /**

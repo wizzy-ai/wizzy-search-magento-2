@@ -2,6 +2,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
     function execute(options) {
         var filters = typeof options['filters'] === "undefined" ? {} : options['filters'];
         var filteringFor = typeof options['for'] === "undefined" ? '' : options['for'];
+        var isCategorySearch = typeof options['isCategorySearch'] === "undefined" ? false: options['isCategorySearch'];
 
         if (filteringFor === "") {
             return;
@@ -20,7 +21,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         };
         pageStore.set(pageStore.keys.filteringFor, filteringFor);
 
-        executeFilter(payload);
+        executeFilter(payload, isCategorySearch);
     }
 
     function setDefaultValuesInFilters(filters) {
@@ -51,23 +52,24 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         return filters;
     }
 
-    function tryFilterOnceConnected(payload) {
-        setTimeout(function(payload) {
-            executeFilter(payload);
-        }, 200, payload);
+    function tryFilterOnceConnected(payload, isCategorySearch) {
+        setTimeout(function(payload, isCategorySearch) {
+            executeFilter(payload, isCategorySearch);
+        }, 200, payload, isCategorySearch);
     }
 
-    function executeFilter(payload) {
+    function executeFilter(payload, isCategorySearch) {
         if (wizzyCommon.isConnected()) {
             var filteringFor = pageStore.get(pageStore.keys.filteringFor, '');
             if (filteringFor === 'page') {
-                searchRenderer.showIndicator(true);
+                console.log({isCategorySearch});
+                searchRenderer.showIndicator(true, !isCategorySearch);
             }
             var response = wizzyCommon.getClient().filter(payload);
             pageStore.set(pageStore.keys.lastRequestIdFilters, response.requestId);
         }
         else {
-            tryFilterOnceConnected(payload);
+            tryFilterOnceConnected(payload, isCategorySearch);
         }
     }
 
@@ -82,14 +84,17 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         window.scrollTo(0, 0);
         setSortInFilters();
         resetPage();
-        refreshFilters(false, false);
+        refreshFilters(false, false, false);
     }
 
     function categorySearch(categoryKey) {
+        console.log('Doing Category Search');
         filtersUtils.clearAll();
+        clear('q');
+        pageStore.set(pageStore.keys.searchInputValue, null);
         resetPage();
         filtersUtils.addCategoryFilter(categoryKey);
-        refreshFilters(true, false);
+        refreshFilters(true, false, true);
     }
 
     function resetPage() {
@@ -117,7 +122,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
 
             if (typeof searchedResponse['pages'] !== "undefined" && nextPage <= searchedResponse['pages']) {
                 filtersUtils.setPage(nextPage);
-                refreshFilters(false, true);
+                refreshFilters(false, true, false);
             }
         }
     }
@@ -131,7 +136,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
 
             if (typeof searchedResponse['pages'] !== "undefined" && prevPage >= 1) {
                 filtersUtils.setPage(prevPage);
-                refreshFilters(false, true);
+                refreshFilters(false, true, false);
             }
         }
     }
@@ -141,7 +146,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         window.scrollTo(0, 0);
         page = parseInt(page);
         filtersUtils.setPage(page);
-        refreshFilters(false, true);
+        refreshFilters(false, true, false);
     }
 
     function apply(facetKey, filterKey, isFromSelected) {
@@ -157,7 +162,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         else {
             filtersUtils.addOrRemoveFilter(facetKey, filterKey);
         }
-        refreshFilters(false, false);
+        refreshFilters(false, false, false);
     }
 
     function getUpdateCategoryFilterKey(facetKey, filterKey) {
@@ -185,7 +190,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
 
     function clearAll() {
         filtersUtils.clearAll();
-        refreshFilters(false, false);
+        refreshFilters(false, false, false);
     }
 
     function setDefaultsFromFilters(filters) {
@@ -197,7 +202,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         }
     }
 
-    function refreshFilters(isFromPageLoad, isByPagination) {
+    function refreshFilters(isFromPageLoad, isByPagination, isCategorySearch) {
         var filters = filtersUtils.getFilters();
         if (typeof filters['sort'] === "undefined") {
             setSortInFilters();
@@ -209,6 +214,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
             'filters': filters,
             'for': 'page',
             'isByPagination': isByPagination,
+            'isCategorySearch': isCategorySearch,
         });
         if (!isFromPageLoad && ((isByPagination && !paginationUtils.isInfiniteScroll() && $(window).width() > 768) || !isByPagination)) {
             urlUtils.updateFilters(filters);
