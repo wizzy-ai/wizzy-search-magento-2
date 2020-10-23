@@ -62,7 +62,6 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         if (wizzyCommon.isConnected()) {
             var filteringFor = pageStore.get(pageStore.keys.filteringFor, '');
             if (filteringFor === 'page') {
-                console.log({isCategorySearch});
                 searchRenderer.showIndicator(true, !isCategorySearch);
             }
             var response = wizzyCommon.getClient().filter(payload);
@@ -88,7 +87,6 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
     }
 
     function categorySearch(categoryKey) {
-        console.log('Doing Category Search');
         filtersUtils.clearAll();
         clear('q');
         pageStore.set(pageStore.keys.searchInputValue, null);

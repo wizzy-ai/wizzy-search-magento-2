@@ -39,7 +39,6 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
 
     function listenChanges(searchElement) {
         window.onpopstate = function(e){
-            console.log("eState", e.state);
             if (e.state) {
                 var searchParams = (typeof e.state !== "undefined") ? e.state : "";
                 if ((typeof searchParams.q != "undefined" && searchParams.q.trim() != "") || (typeof searchParams.categories != "undefined" && searchParams.categories.length > 0)) {
