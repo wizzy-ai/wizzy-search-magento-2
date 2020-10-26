@@ -47,10 +47,14 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
                 try {
                     $job = Magento\Framework\App\ObjectManager::getInstance()->get($jobClass);
                     $jobResponse = $job->execute($data, $storeId);
-                    if ($jobResponse === TRUE) {
+                    if ($jobResponse === true) {
                         $this->queueManager->changeStatus([$jobData], QueueManager::JOB_PROCESSED_STATUS);
                     } else {
-                        $this->queueManager->changeStatus([$jobData], QueueManager::JOB_TO_EXECUTE_STATUS, $this->getQueueError($jobResponse));
+                        $this->queueManager->changeStatus(
+                            [$jobData],
+                            QueueManager::JOB_TO_EXECUTE_STATUS,
+                            $this->getQueueError($jobResponse)
+                        );
                     }
                 } catch (\Exception $exception) {
                   // Log this exception for devs.
@@ -66,18 +70,17 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
         return $this;
     }
 
-    private function getQueueError($jobResponse) {
-       $errorToSave = "";
-       if ($jobResponse instanceof Response) {
-          $errorToSave = json_encode($jobResponse->getPayload());
-       }
-       else if (is_array($jobResponse)) {
-          $errorToSave = json_encode($jobResponse);
-       }
-       else if (is_string($jobResponse)) {
-          $errorToSave = $jobResponse;
-       }
-       return $errorToSave;
+    private function getQueueError($jobResponse)
+    {
+        $errorToSave = "";
+        if ($jobResponse instanceof Response) {
+            $errorToSave = json_encode($jobResponse->getPayload());
+        } elseif (is_array($jobResponse)) {
+            $errorToSave = json_encode($jobResponse);
+        } elseif (is_string($jobResponse)) {
+            $errorToSave = $jobResponse;
+        }
+        return $errorToSave;
     }
 
   /*

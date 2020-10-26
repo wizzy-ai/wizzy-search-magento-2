@@ -65,7 +65,7 @@ class UpdateCurrencyOptions extends QueueProcessorBase
     private function getCurrenciesToDelete(array $supportedCurrencies, $storeId)
     {
         $wizzyCurrencies = $this->currencyUpdater->get($storeId);
-        if ($wizzyCurrencies === TRUE && count($wizzyCurrencies) > 0) {
+        if ($wizzyCurrencies === true && count($wizzyCurrencies) > 0) {
             $wizzyCurrencies = array_column($wizzyCurrencies, "code");
             $currencies = array_values(array_diff($wizzyCurrencies, $supportedCurrencies));
             $currenciesToDelete = [];
