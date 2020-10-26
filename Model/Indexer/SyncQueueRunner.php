@@ -1,6 +1,7 @@
 <?php
 namespace Wizzy\Search\Model\Indexer;
 
+use Wizzy\Search\Model\API\Response;
 use Wizzy\Search\Services\Queue\QueueManager;
 use Magento;
 
@@ -49,7 +50,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
                     if ($jobResponse === TRUE) {
                         $this->queueManager->changeStatus([$jobData], QueueManager::JOB_PROCESSED_STATUS);
                     } else {
-                        $this->queueManager->changeStatus([$jobData], QueueManager::JOB_TO_EXECUTE_STATUS, (is_array($jobResponse)) ? json_encode($jobResponse) : $jobResponse);
+                        $this->queueManager->changeStatus([$jobData], QueueManager::JOB_TO_EXECUTE_STATUS, $this->getQueueError($jobResponse));
                     }
                 } catch (\Exception $exception) {
                   // Log this exception for devs.
@@ -63,6 +64,20 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
         }
 
         return $this;
+    }
+
+    private function getQueueError($jobResponse) {
+       $errorToSave = "";
+       if ($jobResponse instanceof Response) {
+          $errorToSave = json_encode($jobResponse->getPayload());
+       }
+       else if (is_array($jobResponse)) {
+          $errorToSave = json_encode($jobResponse);
+       }
+       else if (is_string($jobResponse)) {
+          $errorToSave = $jobResponse;
+       }
+       return $errorToSave;
     }
 
   /*
