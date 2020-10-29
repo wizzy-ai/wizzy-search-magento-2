@@ -20,9 +20,10 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
 
             if (!isByFilter) {
                 autocompleteWrapper = Mustache.render(autocompleteWrapper, {
-                    suggestions: suggestionsTemplate,
+                    suggestions: suggestionsTemplate['html'],
                     isMenuHidden: isMenuHidden,
                     topProducts: topProductsTemplate,
+                    hasSuggestions: suggestionsTemplate['hasSuggestions'],
                 });
                 $(wizzyAutoCompleteConfig.wrapper).html(autocompleteWrapper);
             }
@@ -108,7 +109,10 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
             suggestions: suggestions,
             hasSuggestions: (suggestions.length > 0)
         });
-        return suggestionsTemplate;
+        return {
+            html: suggestionsTemplate,
+            hasSuggestions: (suggestions.length > 0)
+        };
     }
 
     function getSuggestionList(data) {

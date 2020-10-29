@@ -7,9 +7,9 @@
 <script type="text/template" id="wizzy-autocomplete-wrapper">
     <div class="wizzy-autocomplete-wrapper
     <?php if ($alignment == "right") { ?> onRight <?php } else { ?> onLeft <?php } ?>
-    {{^topProducts}}withoutTopProducts{{/topProducts}}"
+    {{^topProducts}}withoutTopProducts{{/topProducts}} {{^hasSuggestions}}withoutSuggestions{{/hasSuggestions}}"
          style="display: {{^isMenuHidden}}flex{{/isMenuHidden}}">
-    {{#topProducts}}
+        {{#topProducts}}
             {{{topProducts}}}
         {{/topProducts}}
         {{#suggestions}}

@@ -33,10 +33,24 @@ $autoCompleteMenuRadius: 4px;
     color: $darkGreyBg;
   }
 
+  &.withoutSuggestions {
+    width: 615px;
+    .wizzy-autocomplete-suggestions {
+      display: none;
+    }
+    .wizzy-autocomplete-top-products {
+      width: 100%;
+    }
+  }
+
   &.withoutTopProducts{
     width: 344px;
     .wizzy-autocomplete-suggestions {
       width: 100%;
+    }
+
+    &.withoutSuggestions {
+      display: none;
     }
   }
 

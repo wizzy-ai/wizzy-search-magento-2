@@ -28,11 +28,23 @@
   padding-bottom: 30px;
   color: #979797;
 }
+.wizzy-autocomplete-wrapper.withoutSuggestions {
+  width: 615px;
+}
+.wizzy-autocomplete-wrapper.withoutSuggestions .wizzy-autocomplete-suggestions {
+  display: none;
+}
+.wizzy-autocomplete-wrapper.withoutSuggestions .wizzy-autocomplete-top-products {
+  width: 100%;
+}
 .wizzy-autocomplete-wrapper.withoutTopProducts {
   width: 344px;
 }
 .wizzy-autocomplete-wrapper.withoutTopProducts .wizzy-autocomplete-suggestions {
   width: 100%;
+}
+.wizzy-autocomplete-wrapper.withoutTopProducts.withoutSuggestions {
+  display: none;
 }
 .wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products {
   background: #ffffff;
