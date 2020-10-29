@@ -10,9 +10,15 @@ class GenderConfigurable implements ConfigurableImplInterface
 
     private $storeCatalogueConfig;
 
+    private $configuredCategories;
+    private $configuredAttributes;
+
     public function __construct(StoreCatalogueConfig $storeCatalogueConfig)
     {
         $this->storeCatalogueConfig = $storeCatalogueConfig;
+
+        $this->configuredCategories = [];
+        $this->configuredAttributes = [];
     }
 
     public function getValue(array $categories, array $attributes, $storeId)
@@ -55,6 +61,9 @@ class GenderConfigurable implements ConfigurableImplInterface
 
     public function getConfiguredCategories($storeId)
     {
+        if (isset($this->configuredCategories[$storeId])) {
+            return $this->configuredCategories[$storeId];
+        }
         $this->storeCatalogueConfig->setStore($storeId);
         $categories = [];
 
@@ -78,11 +87,15 @@ class GenderConfigurable implements ConfigurableImplInterface
             }
         }
 
+        $this->configuredCategories = $categories;
         return $categories;
     }
 
     public function getConfiguredAttributes($storeId)
     {
+        if (isset($this->configuredAttributes[$storeId])) {
+            return $this->configuredAttributes[$storeId];
+        }
         $this->storeCatalogueConfig->setStore($storeId);
         $attributes = [];
 
@@ -109,6 +122,7 @@ class GenderConfigurable implements ConfigurableImplInterface
             }
         }
 
+        $this->configuredAttributes = $attributes;
         return $attributes;
     }
 }

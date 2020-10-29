@@ -8,9 +8,12 @@ class SizeConfigurable implements ConfigurableImplInterface
 {
 
     private $storeCatalogueConfig;
+    private $configuredAttributes;
+
     public function __construct(StoreCatalogueConfig $storeCatalogueConfig)
     {
         $this->storeCatalogueConfig = $storeCatalogueConfig;
+        $this->configuredAttributes = [];
     }
 
     public function getValue(array $categories, array $attributes, $storeId)
@@ -41,12 +44,14 @@ class SizeConfigurable implements ConfigurableImplInterface
 
     public function getConfiguredCategories($storeId)
     {
-        $this->storeCatalogueConfig->setStore($storeId);
         return [];
     }
 
     public function getConfiguredAttributes($storeId)
     {
+        if (isset($this->configuredAttributes[$storeId])) {
+            return $this->configuredAttributes[$storeId];
+        }
         $this->storeCatalogueConfig->setStore($storeId);
         $attributes = [];
 
@@ -63,6 +68,7 @@ class SizeConfigurable implements ConfigurableImplInterface
             }
         }
 
+        $this->configuredAttributes = $attributes;
         return $attributes;
     }
 }

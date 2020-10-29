@@ -7,6 +7,7 @@ use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
+use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 
 class ProductsMapper
@@ -34,7 +35,8 @@ class ProductsMapper
         ConfigurableProductsData $configurableProductsData,
         AttributesManager $attributesManager,
         StockRegistry $stockRegistry,
-        ConfigManager $configManager
+        ConfigManager $configManager,
+        ProductsSessionStorage $productsSessionStorage
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -45,6 +47,7 @@ class ProductsMapper
         $this->productReviews = [];
         $this->orderItems = [];
         $this->configManager = $configManager;
+        $this->productsSessionStorage = $productsSessionStorage;
     }
 
     private function resetEntitiesToIgnore()
@@ -101,8 +104,8 @@ class ProductsMapper
 
     private function mapConfigurableData($product, &$mappedProduct)
     {
-        $categories = $this->configurableProductsData->getProductCategories($product, $this->storeId);
-        $attributes = $this->configurableProductsData->getProductAttributes($product);
+        $categories = $this->configurableProductsData->getProductCategories($product);
+        $attributes = $this->configurableProductsData->getProductAttributes($product, $this->attributesToIgnore);
 
         $brand = $this->configurableProductsData->getBrand($categories, $attributes, $this->storeId);
         if ($brand) {
@@ -140,7 +143,7 @@ class ProductsMapper
                 $childIds[] = $child->getId();
             }
 
-            $children = $this->productsManager->getProductsByIds($childIds, $this->storeId);
+            $children = $this->productsSessionStorage->getByIds($childIds);
 
             $finalPrice = 0;
 
@@ -222,8 +225,8 @@ class ProductsMapper
                     }
                 }
 
-                $categories = $this->configurableProductsData->getProductCategories($child, $this->storeId);
-                $attributes = $this->configurableProductsData->getProductAttributes($child);
+                $categories = $this->configurableProductsData->getProductCategories($child);
+                $attributes = $this->configurableProductsData->getProductAttributes($child, $this->attributesToIgnore);
 
                 $childColors = $this->configurableProductsData->getColors($categories, $attributes, $this->storeId);
                 $childSizes = $this->configurableProductsData->getSizes($categories, $attributes, $this->storeId);
@@ -340,15 +343,14 @@ class ProductsMapper
             $attributes = $mappedProduct['attributes'];
         }
         $autocompleteAttributes = $this->configurableProductsData->getAutocompleteAttributes($this->storeId);
-        foreach ($product->getAttributes() as $attribute) {
+        $productAttributes = $product->getAttributes();
+        foreach ($productAttributes as $attribute) {
             $id = $attribute->getAttributeId();
-            $code = $attribute->getAttributeCode();
-
             if (isset($this->attributesToIgnore[$id])) {
                 continue;
             }
-            $label = $attribute->getFrontendLabel();
 
+            $code = $attribute->getAttributeCode();
             $isUserDefined = $attribute->getIsUserDefined();
             $isFilterableInSearch = ($attribute->getIsFilterableInSearch()) ? true : false;
             $isSearchable = ($attribute->getIsSearchable()) ? true : false;
@@ -358,18 +360,22 @@ class ProductsMapper
                 $isSearchable = false;
             }
 
-            if ($isUserDefined) {
-                $value = $this->getAttributeValue($product, $attribute);
-            }
-
             if ($isUserDefined &&
                (
                   $isFilterableInSearch ||
                   $isFilterable ||
                   $isSearchable
-               ) &&
-               (count($value) > 1 || (count($value) == 1 && !empty($value[0])))
+               )
             ) {
+                if ($isUserDefined) {
+                    $value = $this->getAttributeValue($product, $attribute);
+                }
+                $label = $attribute->getFrontendLabel();
+
+                if (count($value) === 0 || (count($value) == 1 && empty($value[0]))) {
+                    continue;
+                }
+
                 $autocompleteConfig =
                    $this->getAutocompleteConfig($attribute, $autocompleteAttributes);
                 $attributeValueToAdd = [
@@ -464,7 +470,7 @@ class ProductsMapper
             $parentProductId = array_shift($parentProductIds);
             $mappedProduct['groupId'] = $parentProductId;
 
-            $parentProducts = $this->productsManager->getProductsByIds([$parentProductId], $this->storeId);
+            $parentProducts = $this->productsSessionStorage->getByIds([$parentProductId]);
             if (count($parentProducts)) {
                 foreach ($parentProducts as $parentProduct) {
                     $mappedProduct['url'] = $parentProduct->getUrlModel()->getUrl(
@@ -579,7 +585,7 @@ class ProductsMapper
 
     private function getCategories($product)
     {
-        $categories = $this->configurableProductsData->getProductCategories($product, $this->storeId);
+        $categories = $this->configurableProductsData->getProductCategories($product);
         $categoriesAssoc = [];
 
         foreach ($categories as $category) {

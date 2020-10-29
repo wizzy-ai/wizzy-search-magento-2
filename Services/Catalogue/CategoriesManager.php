@@ -33,6 +33,24 @@ class CategoriesManager
         return $categories;
     }
 
+    /**
+     * Get parent IDs of Given Category
+     *
+     * @param $category
+     * @return mixed
+     */
+    public function getParentIdsOfCategory($category)
+    {
+        if (!$category) {
+            return [];
+        }
+        $parentIds = $category->getParentIds();
+        if (($key = array_search(1, $parentIds)) !== false) {
+            unset($parentIds[$key]);
+        }
+        return $parentIds;
+    }
+
     public function fetchByIds($categoryIds, $storeId)
     {
         if (!$categoryIds || !count($categoryIds)) {

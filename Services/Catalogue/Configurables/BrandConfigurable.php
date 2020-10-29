@@ -13,10 +13,16 @@ class BrandConfigurable implements ConfigurableImplInterface
     private $storeCatalogueConfig;
     private $categoriesManager;
 
+    private $configuredCategories;
+    private $configuredAttributes;
+
     public function __construct(StoreCatalogueConfig $storeCatalogueConfig, CategoriesManager $categoriesManager)
     {
         $this->storeCatalogueConfig = $storeCatalogueConfig;
         $this->categoriesManager = $categoriesManager;
+
+        $this->configuredCategories = [];
+        $this->configuredAttributes = [];
     }
 
     public function getValue(array $categories, array $attributes, $storeId)
@@ -51,6 +57,9 @@ class BrandConfigurable implements ConfigurableImplInterface
 
     public function getConfiguredCategories($storeId)
     {
+        if (isset($this->configuredCategories[$storeId])) {
+            return $this->configuredCategories[$storeId];
+        }
         $this->storeCatalogueConfig->setStore($storeId);
         $categories = [];
 
@@ -72,11 +81,16 @@ class BrandConfigurable implements ConfigurableImplInterface
             }
         }
 
+        $this->configuredCategories[$storeId] = $categories;
+
         return $categories;
     }
 
     public function getConfiguredAttributes($storeId)
     {
+        if (isset($this->configuredAttributes[$storeId])) {
+            return $this->configuredAttributes[$storeId];
+        }
         $this->storeCatalogueConfig->setStore($storeId);
         $attributes = [];
 
@@ -88,6 +102,8 @@ class BrandConfigurable implements ConfigurableImplInterface
                 }
             }
         }
+
+        $this->configuredAttributes[$storeId] = $attributes;
 
         return $attributes;
     }

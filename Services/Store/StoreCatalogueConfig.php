@@ -51,10 +51,13 @@ class StoreCatalogueConfig
 
     private $storeId;
 
+    private $cachedGnderIdentityConsiderParentCategories;
+
     public function __construct(ConfigManager $configManager)
     {
         $this->configManager = $configManager;
         $this->storeId = "";
+        $this->cachedGnderIdentityConsiderParentCategories = [];
     }
 
     public function setStore($storeId)
@@ -104,12 +107,17 @@ class StoreCatalogueConfig
 
     public function genderIdentityConsiderParentCategories()
     {
-        return (
+        if (isset($this->cachedGnderIdentityConsiderParentCategories[$this->storeId])) {
+            return $this->cachedGnderIdentityConsiderParentCategories[$this->storeId];
+        }
+        $this->cachedGnderIdentityConsiderParentCategories[$this->storeId] = (
            $this->configManager->getStoreConfig(
                self::GENDER_IDENTIFIABLE_CATEGORIES_PARENT_CONSIDERATION,
                $this->storeId
            )
         ) ? true : false;
+
+        return $this->cachedGnderIdentityConsiderParentCategories[$this->storeId];
     }
 
     public function isMultiBrandStore()

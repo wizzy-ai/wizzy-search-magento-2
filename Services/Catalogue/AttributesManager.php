@@ -66,19 +66,20 @@ class AttributesManager
 
     public function getSwatchDetails($product, $attribute)
     {
-        $value = $attribute->getFrontend()->getValue($product);
-
-        $optionIds = [];
-        if (is_string($value)) {
-            $optionIds = [$attribute->getSource()->getOptionId($value)];
-        }
-
         $swatchType = $this->getSwatchType($attribute);
-        if (count($optionIds) && $swatchType) {
-            return [
-            'type' => $swatchType,
-            'value' => $this->getSwatchValues($optionIds)
-            ];
+        if ($swatchType) {
+            $value = $attribute->getFrontend()->getValue($product);
+            $optionIds = [];
+            if (is_string($value)) {
+                $optionIds = [$attribute->getSource()->getOptionId($value)];
+            }
+
+            if (count($optionIds)) {
+                return [
+                 'type' => $swatchType,
+                 'value' => $this->getSwatchValues($optionIds)
+                ];
+            }
         }
 
         return null;

@@ -8,6 +8,7 @@ use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroup;
 use Magento\Framework\Api\Search\SearchCriteriaInterface;
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 class ProductsManager
 {
@@ -18,6 +19,7 @@ class ProductsManager
     private $filterBuilder;
     private $status;
     private $visibility;
+    private $configurable;
 
     public function __construct(
         ProductRepository $productRepository,
@@ -25,6 +27,7 @@ class ProductsManager
         FilterGroup $filterGroup,
         FilterBuilder $filterBuilder,
         Status $status,
+        Configurable $configurable,
         Visibility $visibility
     ) {
         $this->productRepository = $productRepository;
@@ -33,6 +36,7 @@ class ProductsManager
         $this->filterBuilder = $filterBuilder;
         $this->status = $status;
         $this->visibility = $visibility;
+        $this->configurable = $configurable;
     }
 
     public function fetchAll()
@@ -100,6 +104,17 @@ class ProductsManager
         $products = $products->getItems();
 
         return $products;
+    }
+
+    /**
+     * Get parent product IDs of given children IDs.
+     *
+     * @param $IDs
+     * @return array
+     */
+    public function getParentProductIds($IDs)
+    {
+        return array_values(array_unique($this->configurable->getParentIdsByChild($IDs)));
     }
 
     public function getProductsByIds($IDs, $storeId)

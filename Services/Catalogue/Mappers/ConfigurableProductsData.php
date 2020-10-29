@@ -8,6 +8,7 @@ use Wizzy\Search\Services\Catalogue\Configurables\BrandConfigurable;
 use Wizzy\Search\Services\Catalogue\Configurables\ColorConfigurable;
 use Wizzy\Search\Services\Catalogue\Configurables\GenderConfigurable;
 use Wizzy\Search\Services\Catalogue\Configurables\SizeConfigurable;
+use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 
 class ConfigurableProductsData
@@ -23,6 +24,9 @@ class ConfigurableProductsData
     private $categoriesManager;
     private $attributesManager;
 
+    private $autocompleteAttributes;
+    private $categoriesSessionStorage;
+
     public function __construct(
         BrandConfigurable $brandConfigurable,
         CategoriesManager $categoriesManager,
@@ -30,7 +34,8 @@ class ConfigurableProductsData
         ColorConfigurable $colorConfigurable,
         SizeConfigurable $sizeConfigurable,
         StoreAutocompleteConfig $storeAutocompleteConfig,
-        AttributesManager $attributesManager
+        AttributesManager $attributesManager,
+        CategoriesSessionStorage $categoriesSessionStorage
     ) {
         $this->brandConfigurable = $brandConfigurable;
         $this->genderConfigurable = $genderConfigurable;
@@ -39,6 +44,8 @@ class ConfigurableProductsData
         $this->storeAutocompleteConfig = $storeAutocompleteConfig;
         $this->categoriesManager = $categoriesManager;
         $this->attributesManager = $attributesManager;
+        $this->categoriesSessionStorage = $categoriesSessionStorage;
+        $this->autocompleteAttributes = [];
     }
 
     public function getBrand($categories, $attributes, $storeId)
@@ -63,6 +70,9 @@ class ConfigurableProductsData
 
     public function getAutocompleteAttributes($storeId)
     {
+        if (isset($this->autocompleteAttributes[$storeId])) {
+            return $this->autocompleteAttributes[$storeId];
+        }
         $this->storeAutocompleteConfig->setStore($storeId);
         $attributes = $this->storeAutocompleteConfig->getAttributes();
         if (!$attributes) {
@@ -78,6 +88,8 @@ class ConfigurableProductsData
             'glue' => $attributeValues['autocomplete_glue'],
             ];
         }
+
+        $this->autocompleteAttributes[$storeId] = $attributesToReturn;
 
         return $attributesToReturn;
     }
@@ -120,10 +132,16 @@ class ConfigurableProductsData
         return $categoriesToIgnore;
     }
 
-    public function getProductAttributes($product)
+    public function getProductAttributes($product, $attributesToConsider)
     {
         $attributes = [];
-        foreach ($product->getAttributes() as $attribute) {
+        $productAttributes = $product->getAttributes();
+        foreach ($productAttributes as $attribute) {
+
+            if (!isset($attributesToConsider[$attribute->getId()])) {
+                continue;
+            }
+
             $attributeArr = [
             'id' => $attribute->getId(),
             'value' => $attribute->getFrontend()->getValue($product),
@@ -140,25 +158,24 @@ class ConfigurableProductsData
         return $attributes;
     }
 
-    public function getProductCategories($product, $storeId)
+    public function getProductCategories($product)
     {
         $categoryIds = $product->getCategoryIds();
-        $categories = $this->categoriesManager->fetchByIds($categoryIds, $storeId);
+        $categories = $this->categoriesSessionStorage->getByIds($categoryIds);
         $categoriesAssoc = [];
 
         foreach ($categories as $category) {
-            $parentCategories = $this->getParentIdsOfCategory($category);
+            $parentCategories = $this->categoriesManager->getParentIdsOfCategory($category);
             if (!count($parentCategories)) {
                 continue;
             }
-            $parentCategories = $this->categoriesManager->fetchByIds($parentCategories, $storeId);
+            $parentCategories = $this->categoriesSessionStorage->getByIds($parentCategories);
 
             $hasOneParentInMenu = false;
-            $hasOneParentInSearch = false;
 
             foreach ($parentCategories as $parentCategory) {
                 if (!isset($categoriesAssoc[$parentCategory->getId()])) {
-                    $parentCategoryArr = $this->getCategoryArray($parentCategory, $storeId);
+                    $parentCategoryArr = $this->getCategoryArray($parentCategory);
                     $parentCategoryArr['isParent'] = true;
                     $categoriesAssoc[$parentCategory->getId()] = $parentCategoryArr;
 
@@ -166,7 +183,7 @@ class ConfigurableProductsData
                 }
             }
 
-            $categoryArr = $this->getCategoryArray($category, $storeId);
+            $categoryArr = $this->getCategoryArray($category);
 
             $categoryArr['includeInMenu'] = ($categoryArr['includeInMenu'] && $hasOneParentInMenu);
 
@@ -176,22 +193,13 @@ class ConfigurableProductsData
         return $categoriesAssoc;
     }
 
-    private function getParentIdsOfCategory($category)
-    {
-        $parentIds = $category->getParentIds();
-        if (($key = array_search(1, $parentIds)) !== false) {
-            unset($parentIds[$key]);
-        }
-        return $parentIds;
-    }
-
-    private function getCategoryArray($category, $storeId)
+    private function getCategoryArray($category)
     {
         $pathIds = $category->getPathIds();
         if (count($pathIds)) {
             unset($pathIds[0]);
             $pathIds = array_values($pathIds);
-            $pathCategories = $this->categoriesManager->fetchByIds($pathIds, $storeId);
+            $pathCategories = $this->categoriesSessionStorage->getByIds($pathIds);
 
             $pathIds = [];
             foreach ($pathCategories as $pathCategory) {
