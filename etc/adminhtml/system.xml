@@ -372,6 +372,15 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="display_add_to_cart_button" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Add to Cart button?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select yes if you want to display Add to Cart button on search results page.
+                        ]]>
+                    </comment>
+                </field>
             </group>
 
             <group id="search_results_facets_configuration" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">

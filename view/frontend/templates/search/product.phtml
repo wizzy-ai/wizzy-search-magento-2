@@ -2,6 +2,7 @@
 /** @var $block \Magento\Framework\View\Element\Template */
 $configs = $block->getConfigs();
 $currency = $configs['store']['currency']['symbol'];
+$displayAddToCartButton = $configs['search']['addToCart']['display'];
 ?>
 
 <script type="text/template" id="wizzy-search-results-product">
@@ -61,6 +62,21 @@ $currency = $configs['store']['currency']['symbol'];
                                </span>
                   {{/price}}
                </div>
+
+                <div class="wizzy-product-add-to-cart">
+                    <?php if ($displayAddToCartButton) {  ?>
+                        <form data-role="tocart-form wizzy-tocart-form" action="{{ cart.action }}" method="post">
+                            <input type="hidden" name="product" value="{{id}}">
+                            <input type="hidden" name="uenc" value="{{ cart.uenc }}">
+                            <input name="form_key" type="hidden" value="{{ cart.formKey }}">
+                            <button type="submit" title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                    class="action tocart primary wizzy-tocart-button"
+                                    data-objectid="{{id}}">
+                                <span><?= $block->escapeHtmlAttr(__('Add to Cart')) ?></span>
+                            </button>
+                        </form>
+                    <?php } ?>
+                </div>
             </div>
          </div><!-- ending of result-product-item-info -->
       </a><!-- ending of wizzy-result-product-item -->

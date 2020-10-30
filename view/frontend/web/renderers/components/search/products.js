@@ -22,6 +22,7 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
             }
 
             products[i] = appendModifiedSwatches(products[i]);
+            products[i] = appendCartValues(products[i]);
         }
         return products;
     }
@@ -36,6 +37,19 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
         }
 
         return product;
+    }
+
+    function appendCartValues(product) {
+        var cartAction = window.wizzyConfig.search.addToCart.formAction + 'product/' + product.id + '/';
+        var cartFormKey = window.wizzyConfig.search.addToCart.formKey;
+
+        product['cart'] = {
+            'action': cartAction,
+            'uenc': window.btoa(cartAction),
+            'formKey': cartFormKey
+        };
+
+        return product
     }
 
     function appendModifiedSwatches(product) {

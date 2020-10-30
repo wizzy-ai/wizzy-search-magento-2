@@ -638,6 +638,9 @@
   text-decoration: none;
   border-radius: 3px;
 }
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-add-to-cart {
+  margin-top: 10px;
+}
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .result-product-item-info .product-item-title {
   margin: 0;
   margin-top: 10px;

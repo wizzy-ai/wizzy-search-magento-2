@@ -2,6 +2,8 @@
 
 namespace Wizzy\Search\Block;
 
+use Magento\Framework\App\ActionInterface;
+use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Template;
 use Wizzy\Search\Services\Request\CategoryManager;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
@@ -11,6 +13,7 @@ use Wizzy\Search\Services\Store\StoreManager;
 use Wizzy\Search\Services\Store\StoreSearchConfig;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Wizzy\Search\Services\Store\StoreSearchFormConfig;
+use Magento\Framework\Url\Helper\Data as UrlDataHelper;
 
 class BaseBlock extends Template
 {
@@ -25,6 +28,8 @@ class BaseBlock extends Template
 
     private $priceCurrency;
     private $searchDataHelper;
+    private $formKey;
+    private $urlDataHelper;
 
     public function __construct(
         Template\Context $context,
@@ -37,6 +42,8 @@ class BaseBlock extends Template
         StoreAutocompleteConfig $storeAutocompleteConfig,
         PriceCurrencyInterface $priceCurrency,
         \Magento\Search\Helper\Data $searchDataHelper,
+        FormKey $formKey,
+        UrlDataHelper $urlDataHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -55,6 +62,30 @@ class BaseBlock extends Template
         $this->priceCurrency = $priceCurrency;
         $this->categoryRequestManager = $categoryRequestManager;
         $this->searchDataHelper = $searchDataHelper;
+        $this->formKey = $formKey;
+        $this->urlDataHelper = $urlDataHelper;
+    }
+
+    private function getAddToCartAction()
+    {
+        $redirectUrl = $this->urlDataHelper->getEncodedUrl($this->_urlBuilder->getCurrentUrl());
+        $urlEncodedName = ActionInterface::PARAM_NAME_URL_ENCODED;
+
+        $urlParams = [
+           $urlEncodedName => $redirectUrl,
+          '_secure' => true,
+        ];
+
+        return $this->_urlBuilder->getUrl('checkout/cart/add', $urlParams);
+    }
+
+    private function getAddToCartParams()
+    {
+        return [
+           'formAction' => $this->getAddToCartAction(),
+           'formKey'    => $this->formKey->getFormKey(),
+           'display'     => $this->storeSearchConfig->hasToDisplayAddToCartButton(),
+        ];
     }
 
     public function getConfigs()
@@ -71,6 +102,7 @@ class BaseBlock extends Template
             'storeId' => $this->storeCredentialsConfig->getStoreId(),
          ],
          'search' => [
+            'addToCart' => $this->getAddToCartParams(),
             'enabled' => $this->storeGeneralConfig->isInstantSearchEnabled(),
             'input' => [
                'placeholder' => __($this->storeSearchFormConfig->getSearchInputPlaceholder()),
