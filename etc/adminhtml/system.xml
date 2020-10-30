@@ -240,6 +240,21 @@
                         <field id="brand_identifiable_categories_way">categories-list</field>
                     </depends>
                 </field>
+                <field id="brand_identifiable_sub_categories_selection" translate="label" type="multiselect" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories List</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoriesListAllLevel</source_model>
+                    <comment>
+                        <![CDATA[
+                            Sub categories of selected categories will be used as Brand by Wizzy.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="is_multi_brand_store">1</field>
+                        <field id="brand_identifiable_by">categories</field>
+                        <field id="brand_identifiable_categories_way">all-sub-categories-list</field>
+                    </depends>
+                </field>
                 <field id="brand_identifiable_attribute_selection" translate="label" type="select" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Attribute</label>
                     <source_model>Wizzy\Search\Model\Admin\Source\AttributesList</source_model>

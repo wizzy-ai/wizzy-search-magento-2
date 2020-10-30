@@ -20,6 +20,8 @@ class StoreCatalogueConfig
        self::CATALOGUE_CONFIGURATION_BRANDS . "/brand_identifiable_categories_level";
     const BRAND_IDENTIFIABLE_CATEGORIES_SELECTION =
        self::CATALOGUE_CONFIGURATION_BRANDS . "/brand_identifiable_categories_selection";
+    const BRAND_IDENTIFIABLE_SUB_CATEGORIES_SELECTION =
+       self::CATALOGUE_CONFIGURATION_BRANDS . "/brand_identifiable_sub_categories_selection";
     const BRAND_IDENTIFIABLE_ATTRIBUTE_SELECTION =
        self::CATALOGUE_CONFIGURATION_BRANDS . "/brand_identifiable_attribute_selection";
 
@@ -143,6 +145,11 @@ class StoreCatalogueConfig
     public function brandsIdentityCategories()
     {
         return $this->configManager->getStoreConfig(self::BRAND_IDENTIFIABLE_CATEGORIES_SELECTION, $this->storeId);
+    }
+
+    public function brandsIdentitySubCategories()
+    {
+        return $this->configManager->getStoreConfig(self::BRAND_IDENTIFIABLE_SUB_CATEGORIES_SELECTION, $this->storeId);
     }
 
     public function brandsIdentityAttributes()

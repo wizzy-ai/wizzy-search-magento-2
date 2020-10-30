@@ -17,18 +17,21 @@ class CategoriesManager
         $this->storeManager = $storeManager;
     }
 
-    public function fetchAllOfCurrentStore()
+    public function fetchAllOfCurrentStore($includeLevelOne = false)
     {
-        return $this->fetchAll($this->storeManager->getCurrentStoreId());
+        return $this->fetchAll($this->storeManager->getCurrentStoreId(), $includeLevelOne);
     }
 
-    public function fetchAll($storeId)
+    public function fetchAll($storeId, $includeLevelOne = false)
     {
         $categories = $this->categoryColleection->create()
          ->distinct(true)
-         ->addAttributeToFilter('level', ['gt' => 1])
          ->addAttributeToSelect('*')
          ->setStore($storeId);
+
+        if ($includeLevelOne === false) {
+            $categories = $categories->addAttributeToFilter('level', ['gt' => 1]);
+        }
 
         return $categories;
     }
@@ -51,16 +54,19 @@ class CategoriesManager
         return $parentIds;
     }
 
-    public function fetchByIds($categoryIds, $storeId)
+    public function fetchByIds($categoryIds, $storeId, $includeAnyLevel = false)
     {
         if (!$categoryIds || !count($categoryIds)) {
             return [];
         }
         $categories = $this->categoryColleection->create()
          ->addAttributeToSelect('*')
-         ->addAttributeToFilter('level', ['gt' => 1])
          ->setStore($storeId)
          ->addAttributeToFilter('entity_id', $categoryIds);
+
+        if ($includeAnyLevel === false) {
+            $categories = $categories->addAttributeToFilter('level', ['gt' => 1]);
+        }
 
         return $categories;
     }
@@ -76,6 +82,27 @@ class CategoriesManager
          ->addAttributeToFilter('entity_id', $categoryIds);
 
         return $categories;
+    }
+
+    public function fetchAllDescendantsByParentIds($categoryIds, $storeId)
+    {
+        $categories = $this->fetchByIds($categoryIds, $storeId, true);
+        $paths = [];
+
+        foreach ($categories as $category) {
+            $paths[] = $category->getPath() . "/";
+        }
+
+        if (count($paths) === 0) {
+            return [];
+        }
+
+        $descendantsCategories = $this->categoryColleection->create()
+          ->addAttributeToSelect('*')
+          ->addPathsFilter($paths)
+          ->setStore($storeId);
+
+        return $descendantsCategories;
     }
 
     public function fetchAllByLevel($level, $storeId = "")

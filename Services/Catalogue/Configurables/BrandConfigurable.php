@@ -78,6 +78,14 @@ class BrandConfigurable implements ConfigurableImplInterface
                     $categories = explode(",", $categories);
                 }
 
+                if ($this->storeCatalogueConfig->brandsIdentityCategoriesWay() ==
+                   IdentityCategoriesBy::ALL_SUB_CATEGORIES) {
+                    $categories = $this->storeCatalogueConfig->brandsIdentitySubCategories();
+                    $categories = explode(",", $categories);
+
+                    $categories = $this->categoriesManager->fetchAllDescendantsByParentIds($categories, $storeId);
+                    $categories = $this->extractCategoryIds($categories);
+                }
             }
         }
 
