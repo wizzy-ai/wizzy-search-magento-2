@@ -518,7 +518,7 @@ class ProductsMapper
          'description' => $product->getDescription(),
          'url' => $product->getUrlModel()->getUrl($product, $this->getUrlOptions()),
          'inStock' => ($stockItem && $stockItem->getIsInStock()),
-         'stockQty' => ($stockItem) ? $stockItem->getQty() : 0,
+         'stockQty' => ($stockItem && $stockItem->getQty() > 0) ? $stockItem->getQty() : 0,
          'createdAt' => $product->getCreatedAt(),
          'updatedAt' => $product->getUpdatedAt(),
          'isSearchable' => (
