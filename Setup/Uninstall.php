@@ -18,8 +18,8 @@ class Uninstall implements UninstallInterface
             $conn->dropTable(WizzyTables::$SYNC_QUEUE_TABLE_NAME);
         }
 
-        if ($conn->isTableExists(WizzyTables::$PRODUCTS_SYNC_TABLE_NAME)) {
-            $conn->dropTable(WizzyTables::$PRODUCTS_SYNC_TABLE_NAME);
+        if ($conn->isTableExists(WizzyTables::$ENTITIES_SYNC_TABLE_NAME)) {
+            $conn->dropTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME);
         }
 
         $setup->endSetup();
