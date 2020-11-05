@@ -187,7 +187,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
     function addInfiniteScrollListener() {
         if (paginationUtils.isInfiniteScroll()) {
             $(window).on("scroll", function() {
-                if (urlUtils.isOnSearchPage()) {
+                if (urlUtils.isOnSearchPage() || wizzyConfig.common.isOnCategoryPage) {
                     var scrollHeight = $(document).height();
                     var scrollPos = $(window).height() + $(window).scrollTop();
                     if((((scrollHeight - 600) >= scrollPos) / scrollHeight) == 0){

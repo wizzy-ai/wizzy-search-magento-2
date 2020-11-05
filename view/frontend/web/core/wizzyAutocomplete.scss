@@ -50,7 +50,7 @@ $autoCompleteMenuRadius: 4px;
     }
 
     &.withoutSuggestions {
-      display: none;
+      display: none !important;
     }
   }
 

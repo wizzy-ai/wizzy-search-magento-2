@@ -44,7 +44,7 @@
   width: 100%;
 }
 .wizzy-autocomplete-wrapper.withoutTopProducts.withoutSuggestions {
-  display: none;
+  display: none !important;
 }
 .wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products {
   background: #ffffff;
