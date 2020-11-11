@@ -191,6 +191,33 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
             $('.wizzy-search-wrapper').addClass('mobileTapped');
             $('.wizzy-search-empty-results-wrapper').addClass('mobileTapped');
         }
+        updateAddToCartUenc();
+    }
+
+    function btoaHelper(value) {
+        return window.btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ',');
+    }
+
+    function updateAddToCartUenc() {
+        var updatedUenc = btoaHelper(window.location.href);
+        var cartAction = window.wizzyConfig.search.addToCart.formAction;
+        var uencMatch = cartAction.match(/\/uenc\/(.*)\//);
+        if (uencMatch.length <= 1) {
+            return;
+        }
+
+        uencMatch = uencMatch[1];
+        cartAction = cartAction.replace(uencMatch, updatedUenc);
+        wizzyConfig.search.addToCart.formAction = cartAction;
+
+        $('.wizzy-tocart-form').each(function(e) {
+            var productId = $(this).find('.wizzy-tocart-productid').val();
+            var action = cartAction + 'product/' + productId + '/';
+            var formUenc = btoaHelper(action);
+
+            $(this).attr('action', action);
+            $(this).find('.wizzy-tocart-uenc').val(formUenc);
+        });
     }
 
     function handleFailedSearch() {

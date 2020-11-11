@@ -5,6 +5,7 @@ namespace Wizzy\Search\Block;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Template;
+use Wizzy\Search\Helpers\UrlHelper;
 use Wizzy\Search\Services\Request\CategoryManager;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Wizzy\Search\Services\Store\StoreCredentialsConfig;
@@ -13,7 +14,6 @@ use Wizzy\Search\Services\Store\StoreManager;
 use Wizzy\Search\Services\Store\StoreSearchConfig;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Wizzy\Search\Services\Store\StoreSearchFormConfig;
-use Magento\Framework\Url\Helper\Data as UrlDataHelper;
 
 class BaseBlock extends Template
 {
@@ -29,7 +29,7 @@ class BaseBlock extends Template
     private $priceCurrency;
     private $searchDataHelper;
     private $formKey;
-    private $urlDataHelper;
+    private $urlHelper;
 
     public function __construct(
         Template\Context $context,
@@ -43,7 +43,7 @@ class BaseBlock extends Template
         PriceCurrencyInterface $priceCurrency,
         \Magento\Search\Helper\Data $searchDataHelper,
         FormKey $formKey,
-        UrlDataHelper $urlDataHelper,
+        UrlHelper $urlHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -63,26 +63,13 @@ class BaseBlock extends Template
         $this->categoryRequestManager = $categoryRequestManager;
         $this->searchDataHelper = $searchDataHelper;
         $this->formKey = $formKey;
-        $this->urlDataHelper = $urlDataHelper;
-    }
-
-    private function getAddToCartAction()
-    {
-        $redirectUrl = $this->urlDataHelper->getEncodedUrl($this->_urlBuilder->getCurrentUrl());
-        $urlEncodedName = ActionInterface::PARAM_NAME_URL_ENCODED;
-
-        $urlParams = [
-           $urlEncodedName => $redirectUrl,
-          '_secure' => true,
-        ];
-
-        return $this->_urlBuilder->getUrl('checkout/cart/add', $urlParams);
+        $this->urlHelper = $urlHelper;
     }
 
     private function getAddToCartParams()
     {
         return [
-           'formAction' => $this->getAddToCartAction(),
+           'formAction' => $this->urlHelper->getAddToCartAction($this->_urlBuilder, $this->_urlBuilder->getCurrentUrl()),
            'formKey'    => $this->formKey->getFormKey(),
            'display'     => $this->storeSearchConfig->hasToDisplayAddToCartButton(),
         ];
