@@ -89,6 +89,31 @@ class EntitiesSync
         $this->connectionManager->insertMultiple(WizzyTables::$ENTITIES_SYNC_TABLE_NAME, $recordsToInsert);
     }
 
+    public function markEverythingSynced()
+    {
+        $entitesSync = $this->entitiesSyncFactory->create();
+        $entitiesPresent = $entitesSync->getCollection()
+          ->addFieldToFilter('status', self::$ENTITY_IN_SYNC_STATUS)
+          ->getItems();
+
+        $entitiesData = [];
+        foreach ($entitiesPresent as $entity) {
+            $entitiesData[] = $entity->getData();
+        }
+
+        $entitiesData = array_map(function ($entityData) {
+            unset($entityData['last_synced_at']);
+            unset($entityData['created_at']);
+            unset($entityData['updated_at']);
+            $entityData['status'] = self::$ENTITY_SYNCED_STATUS;
+            return $entityData;
+        }, $entitiesData);
+
+        $this->connectionManager->insertMultiple(WizzyTables::$ENTITIES_SYNC_TABLE_NAME, $entitiesData);
+
+        return $entitiesData;
+    }
+
     public function markAllEntitiesSynced($storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
     {
         $entitesSync = $this->entitiesSyncFactory->create();

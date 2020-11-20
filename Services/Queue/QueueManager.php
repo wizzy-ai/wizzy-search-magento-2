@@ -29,6 +29,19 @@ class QueueManager
         $this->connectionManager = $connectionManager;
     }
 
+    public function get($queueId)
+    {
+        $jobs = $this->queueFactory->create()->getCollection()
+          ->addFieldToFilter('id', $queueId);
+
+        $jobsData = null;
+        foreach ($jobs as $job) {
+            $jobsData = $job->getData();
+        }
+
+        return $jobsData;
+    }
+
     public function enqueue(string $class, $storeId, array $data = [])
     {
         $queue = $this->queueFactory->create();
@@ -76,6 +89,28 @@ class QueueManager
     {
         $jobs = $this->getAllInProgressJobs($storeId, $jobClass);
         $this->changeStatus($jobs, self::JOB_CANCELLED_STATUS);
+    }
+
+    public function clearAll()
+    {
+        $jobs = $this->getAllClearableJobs();
+        $this->changeStatus($jobs, self::JOB_CANCELLED_STATUS);
+
+        return $jobs;
+    }
+
+    private function getAllClearableJobs()
+    {
+        $jobs = $this->queueFactory->create()->getCollection()
+          ->addFieldToFilter('status', ["in" => [self::JOB_TO_EXECUTE_STATUS, self::JOB_IN_PROGRESS_STATUS]]);
+        $jobs = $jobs->setOrder('id', 'ASC');
+
+        $jobsData = [];
+        foreach ($jobs as $job) {
+            $jobsData[] = $job->getData();
+        }
+
+        return $jobsData;
     }
 
     private function getAllInProgressJobs($storeId, $jobClass = null)

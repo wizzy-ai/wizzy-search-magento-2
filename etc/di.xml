@@ -12,4 +12,17 @@
     <type name="Magento\Catalog\Model\ResourceModel\Attribute">
         <plugin name="wizzyAttributesObserver" type="Wizzy\Search\Model\Observer\AttributesObserver"/>
     </type>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="wizzy_search_queue_listing_data_source" xsi:type="string">Wizzy\Search\Model\ResourceModel\Queue\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Wizzy\Search\Model\ResourceModel\Queue\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">wizzy_sync_queue</argument>
+            <argument name="resourceModel" xsi:type="string">Wizzy\Search\Model\ResourceModel\Queue</argument>
+        </arguments>
+    </virtualType>
 </config>

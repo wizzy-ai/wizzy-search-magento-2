@@ -65,7 +65,8 @@ $displayAddToCartButton = $configs['search']['addToCart']['display'];
 
                 <div class="wizzy-product-add-to-cart">
                     <?php if ($displayAddToCartButton) {  ?>
-                        <form data-role="tocart-form" class="wizzy-tocart-form" action="{{ cart.action }}" method="post">
+                        <form data-role="tocart-form" class="wizzy-tocart-form"
+                              action="{{ cart.action }}" method="post">
                             <input type="hidden" class="wizzy-tocart-productid" name="product" value="{{id}}">
                             <input type="hidden" class="wizzy-tocart-uenc" name="uenc" value="{{ cart.uenc }}">
                             <input name="form_key" type="hidden" value="{{ cart.formKey }}">

@@ -2,7 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
     <menu>
         <add
-            id="Wizzy_Search::manage"
+            id="Wizzy_Search::main"
             title="Wizzy Search"
             module="Wizzy_Search"
             sortOrder="999"
@@ -14,54 +14,54 @@
             title="Store Credentials"
             module="Wizzy_Search"
             sortOrder="10"
-            parent="Wizzy_Search::manage"
+            parent="Wizzy_Search::main"
             action="adminhtml/system_config/edit/section/wizzy_store_credentials/store/1/"
-            resource="Wizzy_Search::manage"
+            resource="Wizzy_Search::main"
         />
         <add
                 id="Wizzy_Search::generalSetup"
                 title="General Setup"
                 module="Wizzy_Search"
                 sortOrder="10"
-                parent="Wizzy_Search::manage"
+                parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_general_configuration/store/1/"
-                resource="Wizzy_Search::manage"
+                resource="Wizzy_Search::main"
         />
         <add
                 id="Wizzy_Search::catalogueConfiguration"
                 title="Catalogue Index"
                 module="Wizzy_Search"
                 sortOrder="10"
-                parent="Wizzy_Search::manage"
+                parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_catalogue_configuration/store/1/"
-                resource="Wizzy_Search::manage"
+                resource="Wizzy_Search::main"
         />
         <add
                 id="Wizzy_Search::searchResultsPage"
                 title="Search Results Page"
                 module="Wizzy_Search"
                 sortOrder="10"
-                parent="Wizzy_Search::manage"
+                parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_search_configuration/store/1/"
-                resource="Wizzy_Search::manage"
+                resource="Wizzy_Search::main"
         />
         <add
                 id="Wizzy_Search::autocompleteMenu"
                 title="Autocomplete Menu"
                 module="Wizzy_Search"
                 sortOrder="10"
-                parent="Wizzy_Search::manage"
+                parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_autocomplete_configuration/store/1/"
-                resource="Wizzy_Search::manage"
+                resource="Wizzy_Search::main"
         />
         <add
             id="Wizzy_Search::queue"
-            title="Queue Runner Status"
+            title="Queue Processors Status"
             module="Wizzy_Search"
             sortOrder="50"
-            parent="Wizzy_Search::manage"
+            parent="Wizzy_Search::main"
             action="wizzy_search/queue/status"
-            resource="Wizzy_Search::manage"
+            resource="Wizzy_Search::main"
         />
     </menu>
 </config>

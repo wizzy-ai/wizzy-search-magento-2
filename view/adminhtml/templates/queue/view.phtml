@@ -1,0 +1,94 @@
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+$item = $block->getQueueProcessorItem();
+?>
+
+<style type="text/css">
+    .wizzy-queue-details .admin__field-option{
+        word-break: break-word;
+    }
+</style>
+
+<div class="admin__fieldset-wrapper opened wizzy-queue-details">
+   <div class="admin__fieldset-wrapper-title"">
+   <strong class="title">
+      <span><?= $block->escapeHtmlAttr(__('Queue Processor Details')); ?></span>
+   </strong>
+</div>
+<div class="admin__fieldset-wrapper-content">
+   <fieldset class="admin__fieldset">
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Queue Id')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= $block->escapeHtml($item['id']); ?>
+            </div>
+         </div>
+      </div>
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Status')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= $block->escapeHtml($item['status']); ?>
+            </div>
+         </div>
+      </div>
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Processor')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= $block->escapeHtml($item['class']); ?>
+            </div>
+         </div>
+      </div>
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Tries')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= $block->escapeHtml($item['tries']); ?>
+            </div>
+         </div>
+      </div>
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Errors')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= $block->escapeHtml($item['errors']); ?>
+            </div>
+         </div>
+      </div>
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Store')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= /* @noEscape */ $item['store']; ?>
+            </div>
+         </div>
+      </div>
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Queued')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= $block->escapeHtml($item['queued_at']); ?>
+            </div>
+         </div>
+      </div>
+      <div class="admin__field">
+         <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Updated')); ?></span></label>
+         <div class="admin__field-control">
+            <div class="admin__field admin__field-option">
+                <?= $block->escapeHtml($item['last_updated_at']); ?>
+            </div>
+         </div>
+      </div>
+       <div class="admin__field">
+           <label class="admin__field-label"><span><?= $block->escapeHtmlAttr(__('Data')); ?></span></label>
+           <div class="admin__field-control">
+               <div class="admin__field admin__field-option">
+                    <?= $block->escapeHtml($item['data']); ?>
+               </div>
+           </div>
+       </div>
+   </fieldset>
+</div>
+</div>

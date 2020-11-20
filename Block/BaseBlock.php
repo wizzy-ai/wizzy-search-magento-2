@@ -69,7 +69,10 @@ class BaseBlock extends Template
     private function getAddToCartParams()
     {
         return [
-           'formAction' => $this->urlHelper->getAddToCartAction($this->_urlBuilder, $this->_urlBuilder->getCurrentUrl()),
+           'formAction' => $this->urlHelper->getAddToCartAction(
+               $this->_urlBuilder,
+               $this->_urlBuilder->getCurrentUrl()
+           ),
            'formKey'    => $this->formKey->getFormKey(),
            'display'     => $this->storeSearchConfig->hasToDisplayAddToCartButton(),
         ];
