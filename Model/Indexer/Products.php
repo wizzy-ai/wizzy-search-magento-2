@@ -2,6 +2,7 @@
 namespace Wizzy\Search\Model\Indexer;
 
 use Wizzy\Search\Services\Catalogue\ProductsManager;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\EntitiesSync;
 use Wizzy\Search\Services\Queue\Processors\IndexProductsProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
@@ -16,12 +17,14 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
     private $maxProductsInSingleQueue;
     private $entitesSync;
     private $storeManager;
+    private $output;
 
     public function __construct(
         ProductsManager $productsManager,
         QueueManager $queueManager,
         EntitiesSync $entitiesSync,
-        StoreManager $storeManager
+        StoreManager $storeManager,
+        IndexerOutput $output
     ) {
         $this->productsManager = $productsManager;
         $this->queueManager = $queueManager;
@@ -31,6 +34,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
 
         $this->entitesSync = $entitiesSync;
         $this->storeManager = $storeManager;
+        $this->output = $output;
     }
 
   /*
@@ -86,6 +90,8 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
             $productBatchIds = [];
             $addedProducts = 0;
             $batchIndex = 0;
+            $this->output->writeDiv();
+            $this->output->writeln(__('Adding ' . count($productIds) .' Products for Sync in Store #' . $storeId));
 
             foreach ($productIds as $productId) {
                 if ($addedProducts == $this->maxProductsInSingleQueue) {

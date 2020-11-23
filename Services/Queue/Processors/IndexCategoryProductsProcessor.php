@@ -5,6 +5,7 @@ namespace Wizzy\Search\Services\Queue\Processors;
 use Wizzy\Search\Services\Catalogue\CategoriesManager;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerManager;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\WizzyProduct;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
 use Wizzy\Search\Services\Store\StoreManager;
@@ -20,6 +21,7 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
     private $wizzyProduct;
     private $storeManager;
     private $productsManager;
+    private $output;
 
     public function __construct(
         IndexerManager $indexerManager,
@@ -27,7 +29,8 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
         StoreManager $storeManager,
         StoreGeneralConfig $storeGeneralConfig,
         CategoriesManager $categoriesManager,
-        WizzyProduct $wizzyProduct
+        WizzyProduct $wizzyProduct,
+        IndexerOutput $output
     ) {
         $this->productsIndexer = $indexerManager->getProductsIndexer();
         $this->storeGeneralConfig = $storeGeneralConfig;
@@ -37,6 +40,7 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
         $this->wizzyProduct = $wizzyProduct;
         $this->storeManager = $storeManager;
         $this->productsManager = $productsManager;
+        $this->output = $output;
     }
 
     public function execute(array $data, $storeId)
@@ -47,10 +51,14 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
         foreach ($storeIds as $storeId) {
             $this->storeGeneralConfig->setStore($storeId);
             if (!$this->storeGeneralConfig->isSyncEnabled() || !isset($data['categoryIds'])) {
+                if (!$this->storeGeneralConfig->isSyncEnabled()) {
+                    $this->output->writeln(__('Category Products Indexing Skipped as Sync is disabled.'));
+                }
                 continue;
             }
 
             $categoryIds = $data['categoryIds'];
+            $this->output->writeln(__('Started processing '.count($categoryIds).' Categories.'));
             $categories = $this->categoriesManager->fetch($categoryIds, $storeId);
             if (count($categories)) {
                 foreach ($categories as $category) {
@@ -67,6 +75,7 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
     private function addProductsToSync($storeId)
     {
         $products = $this->productsManager->getProductsByCategoryIds(array_keys($this->categoriesToProcess), $storeId);
+        $this->output->writeln(__('Added '.count($products).' Products for processing.'));
         $this->productsToSync = $this->productsManager->getProductIds($products);
     }
 

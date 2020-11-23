@@ -4,6 +4,7 @@ namespace Wizzy\Search\Services\Queue\Processors;
 
 use Wizzy\Search\Services\API\Wizzy\Modules\Currency;
 use Wizzy\Search\Services\Currency\CurrencyManager;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
 use Wizzy\Search\Services\Store\StoreManager;
 
@@ -14,29 +15,35 @@ class UpdateCurrencyOptions extends QueueProcessorBase
     private $currencyManager;
     private $currencyUpdater;
     private $storeGeneralConfig;
+    private $output;
 
     public function __construct(
         StoreManager $storeManager,
         StoreGeneralConfig $storeGeneralConfig,
         CurrencyManager $currencyManager,
-        Currency $currency
+        Currency $currency,
+        IndexerOutput $output
     ) {
         $this->storeManager = $storeManager;
         $this->currencyManager = $currencyManager;
         $this->currencyUpdater = $currency;
         $this->storeGeneralConfig = $storeGeneralConfig;
+        $this->output = $output;
     }
 
     public function execute(array $data, $storeId)
     {
-
-        if (!$this->storeGeneralConfig->isSyncEnabled()) {
-            return true;
-        }
-
         $storeIds = $this->storeManager->getToSyncStoreIds($storeId);
 
         foreach ($storeIds as $storeId) {
+            $this->storeGeneralConfig->setStore($storeId);
+            $this->output->writeln(__('Processing currencies for Store #' . $storeId));
+
+            if (!$this->storeGeneralConfig->isSyncEnabled()) {
+                $this->output->writeln(__('Update Currencies Skipped as Sync is disabled.'));
+                return true;
+            }
+
             $defaultCurrency = $this->currencyManager->getDefaultCurrency($storeId);
             $displayCurrency = $this->currencyManager->getDisplayCurrency($storeId);
             $supportedCurrencyCodes = $this->currencyManager->getSupportedCurrencies($storeId);
@@ -44,18 +51,38 @@ class UpdateCurrencyOptions extends QueueProcessorBase
             $currenciesToDelete = $this->getCurrenciesToDelete($supportedCurrencyCodes, $storeId);
 
             if (count($supportedCurrencies)) {
-                $this->currencyUpdater->save($supportedCurrencies, $storeId);
+                $this->output->writeln(__('Saving ' . count($supportedCurrencies) . ' currencies.'));
+                $response = $this->currencyUpdater->save($supportedCurrencies, $storeId);
+
+                if ($response) {
+                    $this->output->writeln(__('Saved ' . count($supportedCurrencies) . ' currencies successfully.'));
+                }
             }
 
             if ($defaultCurrency) {
-                $this->currencyUpdater->saveDefaultCurrency($defaultCurrency, $storeId);
+                $this->output->writeln(__('Setting default currency.'));
+                $response = $this->currencyUpdater->saveDefaultCurrency($defaultCurrency, $storeId);
+
+                if ($response) {
+                    $this->output->writeln(__('Saved default currency.'));
+                }
             }
             if ($displayCurrency) {
-                $this->currencyUpdater->saveDisplayCurrency($displayCurrency, $storeId);
+                $this->output->writeln(__('Setting display currency.'));
+                $response = $this->currencyUpdater->saveDisplayCurrency($displayCurrency, $storeId);
+
+                if ($response) {
+                    $this->output->writeln(__('Saved display currency.'));
+                }
             }
 
             if (count($currenciesToDelete)) {
-                $this->currencyUpdater->delete($currenciesToDelete, $storeId);
+                $this->output->writeln(__('Deleting ' . count($currenciesToDelete) . ' currencies.'));
+                $response = $this->currencyUpdater->delete($currenciesToDelete, $storeId);
+
+                if ($response) {
+                    $this->output->writeln(__('Deleted ' . count($currenciesToDelete) . ' currencies successfully.'));
+                }
             }
         }
 
@@ -65,7 +92,9 @@ class UpdateCurrencyOptions extends QueueProcessorBase
     private function getCurrenciesToDelete(array $supportedCurrencies, $storeId)
     {
         $wizzyCurrencies = $this->currencyUpdater->get($storeId);
-        if ($wizzyCurrencies === true && count($wizzyCurrencies) > 0) {
+        if ($wizzyCurrencies['status'] === true && count($wizzyCurrencies['data']) > 0) {
+            $wizzyCurrencies = $wizzyCurrencies['data'];
+
             $wizzyCurrencies = array_column($wizzyCurrencies, "code");
             $currencies = array_values(array_diff($wizzyCurrencies, $supportedCurrencies));
             $currenciesToDelete = [];

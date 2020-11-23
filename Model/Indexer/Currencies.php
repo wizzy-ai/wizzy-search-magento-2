@@ -3,16 +3,19 @@ namespace Wizzy\Search\Model\Indexer;
 
 use Wizzy\Search\Services\Config\CurrencyOptions;
 use Magento;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Store\StoreManager;
 
 class Currencies implements Magento\Framework\Indexer\ActionInterface, Magento\Framework\Mview\ActionInterface
 {
 
     private $currencyOptions;
+    private $output;
 
-    public function __construct(CurrencyOptions $currencyOptions, StoreManager $storeManager)
+    public function __construct(CurrencyOptions $currencyOptions, IndexerOutput $output)
     {
         $this->currencyOptions = $currencyOptions;
+        $this->output = $output;
     }
 
    /*
@@ -29,6 +32,9 @@ class Currencies implements Magento\Framework\Indexer\ActionInterface, Magento\F
     public function executeFull()
     {
         $this->currencyOptions->onOptionsUpdated();
+        $this->output->writeDiv();
+        $this->output->writeln(__('Added Currencies for Sync.'));
+
         return $this;
     }
 

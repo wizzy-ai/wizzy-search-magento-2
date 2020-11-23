@@ -1,6 +1,7 @@
 <?php
 namespace Wizzy\Search\Model\Indexer;
 
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Queue\Processors\IndexPagesProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
 use Magento;
@@ -9,10 +10,12 @@ class Pages implements Magento\Framework\Indexer\ActionInterface, Magento\Framew
 {
 
     private $queueManager;
+    private $output;
 
-    public function __construct(QueueManager $queueManager)
+    public function __construct(QueueManager $queueManager, IndexerOutput $output)
     {
         $this->queueManager = $queueManager;
+        $this->output = $output;
     }
 
    /*
@@ -58,5 +61,7 @@ class Pages implements Magento\Framework\Indexer\ActionInterface, Magento\Framew
         $this->queueManager->enqueue(IndexPagesProcessor::class, 0, [
          'slugs' => $slugs,
         ]);
+        $this->output->writeDiv();
+        $this->output->writeln(__('Added ' . count($slugs) . ' Pages for Sync.'));
     }
 }

@@ -10,6 +10,7 @@ use Wizzy\Search\Services\Catalogue\Mappers\ProductsMapper;
 use Wizzy\Search\Services\Catalogue\OrderItemManager;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Catalogue\ReviewRatingsManager;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\EntitiesSync;
 use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
@@ -28,6 +29,7 @@ class IndexProductsProcessor extends QueueProcessorBase
     private $categoriesManager;
     private $categoriesSessionStorage;
     private $productsSessionStorage;
+    private $output;
 
     public function __construct(
         ProductsManager $productsManager,
@@ -39,7 +41,8 @@ class IndexProductsProcessor extends QueueProcessorBase
         CategoriesManager $categoriesManager,
         ReviewRatingsManager $reviewRatingsManager,
         CategoriesSessionStorage $categoriesSessionStorage,
-        ProductsSessionStorage $productsSessionStorage
+        ProductsSessionStorage $productsSessionStorage,
+        IndexerOutput $output
     ) {
         $this->productsManager = $productsManager;
         $this->productsMapper = $productsMapper;
@@ -51,16 +54,19 @@ class IndexProductsProcessor extends QueueProcessorBase
         $this->categoriesManager = $categoriesManager;
         $this->productsSessionStorage = $productsSessionStorage;
         $this->categoriesSessionStorage = $categoriesSessionStorage;
+        $this->output = $output;
     }
 
     public function execute(array $data, $storeId)
     {
         $this->storeGeneralConfig->setStore($storeId);
         if (!$this->storeGeneralConfig->isSyncEnabled() || !isset($data['products'])) {
+            $this->output->writeln(__('Index Products Processor Skipped as Sync is disabled.'));
             return true;
         }
 
         $productIds = $data['products'];
+        $this->output->writeln(__('Started processing ' . count($productIds) . ' Products'));
 
         $products = $this->productsManager->getProductsByIds($productIds, $storeId);
         $this->setSessionData($products, $productIds, $storeId);
@@ -71,9 +77,11 @@ class IndexProductsProcessor extends QueueProcessorBase
         $orderItems = $this->orderItemManager->getSummary($productIdsForReview, $storeId);
 
         $products = $this->productsMapper->mapAll($products, $productReviews, $orderItems, $storeId);
+        $this->output->writeln(__('Saving ' . count($productIds) . ' Products.'));
         $saveResponse = $this->submitSaveProductsRequest($products, $storeId);
 
         if ($saveResponse === true) {
+            $this->output->writeln(__('Saved ' . count($productIds) . ' Products successfully.'));
             $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
             $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
             return true;
@@ -206,7 +214,13 @@ class IndexProductsProcessor extends QueueProcessorBase
         if (count($products) == 0) {
             return true;
         }
-        return $this->productsConnector->delete($products, $storeId);
+        $this->output->writeln(__('Deleting ' . count($products) . ' Products.'));
+        $response = $this->productsConnector->delete($products, $storeId);
+        if ($response) {
+            $this->output->writeln(__('Deleted ' . count($products) . ' Products successfully.'));
+        }
+
+        return $response;
     }
 
     private function findDeletedAndInactiveProducts($productIds, $products)

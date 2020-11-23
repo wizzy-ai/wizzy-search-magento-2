@@ -3,15 +3,18 @@
 namespace Wizzy\Search\Services\API\Wizzy\Modules;
 
 use Wizzy\Search\Services\API\Wizzy\WizzyAPIWrapper;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 
 class Pages
 {
 
     private $wizzyAPIWrapper;
+    private $output;
 
-    public function __construct(WizzyAPIWrapper $wizzyAPIWrapper)
+    public function __construct(WizzyAPIWrapper $wizzyAPIWrapper, IndexerOutput $output)
     {
         $this->wizzyAPIWrapper = $wizzyAPIWrapper;
+        $this->output = $output;
     }
 
     public function save($pages, $storeId)
@@ -20,7 +23,10 @@ class Pages
         if ($response->getStatus()) {
             return true;
         } else {
-           // Log the error.
+            $this->output->log([
+               'Message' => 'Pages Save API Failed',
+               'Response' => json_encode($response->getPayload()),
+            ]);
             return $response;
         }
     }
@@ -29,10 +35,22 @@ class Pages
     {
         $response = $this->wizzyAPIWrapper->getPages($storeId);
         if ($response->getStatus()) {
-            return $response['payload']['response']['payload']['pages'];
+            $response = $response->getPayload();
+
+            return [
+               'status' => true,
+               'data'   => $response['response']['payload']['pages'],
+            ];
         } else {
-           // Log the error.
-            return $response;
+            $this->output->log([
+              'Message' => 'Pages Get API Failed',
+              'Response' => json_encode($response->getPayload()),
+            ]);
+
+            return [
+               'status' => false,
+               'data'   => $response,
+            ];
         }
     }
 
@@ -42,7 +60,11 @@ class Pages
         if ($response->getStatus()) {
             return true;
         } else {
-           // Log the error.
+            $this->output->log([
+              'Message' => 'Pages Delete API Failed',
+              'Response' => json_encode($response->getPayload()),
+            ]);
+
             return $response;
         }
     }

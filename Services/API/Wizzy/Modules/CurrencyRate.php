@@ -3,15 +3,18 @@
 namespace Wizzy\Search\Services\API\Wizzy\Modules;
 
 use Wizzy\Search\Services\API\Wizzy\WizzyAPIWrapper;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 
 class CurrencyRate
 {
 
     private $wizzyAPIWrapper;
+    private $output;
 
-    public function __construct(WizzyAPIWrapper $wizzyAPIWrapper)
+    public function __construct(WizzyAPIWrapper $wizzyAPIWrapper, IndexerOutput $output)
     {
         $this->wizzyAPIWrapper = $wizzyAPIWrapper;
+        $this->output = $output;
     }
 
     public function save($currencyRates, $storeId)
@@ -20,7 +23,10 @@ class CurrencyRate
         if ($response->getStatus()) {
             return true;
         } else {
-           // Log the error.
+            $this->output->log([
+               'Message' => 'Current Rates Save API Failed.',
+               'Response' => json_encode($response->getPayload()),
+            ]);
             return $response;
         }
     }

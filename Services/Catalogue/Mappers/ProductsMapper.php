@@ -7,6 +7,7 @@ use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
+use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 
@@ -28,6 +29,7 @@ class ProductsMapper
     private $productReviews;
     private $orderItems;
     private $configManager;
+    private $output;
 
     public function __construct(
         Configurable $configurable,
@@ -36,7 +38,8 @@ class ProductsMapper
         AttributesManager $attributesManager,
         StockRegistry $stockRegistry,
         ConfigManager $configManager,
-        ProductsSessionStorage $productsSessionStorage
+        ProductsSessionStorage $productsSessionStorage,
+        IndexerOutput $output
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -48,6 +51,7 @@ class ProductsMapper
         $this->orderItems = [];
         $this->configManager = $configManager;
         $this->productsSessionStorage = $productsSessionStorage;
+        $this->output = $output;
     }
 
     private function resetEntitiesToIgnore()
@@ -88,7 +92,17 @@ class ProductsMapper
            empty($mappedProduct['sellingPrice']) ||
            $mappedProduct['sellingPrice'] == 0
         ) {
-           // Log this event so developer can debug why particular product is being ignored.
+            $this->output->log([
+               'Message' => 'Product Skipped',
+               'ID' => $product->getId(),
+               'Reason' => "Don't have enough required details",
+               'Data' => json_encode([
+                  'Main Image' => $mappedProduct['mainImage'],
+                  'Categories Count' => count($mappedProduct['categories']),
+                  'selling Price' => $mappedProduct['sellingPrice'],
+               ])
+            ], IndexerOutput::LOG_INFO_TYPE);
+
             return null;
         }
 
