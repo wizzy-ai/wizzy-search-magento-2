@@ -35,8 +35,10 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
 
     function performSearchRequest(isBySubmit, isByTrigger) {
         var value = searchElement.val().trim();
-        if (pageStore.get(pageStore.keys.searchInputValue) !== value || isBySubmit) {
+        if (pageStore.get(pageStore.keys.searchInputValue) !== value || (isBySubmit && pageStore.get(pageStore.keys.searchSubmitValue) !== value)) {
             pageStore.set(pageStore.keys.searchInputValue, value);
+            pageStore.set(pageStore.keys.searchSubmitValue, value);
+
             if (value.length == 0 && isBySubmit) {
                 return;
             }
@@ -282,6 +284,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
 
         $.fn.setSearchedTitle = function(title) {
             pageStore.set(pageStore.keys.searchInputValue, title);
+            pageStore.set(pageStore.keys.searchSubmitValue, title);
             return this;
         };
 

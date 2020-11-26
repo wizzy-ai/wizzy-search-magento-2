@@ -1,6 +1,7 @@
 define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filters/swatch'], function(pageStore, _, swatchComponent) {
     function getTransformedProducts(products) {
         var totalProducts = products.length;
+        resetFormKey();
         for (var i = 0; i < totalProducts; i++) {
             var categories = products[i]['categories'];
             if (categories.length > 0) {
@@ -25,6 +26,20 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
             products[i] = appendCartValues(products[i]);
         }
         return products;
+    }
+
+    function resetFormKey() {
+        var cookieFormKey = getCookie('form_key');
+
+        if(cookieFormKey != "" && window.wizzyConfig.search.addToCart.formKey != cookieFormKey) {
+            window.wizzyConfig.search.addToCart.formKey = cookieFormKey;
+        }
+    }
+
+    function getCookie(name) {
+        function escape(s) { return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1'); }
+        var match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
+        return match ? match[1] : null;
     }
 
     function setNullIfZero(fields, product) {
