@@ -26,8 +26,8 @@ class AttributesManager
         $attributes = $attributes->setOrder('frontend_label', 'ASC');
         $attributes = $attributes->addFilter('is_user_defined', '1');
         $attributes = $attributes->addFieldToFilter(
-            ['is_filterable', 'is_filterable_in_search'],
-            [[1, 2], 1]
+            ['is_filterable', 'is_filterable', 'is_filterable_in_search'],
+            [1, [1, 2], 1]
         );
 
         $attributesToReturn = [];

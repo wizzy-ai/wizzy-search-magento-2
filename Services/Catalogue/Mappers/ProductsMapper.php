@@ -370,20 +370,14 @@ class ProductsMapper
             $isSearchable = ($attribute->getIsSearchable()) ? true : false;
             $isFilterable = ($attribute->getIsFilterable()) ? true: false;
 
+            $isSearchableOrFilterable = ($isFilterableInSearch || $isFilterable || $isSearchable);
+
             if (!$this->isSerachableFrontendInputType($attribute)) {
                 $isSearchable = false;
             }
 
-            if ($isUserDefined &&
-               (
-                  $isFilterableInSearch ||
-                  $isFilterable ||
-                  $isSearchable
-               )
-            ) {
-                if ($isUserDefined) {
-                    $value = $this->getAttributeValue($product, $attribute);
-                }
+            if (($isUserDefined || $this->isSystemDefinedAttribute($attribute)) && $isSearchableOrFilterable) {
+                $value = $this->getAttributeValue($product, $attribute);
                 $label = $attribute->getFrontendLabel();
 
                 if (count($value) === 0 || (count($value) == 1 && empty($value[0]))) {
@@ -428,6 +422,33 @@ class ProductsMapper
             }
             $mappedProduct['attributes'] = $attributes;
         }
+    }
+
+    private function getReservedAttributeCodes(): array
+    {
+        return [
+          'visibility',
+          'name',
+          'price',
+          'description',
+          'created_at',
+          'updated_at',
+          'category_ids',
+          'status',
+        ];
+    }
+
+    private function isSystemDefinedAttribute($attribute)
+    {
+        $isUserDefined = $attribute->getIsUserDefined();
+        if (!$isUserDefined) {
+            $code = $attribute->getAttributeCode();
+            if ($code && !in_array($code, $this->getReservedAttributeCodes())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getAutocompleteConfig($attribute, $autocompleteAttributes)
