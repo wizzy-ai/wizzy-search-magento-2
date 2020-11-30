@@ -5,6 +5,7 @@ namespace Wizzy\Search\Block;
 use Magento\Framework\App\ActionInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Template;
+use Wizzy\Search\Helpers\AddToWishlistHelper;
 use Wizzy\Search\Helpers\UrlHelper;
 use Wizzy\Search\Services\Request\CategoryManager;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
@@ -31,6 +32,8 @@ class BaseBlock extends Template
     private $formKey;
     private $urlHelper;
 
+    private $addToWishlistHelper;
+
     public function __construct(
         Template\Context $context,
         CategoryManager $categoryRequestManager,
@@ -44,6 +47,7 @@ class BaseBlock extends Template
         \Magento\Search\Helper\Data $searchDataHelper,
         FormKey $formKey,
         UrlHelper $urlHelper,
+        AddToWishlistHelper $addToWishlistHelper,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -64,6 +68,8 @@ class BaseBlock extends Template
         $this->searchDataHelper = $searchDataHelper;
         $this->formKey = $formKey;
         $this->urlHelper = $urlHelper;
+
+        $this->addToWishlistHelper = $addToWishlistHelper;
     }
 
     private function getAddToCartParams()
@@ -93,6 +99,7 @@ class BaseBlock extends Template
          ],
          'search' => [
             'addToCart' => $this->getAddToCartParams(),
+            'addToWishlist' => $this->addToWishlistHelper->getAddParams($this->_urlBuilder),
             'enabled' => $this->storeGeneralConfig->isInstantSearchEnabled(),
             'input' => [
                'placeholder' => __($this->storeSearchFormConfig->getSearchInputPlaceholder()),

@@ -192,10 +192,27 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
             $('.wizzy-search-empty-results-wrapper').addClass('mobileTapped');
         }
         updateAddToCartUenc();
+        updateAddToWishlistUenc();
     }
 
     function btoaHelper(value) {
         return window.btoa(value).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, ',');
+    }
+
+    function updateAddToWishlistUenc() {
+        var updatedUenc = btoaHelper(window.location.href);
+        var addToWishlistPayload = wizzyConfig.search.addToWishlist;
+        addToWishlistPayload['data']['uenc'] = updatedUenc;
+
+        $('.wizzy-product-add-to-wishlist').each(function(e) {
+            var button = $(this).find('.wizzy-towishlist-button');
+            addToWishlistPayload['data']['product'] = button.data('productid');
+            var groupId = button.data('groupid');
+            if (groupId != "") {
+                addToWishlistPayload['data']['product'] = groupId;
+            }
+            button.attr('data-post', JSON.stringify(addToWishlistPayload));
+        });
     }
 
     function updateAddToCartUenc() {

@@ -638,6 +638,18 @@
   text-decoration: none;
   border-radius: 3px;
 }
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-actions .product_item-actions .actions-primary, .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-actions .product_item-actions .actions-secondary {
+  display: inline-block;
+}
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-actions .product_item-actions .actions-secondary {
+  margin-left: 10px;
+}
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-add-to-wishlist .wizzy-towishlist-button span {
+  display: none;
+}
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-add-to-wishlist .wizzy-towishlist-button:before {
+  content: "♡";
+}
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-add-to-cart {
   margin-top: 10px;
 }

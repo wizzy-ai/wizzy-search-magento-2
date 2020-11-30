@@ -63,22 +63,47 @@ $displayAddToCartButton = $configs['search']['addToCart']['display'];
                   {{/price}}
                </div>
 
-                <div class="wizzy-product-add-to-cart">
-                    <?php if ($displayAddToCartButton) {  ?>
-                        <form data-role="tocart-form" class="wizzy-tocart-form"
-                              action="{{ cart.action }}" method="post">
-                            <input type="hidden" class="wizzy-tocart-productid" name="product" value="{{id}}">
-                            <input type="hidden" class="wizzy-tocart-uenc" name="uenc" value="{{ cart.uenc }}">
-                            <input name="form_key" type="hidden" value="{{ cart.formKey }}">
-                            <button type="submit" title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>"
-                                    class="action tocart primary wizzy-tocart-button"
-                                    data-objectid="{{id}}">
-                                <span><?= $block->escapeHtmlAttr(__('Add to Cart')) ?></span>
-                            </button>
-                        </form>
-                    <?php } ?>
-                </div>
-            </div>
+                <div class="wizzy-product-actions">
+                    <div class="product_item-actions actions">
+
+                       <?php if ($displayAddToCartButton) {  ?>
+                            <div class="actions-primary">
+                                <div class="wizzy-product-add-to-cart">
+                                   <form data-role="tocart-form" class="wizzy-tocart-form"
+                                         action="{{ cart.action }}" method="post">
+                                       <input type="hidden" class="wizzy-tocart-productid" name="product" value="{{id}}">
+                                       <input type="hidden" class="wizzy-tocart-uenc" name="uenc" value="{{ cart.uenc }}">
+                                       <input name="form_key" type="hidden" value="{{ cart.formKey }}">
+                                       <button type="submit" title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>"
+                                               class="action tocart primary wizzy-tocart-button"
+                                               data-objectid="{{id}}">
+                                           <span><?= $block->escapeHtmlAttr(__('Add to Cart')) ?></span>
+                                       </button>
+                                   </form>
+                                </div>
+                            </div>
+                       <?php } ?>
+
+                        <div class="actions-secondary" data-role="add-to-links">
+                            <div class="wizzy-product-add-to-wishlist">
+                                <button
+                                   class="action towishlist wizzy-towishlist-button"
+                                   title="<?= $block->escapeHtmlAttr(__('Add to Wish List')) ?>"
+                                   aria-label="<?= $block->escapeHtmlAttr(__('Add to Wish List')) ?>"
+                                   data-post=''
+                                   data-productid="{{id}}"
+                                   data-groupid="{{#groupId}}{{groupId}}{{/groupId}}"
+                                   data-action="add-to-wishlist"
+                                   role="button">
+                                    <span><?= $block->escapeHtml(__('Add to Wish List')) ?></span>
+                                </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div><!-- ending of wizzy-product-actions -->
+
+            </div><!-- ending of wizzy-product-item-price-reviews-wrapper -->
          </div><!-- ending of result-product-item-info -->
       </a><!-- ending of wizzy-result-product-item -->
    </li><!-- ending of wizzy-result-product -->

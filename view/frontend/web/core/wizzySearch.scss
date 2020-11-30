@@ -813,6 +813,30 @@
               border-radius: 3px;
             }
 
+            .wizzy-product-actions {
+              .product_item-actions {
+                .actions-primary, .actions-secondary {
+                  display: inline-block;
+                }
+
+                .actions-secondary {
+                  margin-left: 10px;
+                }
+              }
+            }
+
+            .wizzy-product-add-to-wishlist {
+              .wizzy-towishlist-button {
+                span {
+                  display: none;
+                }
+
+                &:before {
+                  content: '\2661';
+                }
+              }
+            }
+
             .wizzy-product-add-to-cart {
               margin-top: 10px;
             }
