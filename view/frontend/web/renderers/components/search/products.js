@@ -25,6 +25,7 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
             products[i] = appendModifiedSwatches(products[i]);
             products[i] = appendCartValues(products[i]);
         }
+        products = wizzy.triggerEvent(wizzy.allowedEvents.AFTER_PRODUCTS_TRANSFORMED, products);
         return products;
     }
 
