@@ -17,6 +17,8 @@ class StoreSearchConfig
        self::WIZZY_SEARCH_RESULTS_CONFIGURATION . "/include_out_of_stock_products";
     const WIZZY_DISPLAY_ADD_TO_CART_BUTTON =
        self::WIZZY_SEARCH_RESULTS_CONFIGURATION . "/display_add_to_cart_button";
+    const WIZZY_DISPLAY_ADD_TO_WISHLIST_BUTTON =
+       self::WIZZY_SEARCH_RESULTS_CONFIGURATION . "/display_add_to_wishlist_button";
 
     const WIZZY_SEARCH_FACETS_CONFIGURATION = self::WIZZY_SEARCH_CONFIGURATION . "/search_results_facets_configuration";
     const WIZZY_FACETS = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/facets_configuration";
@@ -76,6 +78,11 @@ class StoreSearchConfig
     public function hasToDisplayAddToCartButton()
     {
         return ($this->configManager->getStoreConfig(self::WIZZY_DISPLAY_ADD_TO_CART_BUTTON, $this->storeId) == 1);
+    }
+
+    public function hasToDisplayAddToWishlistButton()
+    {
+        return ($this->configManager->getStoreConfig(self::WIZZY_DISPLAY_ADD_TO_WISHLIST_BUTTON, $this->storeId) == 1);
     }
 
     public function getFacetsConfiguration()

@@ -200,8 +200,11 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
     }
 
     function updateAddToWishlistUenc() {
+        if (!wizzyConfig.search.addToWishlist.display) {
+            return;
+        }
         var updatedUenc = btoaHelper(window.location.href);
-        var addToWishlistPayload = wizzyConfig.search.addToWishlist;
+        var addToWishlistPayload = wizzyConfig.search.addToWishlist.postData;
         addToWishlistPayload['data']['uenc'] = updatedUenc;
 
         $('.wizzy-product-add-to-wishlist').each(function(e) {
@@ -216,6 +219,9 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
     }
 
     function updateAddToCartUenc() {
+        if (!wizzyConfig.search.addToCart.display) {
+            return;
+        }
         var updatedUenc = btoaHelper(window.location.href);
         var cartAction = window.wizzyConfig.search.addToCart.formAction;
         var uencMatch = cartAction.match(/\/uenc\/(.*)\//);

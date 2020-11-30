@@ -84,6 +84,14 @@ class BaseBlock extends Template
         ];
     }
 
+    private function getAddToWishlistParams()
+    {
+        return [
+          'postData' => $this->addToWishlistHelper->getAddParams($this->_urlBuilder),
+          'display'  => $this->storeSearchConfig->hasToDisplayAddToWishlistButton(),
+        ];
+    }
+
     public function getConfigs()
     {
         $category = $this->categoryRequestManager->getCategory();
@@ -99,7 +107,7 @@ class BaseBlock extends Template
          ],
          'search' => [
             'addToCart' => $this->getAddToCartParams(),
-            'addToWishlist' => $this->addToWishlistHelper->getAddParams($this->_urlBuilder),
+            'addToWishlist' => $this->getAddToWishlistParams(),
             'enabled' => $this->storeGeneralConfig->isInstantSearchEnabled(),
             'input' => [
                'placeholder' => __($this->storeSearchFormConfig->getSearchInputPlaceholder()),
