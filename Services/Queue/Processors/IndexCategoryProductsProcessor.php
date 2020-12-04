@@ -82,6 +82,7 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
     private function processAllDescendants($category)
     {
         $childCategories = $category->getChildrenCategories();
+        $this->categoriesToProcess[$category->getId()] = $category;
         foreach ($childCategories as $childCategory) {
             $this->categoriesToProcess[$childCategory->getId()] = $childCategory;
             $this->processAllDescendants($childCategory);
