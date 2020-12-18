@@ -85,6 +85,10 @@ class SortOptions extends Select
             'label' => 'Price',
          ],
          [
+            'value' => 'finalPrice',
+            'label' => 'Final Price',
+         ],
+         [
             'value' => 'sellingPrice',
             'label' => 'Selling Price',
          ],

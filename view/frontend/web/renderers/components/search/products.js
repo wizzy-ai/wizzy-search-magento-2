@@ -14,6 +14,7 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
 
             products[i] = setNullIfZero([
                 'price',
+                'finalPrice',
                 'avgRatings',
                 'totalReviews',
             ], products[i]);

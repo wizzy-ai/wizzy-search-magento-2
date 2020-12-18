@@ -183,6 +183,7 @@ class ProductsMapper
             $children = $this->productsSessionStorage->getByIds($childIds);
 
             $finalPrice = 0;
+            $sellingPrice = 0;
 
             $discount = 0;
             $discountPercetnage = 0;
@@ -198,11 +199,13 @@ class ProductsMapper
             'variationsTotalReviews' => [],
             'variationsAvgRatings' => [],
             'prices' => [],
+            'finalPrices' => [],
             ];
 
             foreach ($children as $child) {
                 if ($finalPrice < $child->getFinalPrice()) {
                     $finalPrice = $child->getFinalPrice();
+                    $sellingPrice = $this->getTaxPrice($child, $child->getFinalPrice());
 
                     if ($child->getFinalPrice() < $child->getPrice()) {
                         $discount = ($child->getPrice() - $child->getFinalPrice());
@@ -212,7 +215,10 @@ class ProductsMapper
                     }
                 }
 
-                $mappedProduct['childData']['sellingPrices'][] = $this->getFloatVal($child->getFinalPrice());
+                $mappedProduct['childData']['sellingPrices'][] =
+                   $this->getFloatVal($this->getTaxPrice($child, $child->getFinalPrice()));
+                $mappedProduct['childData']['finalPrices'][] = $this->getFloatVal($child->getFinalPrice());
+
                 if ($child->getPrice() && $child->getPrice() > 0) {
                     $mappedProduct['childData']['prices'][] = $this->getFloatVal($child->getPrice());
                 }
@@ -279,7 +285,7 @@ class ProductsMapper
             }
 
             if ($finalPrice != 0) {
-                $mappedProduct['sellingPrice'] = $this->getFloatVal($this->getTaxPrice($product, $finalPrice));
+                $mappedProduct['sellingPrice'] = $this->getFloatVal($sellingPrice);
                 $mappedProduct['finalPrice'] = $this->getFloatVal($finalPrice);
             }
 
@@ -323,6 +329,7 @@ class ProductsMapper
 
         $parentChildData = [
          'sellingPrices' => 'sellingPrice',
+         'finalPrices' => 'finalPrice',
          'prices' => 'price',
          'discounts' => 'discount',
          'variationsTotalReviews' => 'totalReviews',
