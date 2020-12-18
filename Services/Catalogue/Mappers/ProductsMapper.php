@@ -10,6 +10,8 @@ use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
+use Magento\Catalog\Helper\Data as TexHelper;
+use Wizzy\Search\Services\Store\StoreTaxConfig;
 
 class ProductsMapper
 {
@@ -30,6 +32,8 @@ class ProductsMapper
     private $orderItems;
     private $configManager;
     private $output;
+    private $taxHelper;
+    private $storeTaxConfig;
 
     public function __construct(
         Configurable $configurable,
@@ -39,7 +43,9 @@ class ProductsMapper
         StockRegistry $stockRegistry,
         ConfigManager $configManager,
         ProductsSessionStorage $productsSessionStorage,
-        IndexerOutput $output
+        IndexerOutput $output,
+        TexHelper $taxHelper,
+        StoreTaxConfig $storeTaxConfig
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -52,6 +58,8 @@ class ProductsMapper
         $this->configManager = $configManager;
         $this->productsSessionStorage = $productsSessionStorage;
         $this->output = $output;
+        $this->taxHelper = $taxHelper;
+        $this->storeTaxConfig = $storeTaxConfig;
     }
 
     private function resetEntitiesToIgnore()
@@ -65,6 +73,7 @@ class ProductsMapper
         $this->storeId = $storeId;
         $this->productReviews = $productReviews;
         $this->orderItems = $orderItems;
+        $this->storeTaxConfig->setStore($storeId);
 
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
@@ -76,6 +85,20 @@ class ProductsMapper
             }
         }
         return $mappedProducts;
+    }
+
+    private function getTaxPrice($product, $price)
+    {
+        $includingTax = null;
+
+        if ($this->storeTaxConfig->isCatalogPriceIncludeTax() === false) {
+            if ($this->storeTaxConfig->getTaxCatalogPricesDisplayType() ==
+               \Magento\Tax\Model\Config::DISPLAY_TYPE_BOTH) {
+                $includingTax = true;
+            }
+        }
+
+        return $this->taxHelper->getTaxPrice($product, $price, $includingTax);
     }
 
     public function map($product)
@@ -256,7 +279,8 @@ class ProductsMapper
             }
 
             if ($finalPrice != 0) {
-                $mappedProduct['sellingPrice'] = $this->getFloatVal($finalPrice);
+                $mappedProduct['sellingPrice'] = $this->getFloatVal($this->getTaxPrice($product, $finalPrice));
+                $mappedProduct['finalPrice'] = $this->getFloatVal($finalPrice);
             }
 
             if ($discount != 0) {
@@ -546,10 +570,16 @@ class ProductsMapper
     {
         $stockItem = $this->stockRegistry->getStockItem($product->getId());
         $visibility = $product->getVisibility();
+        $finalPrice = $product->getFinalPrice();
+
+        $sellingPrice = $this->getFloatVal($this->getTaxPrice($product, $finalPrice));
+        $sellingPriceWithoutTax = $this->getFloatVal($finalPrice);
+
         $mappedProduct = [
          'id' => $product->getId(),
          'name' => $product->getName(),
-         'sellingPrice' => $this->getFloatVal($product->getFinalPrice()),
+         'sellingPrice' => $sellingPrice,
+         'finalPrice' => $sellingPriceWithoutTax,
          'description' => $product->getDescription(),
          'url' => $product->getUrlModel()->getUrl($product, $this->getUrlOptions()),
          'inStock' => ($stockItem && $stockItem->getIsInStock()),

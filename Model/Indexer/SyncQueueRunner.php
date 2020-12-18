@@ -62,7 +62,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
                         $errorMessage = $this->getQueueError($jobResponse);
 
                         $this->output->log([
-                           'message' => __('Processor # ' . $jobData['id'] . 'failed.'),
+                           'message' => __('Processor #' . $jobData['id'] . ' failed.'),
                            'Processor Class' => $jobClass,
                            'Store ID' => $storeId,
                            'Error' => $errorMessage,
