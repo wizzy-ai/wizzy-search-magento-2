@@ -67,9 +67,22 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
                 if (value == pageStore.get(pageStore.keys.searchInputValue, '')) {
                     return;
                 }
-                pageStore.set(pageStore.keys.searchInputValue, value);
-                shootAutocompleteRequest();
+                initAutocompleteReq();
             }
+        });
+
+        searchElement.on('paste', function(e) {
+            $(this).trigger('keyup');
+            setTimeout(function(e) {
+                initAutocompleteReq();
+            }, 0);
+        });
+
+        searchElement.on('cut', function() {
+            $(this).trigger('keyup');
+            setTimeout(function(e) {
+                initAutocompleteReq();
+            }, 0);
         });
 
         searchElement.click(function(e) {
@@ -90,6 +103,12 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
         });
 
         addAutocompleteLinkListeners(suggestionLink);
+    }
+
+    function initAutocompleteReq() {
+        var value = searchElement.val().trim();
+        pageStore.set(pageStore.keys.searchInputValue, value);
+        shootAutocompleteRequest();
     }
 
     function addAutocompleteLinkListeners(suggestionLink) {

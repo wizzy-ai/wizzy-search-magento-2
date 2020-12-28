@@ -16,6 +16,17 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
                 performSearchRequest(false, isByTrigger);
             });
 
+            searchElement.bind('paste', function() {
+                setTimeout(function(e) {
+                    performSearchRequest(false, false);
+                }, 0);
+            });
+            searchElement.bind('cut', function() {
+                setTimeout(function(e) {
+                    performSearchRequest(false, false);
+                }, 0);
+            });
+
             searchElement.parents('form').submit(function(e) {
                 e.preventDefault();
             });
