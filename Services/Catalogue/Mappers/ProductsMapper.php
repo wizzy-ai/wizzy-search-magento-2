@@ -10,8 +10,6 @@ use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
-use Magento\Catalog\Helper\Data as TexHelper;
-use Wizzy\Search\Services\Store\StoreTaxConfig;
 
 class ProductsMapper
 {
@@ -32,8 +30,7 @@ class ProductsMapper
     private $orderItems;
     private $configManager;
     private $output;
-    private $taxHelper;
-    private $storeTaxConfig;
+    private $productPrices;
 
     public function __construct(
         Configurable $configurable,
@@ -44,8 +41,7 @@ class ProductsMapper
         ConfigManager $configManager,
         ProductsSessionStorage $productsSessionStorage,
         IndexerOutput $output,
-        TexHelper $taxHelper,
-        StoreTaxConfig $storeTaxConfig
+        ProductPrices $productPrices
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -58,8 +54,7 @@ class ProductsMapper
         $this->configManager = $configManager;
         $this->productsSessionStorage = $productsSessionStorage;
         $this->output = $output;
-        $this->taxHelper = $taxHelper;
-        $this->storeTaxConfig = $storeTaxConfig;
+        $this->productPrices = $productPrices;
     }
 
     private function resetEntitiesToIgnore()
@@ -73,7 +68,7 @@ class ProductsMapper
         $this->storeId = $storeId;
         $this->productReviews = $productReviews;
         $this->orderItems = $orderItems;
-        $this->storeTaxConfig->setStore($storeId);
+        $this->productPrices->setStore($storeId);
 
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
@@ -85,20 +80,6 @@ class ProductsMapper
             }
         }
         return $mappedProducts;
-    }
-
-    private function getTaxPrice($product, $price)
-    {
-        $includingTax = null;
-
-        if ($this->storeTaxConfig->isCatalogPriceIncludeTax() === false) {
-            if ($this->storeTaxConfig->getTaxCatalogPricesDisplayType() ==
-               \Magento\Tax\Model\Config::DISPLAY_TYPE_BOTH) {
-                $includingTax = true;
-            }
-        }
-
-        return $this->taxHelper->getTaxPrice($product, $price, $includingTax);
     }
 
     public function map($product)
@@ -203,35 +184,38 @@ class ProductsMapper
             ];
 
             foreach ($children as $child) {
-                if ($finalPrice < $child->getFinalPrice()) {
-                    $finalPrice = $child->getFinalPrice();
-                    $sellingPrice = $this->getTaxPrice($child, $child->getFinalPrice());
+                $childFinalPrice = $this->productPrices->getFinalPrice($child);
+                $childOriginalPrice = $this->productPrices->getOriginalPrice($child);
+                $childSellingPrice = $this->productPrices->getSellingPrice($child);
 
-                    if ($child->getFinalPrice() < $child->getPrice()) {
-                        $discount = ($child->getPrice() - $child->getFinalPrice());
+                if ($finalPrice < $childFinalPrice) {
+                    $finalPrice = $childFinalPrice;
+                    $sellingPrice = $childSellingPrice;
+
+                    if ($childFinalPrice < $childOriginalPrice) {
+                        $discount = ($childOriginalPrice - $childFinalPrice);
                         $discountPercetnage =
-                           100 - sprintf('%0.2f', (($child->getFinalPrice() * 100) / $child->getPrice()));
-                        $price = $child->getPrice();
+                           100 - sprintf('%0.2f', (($childFinalPrice * 100) / $childOriginalPrice));
+                        $price = $childOriginalPrice;
                     }
                 }
 
-                $mappedProduct['childData']['sellingPrices'][] =
-                   $this->getFloatVal($this->getTaxPrice($child, $child->getFinalPrice()));
-                $mappedProduct['childData']['finalPrices'][] = $this->getFloatVal($child->getFinalPrice());
+                $mappedProduct['childData']['sellingPrices'][] = $this->getFloatVal($childSellingPrice);
+                $mappedProduct['childData']['finalPrices'][] = $this->getFloatVal($childFinalPrice);
 
-                if ($child->getPrice() && $child->getPrice() > 0) {
-                    $mappedProduct['childData']['prices'][] = $this->getFloatVal($child->getPrice());
+                if ($childOriginalPrice && $childOriginalPrice > 0) {
+                    $mappedProduct['childData']['prices'][] = $this->getFloatVal($childOriginalPrice);
                 }
 
-                if ($child->getFinalPrice() && $child->getFinalPrice() > 0 && $child->getPrice() > 0) {
-                    if ($child->getFinalPrice() < $child->getPrice()) {
+                if ($childFinalPrice && $childFinalPrice > 0 && $childOriginalPrice > 0) {
+                    if ($childFinalPrice < $childOriginalPrice) {
                         $mappedProduct['childData']['discounts'][] =
-                           $this->getFloatVal($child->getPrice() - $child->getFinalPrice());
+                           $this->getFloatVal($childOriginalPrice - $childFinalPrice);
                         $mappedProduct['childData']['discountPercentages'][] =
                            $this->getFloatVal(
                                100 - sprintf(
                                    '%0.2f',
-                                   (($child->getFinalPrice() * 100) / $child->getPrice())
+                                   (($childFinalPrice * 100) / $childOriginalPrice)
                                )
                            );
                     }
@@ -577,9 +561,9 @@ class ProductsMapper
     {
         $stockItem = $this->stockRegistry->getStockItem($product->getId());
         $visibility = $product->getVisibility();
-        $finalPrice = $product->getFinalPrice();
+        $finalPrice = $this->productPrices->getFinalPrice($product);
 
-        $sellingPrice = $this->getFloatVal($this->getTaxPrice($product, $finalPrice));
+        $sellingPrice = $this->getFloatVal($this->productPrices->getSellingPrice($product));
         $sellingPriceWithoutTax = $this->getFloatVal($finalPrice);
 
         $mappedProduct = [
@@ -639,18 +623,21 @@ class ProductsMapper
 
     private function mapDiscounts($product, &$mappedProduct)
     {
-        if ($product->getFinalPrice() && $product->getFinalPrice() > 0 && $product->getPrice() > 0) {
-            if ($product->getFinalPrice() < $product->getPrice()) {
-                $mappedProduct['discount'] = $this->getFloatVal($product->getPrice() - $product->getFinalPrice());
+        $productFinalPrice = $this->productPrices->getFinalPrice($product);
+        $productOriginalPrice = $this->productPrices->getOriginalPrice($product);
+
+        if ($productFinalPrice && $productFinalPrice > 0 && $productOriginalPrice > 0) {
+            if ($productFinalPrice < $productOriginalPrice) {
+                $mappedProduct['discount'] = $this->getFloatVal($productOriginalPrice - $productFinalPrice);
                 $mappedProduct['discountPercentage'] =
                    $this->getFloatVal(
                        100 -
                         sprintf(
                             '%0.2f',
-                            (($product->getFinalPrice() * 100) / $product->getPrice())
+                            (($productFinalPrice * 100) / $productOriginalPrice)
                         )
                    );
-                $mappedProduct['price'] = $this->getFloatVal($product->getPrice());
+                $mappedProduct['price'] = $this->getFloatVal($productOriginalPrice);
             }
         }
     }
