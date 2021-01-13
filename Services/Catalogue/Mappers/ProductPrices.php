@@ -53,7 +53,7 @@ class ProductPrices
             return $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()];
         }
 
-        $originalPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+        $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
         $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()] = $originalPrice;
 
         return $this->getDefaultCurrncyValue($originalPrice);
@@ -68,7 +68,7 @@ class ProductPrices
         $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->getValue();
         $finalPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
 
-        if ($specialPrice !== false) {
+        if ($specialPrice !== false && $specialPrice !== 0) {
             $finalPrice = $this->getDefaultCurrncyValue($specialPrice);
         } else {
             $finalPrice = $this->getDefaultCurrncyValue($finalPrice);
@@ -104,6 +104,10 @@ class ProductPrices
 
     private function getDefaultCurrncyValue($price)
     {
+        if ($price === 0) {
+            return $price;
+        }
+
         $rate = $this->priceHelper->convert($price, $this->storeId) / $price;
         $price = $price / $rate;
 
