@@ -53,7 +53,7 @@ class ProductPrices
             return $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()];
         }
 
-        $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getBaseAmount();
+        $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
         $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()] = $originalPrice;
 
         return $this->getDefaultCurrncyValue($originalPrice);
