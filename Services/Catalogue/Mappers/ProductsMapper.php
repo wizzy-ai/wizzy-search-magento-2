@@ -192,10 +192,10 @@ class ProductsMapper
                     $finalPrice = $childFinalPrice;
                     $sellingPrice = $childSellingPrice;
 
-                    if ($childFinalPrice < $childOriginalPrice) {
-                        $discount = ($childOriginalPrice - $childFinalPrice);
+                    if ($childSellingPrice < $childOriginalPrice) {
+                        $discount = ($childOriginalPrice - $childSellingPrice);
                         $discountPercetnage =
-                           100 - sprintf('%0.2f', (($childFinalPrice * 100) / $childOriginalPrice));
+                           100 - sprintf('%0.2f', (($childSellingPrice * 100) / $childOriginalPrice));
                         $price = $childOriginalPrice;
                     }
                 }
@@ -623,7 +623,7 @@ class ProductsMapper
 
     private function mapDiscounts($product, &$mappedProduct)
     {
-        $productFinalPrice = $this->productPrices->getFinalPrice($product);
+        $productFinalPrice = $this->productPrices->getSellingPrice($product);
         $productOriginalPrice = $this->productPrices->getOriginalPrice($product);
 
         if ($productFinalPrice && $productFinalPrice > 0 && $productOriginalPrice > 0) {
