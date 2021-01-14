@@ -53,7 +53,7 @@ class ProductPrices
             return $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()];
         }
 
-        $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
+        $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getBaseAmount();
         $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()] = $originalPrice;
 
         return $this->getDefaultCurrncyValue($originalPrice);
@@ -65,8 +65,8 @@ class ProductPrices
             return $this->productPrices[self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()];
         }
 
-        $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->getValue();
-        $finalPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getValue();
+        $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->getBaseAmount();
+        $finalPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getBaseAmount();
 
         if ($specialPrice !== false && $specialPrice !== 0) {
             $finalPrice = $this->getDefaultCurrncyValue($specialPrice);
@@ -95,7 +95,6 @@ class ProductPrices
                 $includingTax = true;
             }
         }
-
         $sellingPrice = $this->taxHelper->getTaxPrice($product, $finalPrice, $includingTax);
         $this->productPrices[self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()] = $sellingPrice;
 
