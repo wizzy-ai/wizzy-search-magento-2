@@ -195,7 +195,7 @@ class ProductsMapper
                     if ($childSellingPrice < $childOriginalPrice) {
                         $discount = ($childOriginalPrice - $childSellingPrice);
                         $discountPercetnage =
-                           100 - sprintf('%0.2f', (($childSellingPrice * 100) / $childOriginalPrice));
+                           round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100);
                         $price = $childOriginalPrice;
                     }
                 }
@@ -213,10 +213,7 @@ class ProductsMapper
                            $this->getFloatVal($childOriginalPrice - $childFinalPrice);
                         $mappedProduct['childData']['discountPercentages'][] =
                            $this->getFloatVal(
-                               100 - sprintf(
-                                   '%0.2f',
-                                   (($childFinalPrice * 100) / $childOriginalPrice)
-                               )
+                               round((($childOriginalPrice - $childFinalPrice) / $childOriginalPrice) * 100)
                            );
                     }
                 }
@@ -631,11 +628,7 @@ class ProductsMapper
                 $mappedProduct['discount'] = $this->getFloatVal($productOriginalPrice - $productFinalPrice);
                 $mappedProduct['discountPercentage'] =
                    $this->getFloatVal(
-                       100 -
-                        sprintf(
-                            '%0.2f',
-                            (($productFinalPrice * 100) / $productOriginalPrice)
-                        )
+                       round((($productOriginalPrice - $productFinalPrice) / $productOriginalPrice) * 100)
                    );
                 $mappedProduct['price'] = $this->getFloatVal($productOriginalPrice);
             }
