@@ -110,6 +110,6 @@ class ProductPrices
         $rate = $this->priceHelper->convert($price, $this->storeId) / $price;
         $price = $price / $rate;
 
-        return $price;
+        return $this->priceHelper->round($price);
     }
 }

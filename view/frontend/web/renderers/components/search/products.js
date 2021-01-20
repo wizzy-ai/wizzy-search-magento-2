@@ -25,6 +25,7 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
 
             products[i] = appendModifiedSwatches(products[i]);
             products[i] = appendCartValues(products[i]);
+            products[i] = formatPrices(products[i]);
         }
         products = wizzy.triggerEvent(wizzy.allowedEvents.AFTER_PRODUCTS_TRANSFORMED, products);
         return products;
@@ -50,6 +51,25 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
         for(var j = 0; j < totalFields; j++) {
             if (typeof product[fields[j]] !== "undefined" && product[fields[j]] == 0) {
                 product[fields[j]] = null;
+            }
+        }
+
+        return product;
+    }
+
+    function formatPrices(product) {
+        let priceKeys = [
+            'price',
+            'finalPrice',
+            'sellingPrice',
+        ];
+
+        var totalKeys = priceKeys.length;
+
+        for(var j = 0; j < totalKeys; j++) {
+            if (typeof product[priceKeys[j]] !== "undefined" && product[priceKeys[j]] !== null && product[priceKeys[j]] % 1 !== 0) {
+                var fieldVale = parseFloat(product[priceKeys[j]]);
+                product[priceKeys[j]] = fieldVale.toFixed(2);
             }
         }
 
