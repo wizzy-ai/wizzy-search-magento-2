@@ -604,7 +604,7 @@ class ProductsMapper
 
         if ($summary != null) {
             $mappedProduct['orderedQty'] = $summary['qty'];
-            $mappedProduct['noOfTimesOrdered'] = count($summary['orders']);
+            $mappedProduct['noOfTimesOrdered'] = $summary['orders'];
         }
     }
 
@@ -654,7 +654,9 @@ class ProductsMapper
     {
         return [
          'name' => $category['name'],
-         'id'  => $category['urlKey'],
+         'id'  =>
+            (!empty($category['urlKey']) && $category['urlKey'] != null)
+               ? $category['urlKey'] : $category['id'],
          'url' => $category['url'],
          'position' => (int) $category['position'],
          'level'  => (int) $category['level'],

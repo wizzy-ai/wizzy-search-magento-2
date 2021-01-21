@@ -2,49 +2,39 @@
 
 namespace Wizzy\Search\Services\Catalogue;
 
-use Magento\Framework\Api\FilterBuilder;
-use Magento\Framework\Api\Search\FilterGroup;
-use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Api\SearchCriteriaInterface;
 use Magento\Sales\Api\Data\OrderItemInterface;
-use Magento\Sales\Api\OrderItemRepositoryInterface;
+use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory;
 
 class OrderItemManager
 {
-    private $orderItemRepository;
-    private $searchCriteriaInterface;
-    private $filterGroup;
-    private $filterBuilder;
+    private $orderItemCollection;
 
     public function __construct(
-        OrderItemRepositoryInterface $orderItemRepository,
-        SearchCriteriaInterface $searchCriteriaInterface,
-        FilterGroup $filterGroup,
-        FilterBuilder $filterBuilder
+        CollectionFactory $orderItemCollection
     ) {
-        $this->orderItemRepository = $orderItemRepository;
-        $this->searchCriteriaInterface = $searchCriteriaInterface;
-        $this->filterBuilder = $filterBuilder;
-        $this->filterGroup = $filterGroup;
+        $this->orderItemCollection = $orderItemCollection;
     }
 
-    public function getByProductIds($productIds, $storeId)
+    public function getSummaryByProductIds($productIds, $storeId)
     {
-        $this->filterGroup->setFilters([
-         $this->filterBuilder
-            ->setField(OrderItemInterface::PRODUCT_ID)
-            ->setConditionType('in')
-            ->setValue($productIds)
-            ->create(),
-         $this->filterBuilder
-            ->setField(OrderItemInterface::STORE_ID)
-            ->setConditionType('eq')
-            ->setValue($storeId)
-            ->create(),
-        ]);
 
-        $this->searchCriteriaInterface->setFilterGroups([$this->filterGroup]);
-        return $this->orderItemRepository->getList($this->searchCriteriaInterface);
+        $orderItemsCollection = $this->orderItemCollection->create();
+
+        $orderItemsCollection
+          ->addFieldToSelect(OrderItemInterface::ITEM_ID)
+          ->addFieldToSelect(OrderItemInterface::PRODUCT_ID)
+          ->getSelect()
+          ->columns(
+              [
+                'COUNT('.OrderItemInterface::QTY_INVOICED.') AS totalQtyInvoiced',
+                'COUNT(DISTINCT '.OrderItemInterface::ORDER_ID.') AS totalOrders'
+              ]
+          )
+          ->where(OrderItemInterface::PRODUCT_ID . ' IN (' .implode(",", $productIds). ')')
+          ->where(OrderItemInterface::STORE_ID. ' = ' . $storeId)
+          ->group(OrderItemInterface::PRODUCT_ID);
+
+        return $orderItemsCollection->getData();
     }
 
     public function getSummary($productIds, $storeId)
@@ -52,18 +42,20 @@ class OrderItemManager
         $productOrdersSummry = [];
         foreach ($productIds as $productId) {
             $productOrdersSummry[$productId] = [
-            'orders' => [],
+            'orders' => 0,
             'qty'    => 0,
             ];
         }
 
-        $orderItems = $this->getByProductIds($productIds, $storeId);
+        $orderItemsSummary = $this->getSummaryByProductIds($productIds, $storeId);
 
-        foreach ($orderItems as $orderItem) {
-            if ($orderItem->getProductId() && isset($productOrdersSummry[$orderItem->getProductId()])) {
-                $qty = $orderItem->getQtyToInvoice();
-                $productOrdersSummry[$orderItem->getProductId()]['orders'][$orderItem->getOrder()->getId()] = true;
-                $productOrdersSummry[$orderItem->getProductId()]['qty'] += $qty;
+        foreach ($orderItemsSummary as $orderItemSummary) {
+            if (isset($orderItemSummary['product_id'])) {
+                $productId = $orderItemSummary['product_id'];
+                if (!empty($productId) && $productId !== null && isset($productOrdersSummry[$productId])) {
+                    $productOrdersSummry[$productId]['orders'] = $orderItemSummary['totalOrders'];
+                    $productOrdersSummry[$productId]['qty'] = $orderItemSummary['totalQtyInvoiced'];
+                }
             }
         }
 
