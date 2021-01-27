@@ -103,7 +103,7 @@ class ProductPrices
 
     private function getDefaultCurrncyValue($price)
     {
-        if ($price === 0) {
+        if ($price == 0) {
             return $price;
         }
 
