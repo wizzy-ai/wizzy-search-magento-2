@@ -48,7 +48,7 @@ class AttributesManager
             $swatchValues = array_values($swatchValues);
             return $swatchValues[0]['value'];
         }
-        return '';
+        return null;
     }
 
     private function getSwatchType($attribute)
@@ -74,10 +74,11 @@ class AttributesManager
                 $optionIds = [$attribute->getSource()->getOptionId($value)];
             }
 
-            if (count($optionIds)) {
+            $swatchValue = $this->getSwatchValues($optionIds);
+            if (count($optionIds) && $swatchValue !== null) {
                 return [
                  'type' => $swatchType,
-                 'value' => $this->getSwatchValues($optionIds)
+                 'value' => $swatchValue,
                 ];
             }
         }
