@@ -6,6 +6,7 @@ use Magento\Catalog\Model\Product\Visibility;
 use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
+use Wizzy\Search\Services\Catalogue\ProductImageManager;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
@@ -31,6 +32,7 @@ class ProductsMapper
     private $configManager;
     private $output;
     private $productPrices;
+    private $productImageManager;
 
     public function __construct(
         Configurable $configurable,
@@ -41,6 +43,7 @@ class ProductsMapper
         ConfigManager $configManager,
         ProductsSessionStorage $productsSessionStorage,
         IndexerOutput $output,
+        ProductImageManager $productImageManager,
         ProductPrices $productPrices
     ) {
         $this->configurable = $configurable;
@@ -55,6 +58,7 @@ class ProductsMapper
         $this->productsSessionStorage = $productsSessionStorage;
         $this->output = $output;
         $this->productPrices = $productPrices;
+        $this->productImageManager = $productImageManager;
     }
 
     private function resetEntitiesToIgnore()
@@ -714,6 +718,10 @@ class ProductsMapper
                 $images[] = $productImageData['url'];
             }
             $index++;
+        }
+
+        if ($mainImage === '') {
+            $mainImage = $this->productImageManager->getPlaceholderImage($this->storeId);
         }
 
         return [
