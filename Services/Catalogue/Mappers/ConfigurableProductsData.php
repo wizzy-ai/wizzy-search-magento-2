@@ -26,6 +26,7 @@ class ConfigurableProductsData
 
     private $autocompleteAttributes;
     private $categoriesSessionStorage;
+    private $rootCategory;
 
     public function __construct(
         BrandConfigurable $brandConfigurable,
@@ -46,6 +47,7 @@ class ConfigurableProductsData
         $this->attributesManager = $attributesManager;
         $this->categoriesSessionStorage = $categoriesSessionStorage;
         $this->autocompleteAttributes = [];
+        $this->rootCategory = false;
     }
 
     public function getBrand($categories, $attributes, $storeId)
@@ -158,6 +160,30 @@ class ConfigurableProductsData
         return $attributes;
     }
 
+    /**
+     * Get default unassigned category
+     * @param $storeId
+     * @return array|false|null
+     */
+    public function getDefaultUnassignedCategory($storeId)
+    {
+        if ($this->rootCategory !== false) {
+            return $this->rootCategory;
+        }
+
+        $this->rootCategory = null;
+
+        $category = $this->categoriesManager->getRootCategory($storeId);
+        if ($category) {
+            $this->rootCategory =  $this->getCategoryArray($category);
+        }
+
+        $this->rootCategory['isSearchable'] = false;
+        $this->rootCategory['includeInMenu'] = false;
+
+        return $this->rootCategory;
+    }
+
     public function getProductCategories($product)
     {
         $categoryIds = $product->getCategoryIds();
@@ -206,6 +232,11 @@ class ConfigurableProductsData
                 $pathIds[] = $pathCategory->getUrlKey();
             }
         }
+
+        if (!count($pathIds)) {
+            $pathIds = [$category->getUrlKey()];
+        }
+
         return [
          'id' => $category->getId(),
          'value' => $category->getName(),

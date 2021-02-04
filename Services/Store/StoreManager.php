@@ -2,6 +2,7 @@
 
 namespace Wizzy\Search\Services\Store;
 
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
 class StoreManager
@@ -12,6 +13,17 @@ class StoreManager
     public function __construct(StoreManagerInterface $storeManager)
     {
         $this->storeManager = $storeManager;
+    }
+
+    /**
+     * Get specific store by store ID
+     * @param $storeId
+     * @return StoreInterface|null
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function getStoreById($storeId) : ?StoreInterface
+    {
+        return $this->storeManager->getStore($storeId);
     }
 
     public function getCurrentStoreId()

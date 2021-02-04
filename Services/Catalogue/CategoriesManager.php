@@ -36,6 +36,21 @@ class CategoriesManager
         return $categories;
     }
 
+   /**
+    *  Get root category of the store.
+    */
+    public function getRootCategory($storeId)
+    {
+        $store = $this->storeManager->getStoreById($storeId);
+        $categoryId = $store->getRootCategoryId();
+        $categories = $this->fetchByIds([$categoryId], $storeId, true);
+        if (count($categories)) {
+            return $categories->getFirstItem();
+        }
+
+        return null;
+    }
+
     /**
      * Get parent IDs of Given Category
      *
