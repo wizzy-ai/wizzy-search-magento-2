@@ -99,6 +99,15 @@ class QueueManager
         return $jobs;
     }
 
+    public function truncateAllCompletedOrCancelled() {
+       $jobs = $this->queueFactory->create()->getCollection()
+          ->addFieldToFilter('status', ["in" => [self::JOB_PROCESSED_STATUS, self::JOB_CANCELLED_STATUS]]);
+       $jobs = $jobs->setOrder('id', 'ASC');
+       $jobs->walk('delete');
+
+       return $jobs;
+    }
+
     private function getAllClearableJobs()
     {
         $jobs = $this->queueFactory->create()->getCollection()

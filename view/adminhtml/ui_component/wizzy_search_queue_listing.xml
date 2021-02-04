@@ -18,6 +18,12 @@
                 <item name="class" xsi:type="string">primary</item>
                 <item name="url" xsi:type="string">*/*/clearentities</item>
             </item>
+            <item name="truncateQueue" xsi:type="array">
+                <item name="name" xsi:type="string">truncate</item>
+                <item name="label" xsi:type="string" translate="true">Truncate Queue</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/truncate</item>
+            </item>
         </item>
     </argument>
     <dataSource name="nameOfDataSource">
