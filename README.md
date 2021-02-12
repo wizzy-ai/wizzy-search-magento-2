@@ -45,7 +45,7 @@ php bin/magento setup:upgrade
 php bin/magento setup:static-content:deploy
 ````
 
-### Magento Marketplace **(Not available for now)**
+### Magento Marketplace
 
 [Click Here](https://marketplace.magento.com/wizzy-search-magento-2.html) to Visit Magento Marketplace and install the module, follow the instructions on the marketplace for installation guide.
 
