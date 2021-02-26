@@ -197,22 +197,15 @@ class ConfigurableProductsData
             }
             $parentCategories = $this->categoriesSessionStorage->getByIds($parentCategories);
 
-            $hasOneParentInMenu = false;
-
             foreach ($parentCategories as $parentCategory) {
                 if (!isset($categoriesAssoc[$parentCategory->getId()])) {
                     $parentCategoryArr = $this->getCategoryArray($parentCategory);
                     $parentCategoryArr['isParent'] = true;
                     $categoriesAssoc[$parentCategory->getId()] = $parentCategoryArr;
-
-                    $hasOneParentInMenu = $parentCategoryArr['includeInMenu'];
                 }
             }
 
             $categoryArr = $this->getCategoryArray($category);
-
-            $categoryArr['includeInMenu'] = ($categoryArr['includeInMenu'] && $hasOneParentInMenu);
-
             $categoriesAssoc[$category->getId()] = $categoryArr;
         }
 

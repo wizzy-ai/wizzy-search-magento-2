@@ -650,7 +650,7 @@ class ProductsMapper
                 $categoriesAssoc[$category['id']] = $categoryToAdd;
             }
         }
-        if (count($categoriesAssoc) > 0) {
+        if (count($categoriesAssoc) === 0) {
             $defaultCategory = $this->configurableProductsData->getDefaultUnassignedCategory($this->storeId);
             if ($defaultCategory) {
                 return [$this->getCategoryArrayToSend($defaultCategory)];
