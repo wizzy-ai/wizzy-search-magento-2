@@ -61,7 +61,7 @@ class Facets extends Select
 
         foreach ($attributes as $attribute) {
             $options[] = [
-            'value' => $attribute->getId(),
+            'value' => $attribute->getAttributeCode(),
             'label' => $attribute->getStoreLabel() . " (" . $attribute->getName() . ")",
             ];
         }
