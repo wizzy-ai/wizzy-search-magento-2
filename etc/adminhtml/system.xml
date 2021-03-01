@@ -363,15 +363,6 @@
                     <comment>Number of products to display in a single page.</comment>
                     <validate>required-entry validate-not-negative-number</validate>
                 </field>
-                <field id="include_out_of_stock_products" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
-                    <label>Include out of stock products?</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>
-                        <![CDATA[
-                            Select yes if out of stock products needs to be displayed in search results. If selected as yes, It's advisable to add Availability facet for user to filter out the results as per needs.
-                        ]]>
-                    </comment>
-                </field>
                 <field id="display_add_to_cart_button" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Display Add to Cart button?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

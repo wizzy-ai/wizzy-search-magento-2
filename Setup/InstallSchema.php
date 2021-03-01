@@ -46,7 +46,6 @@ class InstallSchema implements InstallSchemaInterface
       'wizzy_search_configuration/search_results_general_configuration/dom_selector' => '.columns',
       'wizzy_search_configuration/search_results_general_configuration/search_endpoint' => '/search',
       'wizzy_search_configuration/search_results_general_configuration/no_of_products' => '20',
-      'wizzy_search_configuration/search_results_general_configuration/include_out_of_stock_products' => '0',
       'wizzy_search_configuration/search_results_general_configuration/display_add_to_cart_button' => '1',
       'wizzy_search_configuration/search_results_general_configuration/display_add_to_wishlist_button' => '1',
 

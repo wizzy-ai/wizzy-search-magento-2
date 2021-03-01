@@ -15,6 +15,7 @@ use Wizzy\Search\Services\Store\StoreManager;
 use Wizzy\Search\Services\Store\StoreSearchConfig;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Wizzy\Search\Services\Store\StoreSearchFormConfig;
+use Wizzy\Search\Services\Store\StoreStockConfig;
 
 class BaseBlock extends Template
 {
@@ -33,6 +34,7 @@ class BaseBlock extends Template
     private $urlHelper;
 
     private $addToWishlistHelper;
+    private $storeStockConfig;
 
     public function __construct(
         Template\Context $context,
@@ -42,6 +44,7 @@ class BaseBlock extends Template
         StoreGeneralConfig $storeGeneralConfig,
         StoreCredentialsConfig $storeCredentialsConfig,
         StoreSearchConfig $storeSearchConfig,
+        StoreStockConfig $storeStockConfig,
         StoreAutocompleteConfig $storeAutocompleteConfig,
         PriceCurrencyInterface $priceCurrency,
         \Magento\Search\Helper\Data $searchDataHelper,
@@ -58,10 +61,14 @@ class BaseBlock extends Template
         $this->storeManager = $storeManager;
         $this->storeGeneralConfig = $storeGeneralConfig;
         $this->storeSearchFormConfig = $storeSearchFormConfig;
+        $this->storeStockConfig = $storeStockConfig;
 
-        $this->storeAutocompleteConfig->setStore($this->storeManager->getCurrentStoreId());
-        $this->storeSearchConfig->setStore($this->storeManager->getCurrentStoreId());
-        $this->storeCredentialsConfig->setStore($this->storeManager->getCurrentStoreId());
+        $currentStoreId = $this->storeManager->getCurrentStoreId();
+
+        $this->storeAutocompleteConfig->setStore($currentStoreId);
+        $this->storeSearchConfig->setStore($currentStoreId);
+        $this->storeStockConfig->setStore($currentStoreId);
+        $this->storeCredentialsConfig->setStore($currentStoreId);
 
         $this->priceCurrency = $priceCurrency;
         $this->categoryRequestManager = $categoryRequestManager;
@@ -117,7 +124,7 @@ class BaseBlock extends Template
                   'dom' => $this->storeSearchConfig->getDOMSelector(),
                   'searchEndpoint' => $this->storeSearchConfig->getSearchEndpoint(),
                   'noOfProducts' => $this->storeSearchConfig->getNoOfProducts(),
-                  'includeOutOfStock' => $this->storeSearchConfig->hasToIncludeOutOfStockProducts(),
+                  'includeOutOfStock' => $this->storeStockConfig->hasToIncludeOutOfStockProducts(),
                   'behaviour' => $this->storeGeneralConfig->getInstantSearchBehaviour(),
                ],
                'facets' => [
