@@ -25,4 +25,17 @@
             <argument name="resourceModel" xsi:type="string">Wizzy\Search\Model\ResourceModel\Queue</argument>
         </arguments>
     </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="wizzy_search_skipped_entities_listing_data_source" xsi:type="string">Wizzy\Search\Model\ResourceModel\SyncSkippedEntities\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Wizzy\Search\Model\ResourceModel\SyncSkippedEntities\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">wizzy_sync_skipped_entities</argument>
+            <argument name="resourceModel" xsi:type="string">Wizzy\Search\Model\ResourceModel\SyncSkippedEntities</argument>
+        </arguments>
+    </virtualType>
 </config>

@@ -9,6 +9,7 @@ use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductImageManager;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
+use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 
@@ -33,6 +34,8 @@ class ProductsMapper
     private $output;
     private $productPrices;
     private $productImageManager;
+    private $syncSkippedEntities;
+    private $skippedProducts;
 
     public function __construct(
         Configurable $configurable,
@@ -44,7 +47,8 @@ class ProductsMapper
         ProductsSessionStorage $productsSessionStorage,
         IndexerOutput $output,
         ProductImageManager $productImageManager,
-        ProductPrices $productPrices
+        ProductPrices $productPrices,
+        SyncSkippedEntities $syncSkippedEntities
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -59,6 +63,8 @@ class ProductsMapper
         $this->output = $output;
         $this->productPrices = $productPrices;
         $this->productImageManager = $productImageManager;
+        $this->syncSkippedEntities = $syncSkippedEntities;
+        $this->skippedProducts = [];
     }
 
     private function resetEntitiesToIgnore()
@@ -83,7 +89,16 @@ class ProductsMapper
                 $mappedProducts[] = $mappedProduct;
             }
         }
+
+        $this->updateSkippedProducts($mappedProducts);
         return $mappedProducts;
+    }
+
+    private function updateSkippedProducts($mappedProducts)
+    {
+        $mappedProductIds = array_column($mappedProducts, 'id');
+        $this->syncSkippedEntities->deleteSkippedEntities($mappedProductIds, $this->storeId);
+        $this->syncSkippedEntities->addSkippedEntities(array_values($this->skippedProducts), $this->storeId);
     }
 
     public function map($product)
@@ -100,16 +115,23 @@ class ProductsMapper
            empty($mappedProduct['sellingPrice']) ||
            $mappedProduct['sellingPrice'] == 0
         ) {
+            $requiredData = json_encode([
+               'Main Image' => $mappedProduct['mainImage'],
+               'Categories Count' => count($mappedProduct['categories']),
+               'selling Price' => $mappedProduct['sellingPrice'],
+            ]);
+
             $this->output->log([
                'Message' => 'Product Skipped',
                'ID' => $product->getId(),
                'Reason' => "Don't have enough required details",
-               'Data' => json_encode([
-                  'Main Image' => $mappedProduct['mainImage'],
-                  'Categories Count' => count($mappedProduct['categories']),
-                  'selling Price' => $mappedProduct['sellingPrice'],
-               ])
+               'Data' => $requiredData
             ], IndexerOutput::LOG_INFO_TYPE);
+
+            $this->skippedProducts[$mappedProduct['id']] = [
+               'id' => $mappedProduct['id'],
+               'data' => $requiredData,
+            ];
 
             return null;
         }

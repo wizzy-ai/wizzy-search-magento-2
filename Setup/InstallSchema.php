@@ -12,6 +12,7 @@ use Wizzy\Search\Helpers\DB\WizzyTables;
 use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use Wizzy\Search\Model\Admin\Source\InstantSearchBehaviours;
 use Wizzy\Search\Model\Admin\Source\PaginationType;
+use Wizzy\Search\Services\Setup\Version118;
 use Wizzy\Search\Services\Store\StoreManager;
 
 class InstallSchema implements InstallSchemaInterface
@@ -98,15 +99,18 @@ class InstallSchema implements InstallSchemaInterface
     private $config;
     private $storeManager;
     private $productMetadata;
+    private $version118;
 
     public function __construct(
         ConfigInterface $config,
         StoreManager $storeManager,
-        ProductMetadataInterface $productMetadata
+        ProductMetadataInterface $productMetadata,
+        Version118 $version118
     ) {
         $this->config = $config;
         $this->storeManager = $storeManager;
         $this->productMetadata = $productMetadata;
+        $this->version118 = $version118;
     }
 
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
@@ -114,8 +118,14 @@ class InstallSchema implements InstallSchemaInterface
         $setup->startSetup();
         $this->createSyncQueueTable($setup);
         $this->createEntitiesSyncTable($setup);
+        $this->versionInstalls($setup);
         $this->setDefaultConfig();
         $setup->endSetup();
+    }
+
+    private function versionInstalls(SchemaSetupInterface $setup)
+    {
+        $this->version118->install($setup);
     }
 
     private function setDefaultConfig()
