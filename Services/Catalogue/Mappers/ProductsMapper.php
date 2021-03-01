@@ -649,7 +649,7 @@ class ProductsMapper
         $productFinalPrice = $this->productPrices->getSellingPrice($product);
         $productOriginalPrice = $this->productPrices->getOriginalPrice($product);
 
-        if ($productFinalPrice && $productFinalPrice > 0 && $productOriginalPrice > 0) {
+        if ($productFinalPrice && $productFinalPrice > 0 && $productOriginalPrice > 0 && $productOriginalPrice > $productFinalPrice) {
             if ($productFinalPrice < $productOriginalPrice) {
                 $mappedProduct['discount'] = $this->getFloatVal($productOriginalPrice - $productFinalPrice);
                 $mappedProduct['discountPercentage'] =
