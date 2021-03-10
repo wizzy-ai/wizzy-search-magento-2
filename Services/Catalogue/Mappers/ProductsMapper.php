@@ -729,13 +729,13 @@ class ProductsMapper
         $images = [];
         $mainImage = "";
         $index = 0;
-
+        $thumbnail = $product->getThumbnail();
         foreach ($product->getMediaGalleryImages() as $productImage) {
             $productImageData = $productImage->getData();
             if ($productImageData['disabled'] == 1) {
                 continue;
             }
-            if ($index == 0) {
+            if ($index == 0 || $thumbnail == $productImageData['file']) {
                 $mainImage = $productImageData['url'];
             } else {
                 $images[] = $productImageData['url'];
