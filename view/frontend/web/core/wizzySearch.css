@@ -788,7 +788,7 @@
   padding: 0;
   list-style: none;
   display: flex;
-  padding-bottom: 15px;
+  flex-wrap: wrap;
 }
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-filters-top .wizzy-selected-filters ul.wizzy-selected-facet-list li.wizzy-selected-facet-list-item {
   margin: 0;
@@ -800,6 +800,7 @@
   font-size: 13px;
   margin-right: 15px;
   border-radius: 30px;
+  margin-bottom: 15px;
 }
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-filters-top .wizzy-selected-filters ul.wizzy-selected-facet-list li.wizzy-selected-facet-list-item span.wizzy-selected-facet-delete:after {
   content: "✕";
