@@ -93,9 +93,10 @@
             </argument>
         </column>
 
-        <column name="entity_data">
+        <column name="entity_data" class="Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
                     <item name="filter" xsi:type="string">text</item>
                     <item name="label" xsi:type="string" translate="true">Entity Data</item>
                 </item>

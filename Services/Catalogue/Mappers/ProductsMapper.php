@@ -118,7 +118,7 @@ class ProductsMapper
             $requiredData = json_encode([
                'Main Image' => $mappedProduct['mainImage'],
                'Categories Count' => count($mappedProduct['categories']),
-               'selling Price' => $mappedProduct['sellingPrice'],
+               'Selling Price' => $mappedProduct['sellingPrice'],
             ]);
 
             $this->output->log([
