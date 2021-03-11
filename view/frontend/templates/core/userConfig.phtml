@@ -1,0 +1,7 @@
+<?php
+$configs = $block->getConfigs();
+?>
+
+<script type="text/javascript">
+    window.wizzyUserConfig = JSON.parse('<?= /* @noEscape */ json_encode($configs); ?>');
+</script>

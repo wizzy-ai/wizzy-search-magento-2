@@ -29,7 +29,9 @@ define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyB
 
     function connect() {
         connectionTries++;
-        wizzyClient = new wizzyBundle.WizzyClient(window.wizzyConfig.credentials.apiKey, window.wizzyConfig.credentials.storeId);
+        wizzyClient = new wizzyBundle.WizzyClient(window.wizzyConfig.credentials.apiKey, window.wizzyConfig.credentials.storeId, {
+            "USER_ID": window.wizzyUserConfig.loggedInUser.id,
+        });
         wizzyClient.connect();
         addSocketListeners();
     }
