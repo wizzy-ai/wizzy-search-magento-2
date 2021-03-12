@@ -184,7 +184,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         selectComponent.refreshSelectBoxes([
             {
                 element: $('.wizzy-sort-select'),
-                label: 'Sort By',
+                label: window.wizzyConfig.common.view.templates.literals['sortBy'],
             }
         ]);
         if ($('.wizzy-search-form-wrapper').hasClass('mobileTapped')) {
