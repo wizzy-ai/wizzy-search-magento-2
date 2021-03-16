@@ -30,9 +30,7 @@ class ProductPrices
         TexHelper $taxHelper
     ) {
         $this->productPrices = [
-         self::PRODUCT_PRICE_FINAL_TYPE => [],
-         self::PRODUCT_PRICE_ORIGINAL_TYPE => [],
-         self::PRODUCT_PRICE_SELLING_TYPE => [],
+
         ];
         $this->currencyManager = $currencyManager;
         $this->priceHelper = $priceHelper;
@@ -45,24 +43,29 @@ class ProductPrices
         $this->storeId = $storeId;
         $this->storeTaxConfig->setStore($storeId);
         $this->defaultCurrency = $this->currencyManager->getDefaultCurrency($this->storeId);
+        $this->productPrices[$storeId] = [
+           self::PRODUCT_PRICE_FINAL_TYPE => [],
+           self::PRODUCT_PRICE_ORIGINAL_TYPE => [],
+           self::PRODUCT_PRICE_SELLING_TYPE => [],
+        ];
     }
 
     public function getOriginalPrice($product)
     {
-        if (isset($this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()])) {
-            return $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()];
+        if (isset($this->productPrices[$this->storeId][self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()])) {
+            return $this->productPrices[$this->storeId][self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()];
         }
 
         $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
-        $this->productPrices[self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()] = $originalPrice;
+        $this->productPrices[$this->storeId][self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()] = $originalPrice;
 
         return $this->getDefaultCurrncyValue($originalPrice);
     }
 
     public function getFinalPrice($product)
     {
-        if (isset($this->productPrices[self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()])) {
-            return $this->productPrices[self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()];
+        if (isset($this->productPrices[$this->storeId][self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()])) {
+            return $this->productPrices[$this->storeId][self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()];
         }
 
         $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->getBaseAmount();
@@ -74,15 +77,15 @@ class ProductPrices
             $finalPrice = $this->getDefaultCurrncyValue($finalPrice);
         }
 
-        $this->productPrices[self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()] =  $finalPrice;
+        $this->productPrices[$this->storeId][self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()] =  $finalPrice;
 
         return $finalPrice;
     }
 
     public function getSellingPrice($product)
     {
-        if (isset($this->productPrices[self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()])) {
-            return $this->productPrices[self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()];
+        if (isset($this->productPrices[$this->storeId][self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()])) {
+            return $this->productPrices[$this->storeId][self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()];
         }
 
         $finalPrice = $this->getFinalPrice($product);
@@ -96,7 +99,7 @@ class ProductPrices
             }
         }
         $sellingPrice = $this->taxHelper->getTaxPrice($product, $finalPrice, $includingTax);
-        $this->productPrices[self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()] = $sellingPrice;
+        $this->productPrices[$this->storeId][self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()] = $sellingPrice;
 
         return $sellingPrice;
     }
