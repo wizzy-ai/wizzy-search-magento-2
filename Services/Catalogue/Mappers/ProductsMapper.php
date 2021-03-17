@@ -566,7 +566,7 @@ class ProductsMapper
     private function getFloatVal($value)
     {
         if (!empty($value)) {
-            return floatval(number_format($value, 2));
+            return floatval(number_format($value, 2, '.', ''));
         }
 
         return $value;
