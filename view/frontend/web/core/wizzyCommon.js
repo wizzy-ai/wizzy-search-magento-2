@@ -1,6 +1,6 @@
 define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyBundle, wizzyRenderer) {
     var connectionTries = 0;
-    var maxConnectionTries = 300;
+    var maxConnectionTries = 50;
     var wizzyClient;
     var isOpened = false;
     var wizzyUtils = wizzyBundle.WizzyUtils;

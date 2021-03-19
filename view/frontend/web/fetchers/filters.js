@@ -52,24 +52,13 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         return filters;
     }
 
-    function tryFilterOnceConnected(payload, isCategorySearch) {
-        setTimeout(function(payload, isCategorySearch) {
-            executeFilter(payload, isCategorySearch);
-        }, 200, payload, isCategorySearch);
-    }
-
     function executeFilter(payload, isCategorySearch) {
-        if (wizzyCommon.isConnected()) {
-            var filteringFor = pageStore.get(pageStore.keys.filteringFor, '');
-            if (filteringFor === 'page') {
-                searchRenderer.showIndicator(true, !isCategorySearch);
-            }
-            var response = wizzyCommon.getClient().filter(payload);
-            pageStore.set(pageStore.keys.lastRequestIdFilters, response.requestId);
+        var filteringFor = pageStore.get(pageStore.keys.filteringFor, '');
+        if (filteringFor === 'page') {
+            searchRenderer.showIndicator(true, !isCategorySearch);
         }
-        else {
-            tryFilterOnceConnected(payload, isCategorySearch);
-        }
+        var response = wizzyCommon.getClient().filter(payload);
+        pageStore.set(pageStore.keys.lastRequestIdFilters, response.requestId);
     }
 
     function setSortInFilters() {

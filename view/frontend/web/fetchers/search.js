@@ -32,20 +32,9 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/searc
         }
     }
 
-    function trySearchOnceConnected(payload) {
-        setTimeout(function(payload) {
-            executeSearch(payload);
-        }, 200, payload);
-    }
-
     function executeSearch(payload) {
-        if (wizzyCommon.isConnected()) {
-            var response = wizzyCommon.getClient().search(payload);
-            pageStore.set(pageStore.keys.lastRequestIdSearch, response.requestId);
-        }
-        else {
-            trySearchOnceConnected(payload);
-        }
+        var response = wizzyCommon.getClient().search(payload);
+        pageStore.set(pageStore.keys.lastRequestIdSearch, response.requestId);
     }
 
     return {
