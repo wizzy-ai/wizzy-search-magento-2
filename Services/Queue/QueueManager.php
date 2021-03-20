@@ -42,6 +42,23 @@ class QueueManager
         return $jobsData;
     }
 
+    public function getLatestInQueueByClass(string $class, $storeId)
+    {
+        $jobs = $this->queueFactory->create()->getCollection()
+          ->addFieldToFilter('class', $class)
+          ->addFieldToFilter('store_id', $storeId)
+          ->addFieldToFilter('status', self::JOB_TO_EXECUTE_STATUS)
+          ->setOrder('id', 'desc')
+          ->setPageSize(1);
+
+        $jobData = null;
+        foreach ($jobs as $job) {
+            $jobData = $job->getData();
+        }
+
+        return $jobData;
+    }
+
     public function enqueue(string $class, $storeId, array $data = [])
     {
         $queue = $this->queueFactory->create();
@@ -67,6 +84,11 @@ class QueueManager
             }
             $this->connectionManager->insertMultiple(WizzyTables::$SYNC_QUEUE_TABLE_NAME, $jobs, true);
         }
+    }
+
+    public function edit(array $job)
+    {
+         $this->connectionManager->insertMultiple(WizzyTables::$SYNC_QUEUE_TABLE_NAME, [$job], true);
     }
 
     public function dequeue($maxJobs = 7)

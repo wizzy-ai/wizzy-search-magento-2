@@ -66,7 +66,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
    */
     public function executeList(array $ids)
     {
-        $this->addProductsInQueue($ids);
+        $this->addProductsInQueue($ids, '', true);
     }
 
   /*
@@ -74,10 +74,10 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
    */
     public function executeRow($id)
     {
-        $this->addProductsInQueue([$id], $this->storeManager->getCurrentStoreId());
+        $this->addProductsInQueue([$id], $this->storeManager->getCurrentStoreId(), true);
     }
 
-    private function addProductsInQueue(array $productIdsToProcess, $storeId = '')
+    private function addProductsInQueue(array $productIdsToProcess, $storeId = '', $combinePreviousEntries = false)
     {
         if (count($productIdsToProcess) == 0) {
           // Return as no products to process.
@@ -105,13 +105,62 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
                 $addedProducts++;
             }
 
+            if (count($productBatchIds) > 1) {
+                $combinePreviousEntries = false;
+            }
+
+            if ($combinePreviousEntries) {
+                $jobData = $this->queueManager->getLatestInQueueByClass(IndexProductsProcessor::class, $storeId);
+            }
+
             foreach ($productBatchIds as $productIds) {
-                $this->queueManager->enqueue(IndexProductsProcessor::class, $storeId, [
-                'products' => $productIds,
-                ]);
+                $hasEdited = false;
+
+                if ($combinePreviousEntries && $jobData !== null) {
+                    $existingProducts = json_decode($jobData['data'], true);
+                    $existingProducts = $existingProducts['products'];
+
+                    $existingProducts = $this->mergeProductIds($existingProducts, $productIds);
+
+                    if (count($existingProducts) <= $this->maxProductsInSingleQueue) {
+                        $jobData['data'] = json_encode([
+                         'products' => $existingProducts,
+                        ]);
+                        $this->queueManager->edit($jobData);
+                        $hasEdited = true;
+                        $combinePreviousEntries = false;
+                    }
+                }
+
+                if ($hasEdited === false) {
+                    $this->queueManager->enqueue(IndexProductsProcessor::class, $storeId, [
+                       'products' => $productIds,
+                    ]);
+                }
+
                 $this->entitesSync->addEntitiesToSync($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
             }
         }
+    }
+
+    private function mergeProductIds(array $productIdsA, array $productIdsB)
+    {
+        $mergedIds = [];
+
+        foreach ($productIdsA as $productId) {
+            $mergedIds[$productId] = true;
+        }
+
+        foreach ($productIdsB as $productId) {
+            $mergedIds[$productId] = true;
+        }
+
+        $mergedIds = array_keys($mergedIds);
+        $mergedIds = array_map(function ($value) {
+            return (string) $value;
+        }, $mergedIds);
+        
+        return $mergedIds;
     }
 
     private function getProductIdsToSync($productIds, $storeId)
