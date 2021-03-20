@@ -77,11 +77,16 @@ class IndexProductsProcessor extends QueueProcessorBase
         $orderItems = $this->orderItemManager->getSummary($productIdsForReview, $storeId);
 
         $products = $this->productsMapper->mapAll($products, $productReviews, $orderItems, $storeId);
-        $this->output->writeln(__('Saving ' . count($productIds) . ' Products.'));
+
+        if (count($products) == 0) {
+            return true;
+        }
+
+        $this->output->writeln(__('Saving ' . count($products) . ' Products.'));
         $saveResponse = $this->submitSaveProductsRequest($products, $storeId);
 
         if ($saveResponse === true) {
-            $this->output->writeln(__('Saved ' . count($productIds) . ' Products successfully.'));
+            $this->output->writeln(__('Saved ' . count($products) . ' Products successfully.'));
             $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
             $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
             return true;
