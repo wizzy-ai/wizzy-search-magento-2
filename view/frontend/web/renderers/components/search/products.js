@@ -1,4 +1,15 @@
 define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filters/swatch'], function(pageStore, _, swatchComponent) {
+
+    Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
+        var n = this,
+            decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+            decSeparator = decSeparator == undefined ? "." : decSeparator,
+            thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
+            i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+            j = (j = i.length) > 3 ? j % 3 : 0;
+        return (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+    };
+
     function getTransformedProducts(products) {
         var totalProducts = products.length;
         resetFormKey();
@@ -69,7 +80,7 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
         for(var j = 0; j < totalKeys; j++) {
             if (typeof product[priceKeys[j]] !== "undefined" && product[priceKeys[j]] !== null && product[priceKeys[j]] % 1 !== 0) {
                 var fieldVale = parseFloat(product[priceKeys[j]]);
-                product[priceKeys[j]] = fieldVale.toFixed(2);
+                product[priceKeys[j]] = Number(fieldVale.toFixed(2)).formatMoney();
             }
         }
 
