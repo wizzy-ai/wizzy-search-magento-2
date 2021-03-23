@@ -733,10 +733,12 @@ class ProductsMapper
             if ($productImageData['disabled'] == 1) {
                 continue;
             }
+
+            $gridImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
             if ($index == 0 || $thumbnail == $productImageData['file']) {
-                $mainImage = $productImageData['url'];
+                $mainImage = $gridImage;
             } else {
-                $images[] = $productImageData['url'];
+                $images[] = $gridImage;
             }
             $index++;
         }

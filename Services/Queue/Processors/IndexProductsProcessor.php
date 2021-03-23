@@ -4,6 +4,7 @@ namespace Wizzy\Search\Services\Queue\Processors;
 
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Framework\App\Area;
 use Wizzy\Search\Services\API\Wizzy\Modules\Products;
 use Wizzy\Search\Services\Catalogue\CategoriesManager;
 use Wizzy\Search\Services\Catalogue\Mappers\ProductsMapper;
@@ -15,6 +16,8 @@ use Wizzy\Search\Services\Model\EntitiesSync;
 use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
+use Magento\Store\Model\App\Emulation;
+use Magento\Framework\App\Config\ScopeCodeResolver;
 
 class IndexProductsProcessor extends QueueProcessorBase
 {
@@ -30,6 +33,8 @@ class IndexProductsProcessor extends QueueProcessorBase
     private $categoriesSessionStorage;
     private $productsSessionStorage;
     private $output;
+    private $emulation;
+    private $scopeCodeResolver;
 
     public function __construct(
         ProductsManager $productsManager,
@@ -42,7 +47,9 @@ class IndexProductsProcessor extends QueueProcessorBase
         ReviewRatingsManager $reviewRatingsManager,
         CategoriesSessionStorage $categoriesSessionStorage,
         ProductsSessionStorage $productsSessionStorage,
-        IndexerOutput $output
+        IndexerOutput $output,
+        Emulation $emulation,
+        ScopeCodeResolver $scopeCodeResolver
     ) {
         $this->productsManager = $productsManager;
         $this->productsMapper = $productsMapper;
@@ -55,6 +62,8 @@ class IndexProductsProcessor extends QueueProcessorBase
         $this->productsSessionStorage = $productsSessionStorage;
         $this->categoriesSessionStorage = $categoriesSessionStorage;
         $this->output = $output;
+        $this->emulation = $emulation;
+        $this->scopeCodeResolver = $scopeCodeResolver;
     }
 
     public function execute(array $data, $storeId)
@@ -64,6 +73,7 @@ class IndexProductsProcessor extends QueueProcessorBase
             $this->output->writeln(__('Index Products Processor Skipped as Sync is disabled.'));
             return true;
         }
+        $this->startEmulation($storeId);
 
         $productIds = $data['products'];
         $this->output->writeln(__('Started processing ' . count($productIds) . ' Products'));
@@ -89,10 +99,30 @@ class IndexProductsProcessor extends QueueProcessorBase
             $this->output->writeln(__('Saved ' . count($products) . ' Products successfully.'));
             $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
             $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
+            $this->stopEmulation();
             return true;
         }
 
+        $this->stopEmulation();
         return $saveResponse;
+    }
+
+    /**
+     * Starts  frontend ENV emulation of given Store view.
+     * @param $storeId
+     */
+    private function startEmulation($storeId)
+    {
+        $this->emulation->startEnvironmentEmulation($storeId, Area::AREA_FRONTEND, true);
+        $this->scopeCodeResolver->clean();
+    }
+
+    /**
+     * Stops emulation
+     */
+    private function stopEmulation()
+    {
+        $this->emulation->stopEnvironmentEmulation();
     }
 
     /**
