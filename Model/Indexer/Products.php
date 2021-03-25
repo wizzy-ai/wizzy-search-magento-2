@@ -43,7 +43,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
    */
     public function execute($ids)
     {
-        $this->addProductsInQueue($ids);
+        $this->addProductsInQueue($ids, '', true);
     }
 
   /*
@@ -85,6 +85,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         }
 
         $storeIds = $this->storeManager->getToSyncStoreIds($storeId);
+
         foreach ($storeIds as $storeId) {
             $productIds = $this->getProductIdsToSync($productIdsToProcess, $storeId);
             $productBatchIds = [];
@@ -92,6 +93,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
             $batchIndex = 0;
             $this->output->writeDiv();
             $this->output->writeln(__('Adding ' . count($productIds) .' Products for Sync in Store #' . $storeId));
+            $combinePreviousEntriesOfStore = $combinePreviousEntries;
 
             foreach ($productIds as $productId) {
                 if ($addedProducts == $this->maxProductsInSingleQueue) {
@@ -106,17 +108,17 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
             }
 
             if (count($productBatchIds) > 1) {
-                $combinePreviousEntries = false;
+                $combinePreviousEntriesOfStore = false;
             }
 
-            if ($combinePreviousEntries) {
+            if ($combinePreviousEntriesOfStore) {
                 $jobData = $this->queueManager->getLatestInQueueByClass(IndexProductsProcessor::class, $storeId);
             }
 
             foreach ($productBatchIds as $productIds) {
                 $hasEdited = false;
 
-                if ($combinePreviousEntries && $jobData !== null) {
+                if ($combinePreviousEntriesOfStore && $jobData !== null) {
                     $existingProducts = json_decode($jobData['data'], true);
                     $existingProducts = $existingProducts['products'];
 
@@ -128,7 +130,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
                         ]);
                         $this->queueManager->edit($jobData);
                         $hasEdited = true;
-                        $combinePreviousEntries = false;
+                        $combinePreviousEntriesOfStore = false;
                     }
                 }
 
