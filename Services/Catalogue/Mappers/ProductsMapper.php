@@ -734,11 +734,10 @@ class ProductsMapper
                 continue;
             }
 
-            $gridImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
             if ($index == 0 || $thumbnail == $productImageData['file']) {
-                $mainImage = $gridImage;
+                $mainImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
             } else {
-                $images[] = $gridImage;
+                $images[] = $productImageData['url'];
             }
             $index++;
         }
