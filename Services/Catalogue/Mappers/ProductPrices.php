@@ -57,9 +57,11 @@ class ProductPrices
         }
 
         $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
+        $originalPrice = $this->getDefaultCurrncyValue($originalPrice);
+
         $this->productPrices[$this->storeId][self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()] = $originalPrice;
 
-        return $this->getDefaultCurrncyValue($originalPrice);
+        return $originalPrice;
     }
 
     public function getFinalPrice($product)

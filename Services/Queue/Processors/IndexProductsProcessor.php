@@ -89,6 +89,7 @@ class IndexProductsProcessor extends QueueProcessorBase
         $products = $this->productsMapper->mapAll($products, $productReviews, $orderItems, $storeId);
 
         if (count($products) == 0) {
+            $this->output->writeln(__('No Products to sync in Store #' . $storeId));
             return true;
         }
 

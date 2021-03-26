@@ -291,9 +291,12 @@ class ProductsMapper
                 $this->mapAttributes($child, $mappedProduct, $variationInStock, true);
             }
 
-            if ($finalPrice != 0) {
-                $mappedProduct['sellingPrice'] = $this->getFloatVal($sellingPrice);
+            if ($finalPrice != 0 && $finalPrice < $mappedProduct['finalPrice']) {
                 $mappedProduct['finalPrice'] = $this->getFloatVal($finalPrice);
+            }
+
+            if ($sellingPrice != 0 && $sellingPrice < $mappedProduct['sellingPrice']) {
+               $mappedProduct['sellingPrice'] = $this->getFloatVal($sellingPrice);
             }
 
             if ($discount != 0) {
@@ -339,6 +342,7 @@ class ProductsMapper
          'finalPrices' => 'finalPrice',
          'prices' => 'price',
          'discounts' => 'discount',
+         'discountPercentages' => 'discountPercentage',
          'variationsTotalReviews' => 'totalReviews',
          'variationsAvgRatings' => 'avgRatings',
         ];
