@@ -177,7 +177,7 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
         if (selectedIndex > -1) {
             menu.find(selector).eq(selectedIndex).attr(dataFocus, true);
             searchValue = menu.find(selector).eq(selectedIndex).data(searchterm);
-            displayTopProductsOfSuggestion(selectedIndex);
+            displayTopProductsOfSuggestion(selectedIndex, 'menu');
         }
         else {
             shootAutocompleteRequest();
@@ -185,14 +185,20 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
         searchElement.val(searchValue);
     }
 
-    function displayTopProductsOfSuggestion(index) {
+    function displayTopProductsOfSuggestion(index, filtersFor) {
         var autocompleteFilters = pageStore.get(pageStore.keys.suggestionFilters, []);
         if (typeof autocompleteFilters[index] !== "undefined") {
             if (autocompleteFilters[index]['group'] != "pages") {
+                var filters = autocompleteFilters[index]['filters'];
                 filtersFetcher.execute({
-                    'for': 'menu',
-                    'filters': autocompleteFilters[index]['filters'],
+                    'for': filtersFor,
+                    'filters': filters,
                 });
+
+                if (filtersFor === "page") {
+                    filters['fq'] = pageStore.get(pageStore.keys.searchInputValue);
+                    urlUtils.updateFilters(filters);
+                }
             }
         }
     }
@@ -203,17 +209,15 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
             if (autocompleteFilters[index]['group'] == "pages" && autocompleteFilters[index]['filters']['pages'].length > 0) {
                 window.location.href = autocompleteFilters[index]['filters']['pages'][0].url;
             }
+            else if (autocompleteFilters[index]['group'] == "categories" && typeof autocompleteFilters[index]['data'] !== "undefined" && typeof autocompleteFilters[index]['data']['url'] !== "undefined") {
+                window.location.href = autocompleteFilters[index]['data']['url'];
+            }
             else {
                 hideMenu();
                 var searchValue = autocompleteFilters[index]['value'].toLowerCase();
                 pageStore.set(pageStore.keys.searchInputValue, searchValue);
-                searchElement.val(searchValue);
-                sF.execute({
-                    q: searchValue
-                });
-                if (searchValue.length !== 0) {
-                    urlUtils.updateQuery(searchValue);
-                }
+
+                displayTopProductsOfSuggestion(index, 'page');
             }
         }
     }

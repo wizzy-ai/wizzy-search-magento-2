@@ -144,6 +144,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
                         group: groupKey,
                         value: groupsData[j].value,
                         filters: getSuggestionFilter(groupsData[j]),
+                        data: getSuggestionData(groupsData[j], groupKey),
                     });
                     suggestionIndex++;
                 }
@@ -211,6 +212,40 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
     function getSuggestionFilter(data) {
         var filters = data.filters;
         return filters;
+    }
+
+    function getSuggestionData(data, key) {
+        if (typeof data.payload === "undefined" || key !== "categories") {
+            return {};
+        }
+
+        var payload = data.payload;
+        var totalPairs = payload.length;
+
+        var categoryId = "";
+        var relatedCategories = {};
+
+        for (var i = 0; i < totalPairs; i++) {
+            if (payload[i].key === "categoryId") {
+                categoryId = payload[i].value;
+            }
+
+            if (payload[i].key === "relatedCategories" && typeof payload[i].value !== "undefined") {
+                var totalRelatedCategories = payload[i].value.length;
+
+                for(var j=0; j < totalRelatedCategories; j++) {
+                    relatedCategories[payload[i].value[j].id] = payload[i].value[j];
+                }
+            }
+        }
+
+        if (categoryId === "" || typeof relatedCategories[categoryId] === "undefined" || typeof relatedCategories[categoryId]['url'] === "undefined") {
+            return {};
+        }
+
+        return {
+            'url': relatedCategories[categoryId]['url']
+        };
     }
 
     function getHeadLabel(groupKey) {

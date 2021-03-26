@@ -111,6 +111,9 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
         if (onChange) {
             return filters.q;
         }
+        if (typeof filters['fq'] !== "undefined" && isValidQueryString(filters['fq'])) {
+            return filters['fq'];
+        }
         if (typeof filters['categories'] !== "undefined" && filters['categories'].length > 0) {
             return filters['categories'][0];
         }
