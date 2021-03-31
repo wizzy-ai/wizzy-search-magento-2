@@ -78,7 +78,7 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
         var totalKeys = priceKeys.length;
 
         for(var j = 0; j < totalKeys; j++) {
-            if (typeof product[priceKeys[j]] !== "undefined" && product[priceKeys[j]] !== null && product[priceKeys[j]] % 1 !== 0) {
+            if (typeof product[priceKeys[j]] !== "undefined" && product[priceKeys[j]] !== null) {
                 var fieldVale = parseFloat(product[priceKeys[j]]);
                 product[priceKeys[j]] = Number(fieldVale.toFixed(2)).formatMoney();
             }

@@ -151,6 +151,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'noUiSlider', 'wNumb', 'wi
     function getRangeValueFormatter() {
         return wNumb({
             decimals: 2,
+            thousand: ',',
             prefix: window.wizzyConfig.store.currency.symbol,
         });
     }
