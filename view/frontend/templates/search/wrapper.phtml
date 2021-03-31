@@ -3,7 +3,7 @@ $configs = $block->getConfigs();
 $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidget']['add'];
 ?>
 <script type="text/template" id="wizzy-search-wrapper">
-
+    <?= $block->getBlockHtml('formkey'); ?>
    <div class="wizzy-search-wrapper {{#inOnCategoryPage}}wizzy-category-page{{/inOnCategoryPage}}
         {{#hasFacets}}has-facets{{/hasFacets}}
         {{#hasLeftFacets}}has-left-facets{{/hasLeftFacets}}
