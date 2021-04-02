@@ -19,7 +19,7 @@
     "magento/module-store": "@stable",
     "magento/module-catalog": "@stable"
   },
-  "version": "1.2.3",
+  "version": "1.2.4",
   "autoload": {
     "files": [
       "registration.php"
