@@ -13,11 +13,16 @@ class PageLoadObserver implements ObserverInterface
 
     private $storeGeneralConfig;
     private $categoryRequestManager;
+    private $request;
 
-    public function __construct(StoreGeneralConfig $storeGeneralConfig, CategoryManager $categoryRequestManager)
-    {
+    public function __construct(
+        StoreGeneralConfig $storeGeneralConfig,
+        CategoryManager $categoryRequestManager,
+        RequestInterface $request
+    ) {
         $this->storeGeneralConfig = $storeGeneralConfig;
         $this->categoryRequestManager = $categoryRequestManager;
+        $this->request = $request;
     }
 
     public function execute(Observer $observer)
@@ -27,6 +32,12 @@ class PageLoadObserver implements ObserverInterface
         $isAutocompleteEnabled = $this->storeGeneralConfig->isAutocompleteEnabled();
         $isInstantSearchEnabled = $this->storeGeneralConfig->isInstantSearchEnabled();
         $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
+
+        if ($this->request->getModuleName() === "checkout"
+           && $this->request->getFullActionName() === "checkout_index_index"
+        ) {
+            return;
+        }
 
         if ($isAutocompleteEnabled || $isInstantSearchEnabled) {
             $layout->getUpdate()->addHandle('wizzy_search_common');
