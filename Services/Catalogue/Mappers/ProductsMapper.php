@@ -12,6 +12,7 @@ use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
+use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 
 class ProductsMapper
 {
@@ -36,6 +37,9 @@ class ProductsMapper
     private $productImageManager;
     private $syncSkippedEntities;
     private $skippedProducts;
+    private $storeCatalogueConfig;
+
+    private $isBrandMandatory;
 
     public function __construct(
         Configurable $configurable,
@@ -48,7 +52,8 @@ class ProductsMapper
         IndexerOutput $output,
         ProductImageManager $productImageManager,
         ProductPrices $productPrices,
-        SyncSkippedEntities $syncSkippedEntities
+        SyncSkippedEntities $syncSkippedEntities,
+        StoreCatalogueConfig $storeCatalogueConfig
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -65,6 +70,7 @@ class ProductsMapper
         $this->productImageManager = $productImageManager;
         $this->syncSkippedEntities = $syncSkippedEntities;
         $this->skippedProducts = [];
+        $this->storeCatalogueConfig = $storeCatalogueConfig;
     }
 
     private function resetEntitiesToIgnore()
@@ -79,6 +85,9 @@ class ProductsMapper
         $this->productReviews = $productReviews;
         $this->orderItems = $orderItems;
         $this->productPrices->setStore($storeId);
+        $this->storeCatalogueConfig->setStore($storeId);
+
+        $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();
 
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
@@ -113,13 +122,18 @@ class ProductsMapper
         if ($mappedProduct['mainImage'] == "" ||
            empty($mappedProduct['categories']) ||
            empty($mappedProduct['sellingPrice']) ||
-           $mappedProduct['sellingPrice'] == 0
+           $mappedProduct['sellingPrice'] == 0 ||
+           ($this->isBrandMandatory && (!isset($mappedProduct) || empty($mappedProduct['brand'])))
         ) {
-            $requiredData = json_encode([
+            $requiredData = [
                'Main Image' => $mappedProduct['mainImage'],
                'Categories Count' => count($mappedProduct['categories']),
                'Selling Price' => $mappedProduct['sellingPrice'],
-            ]);
+            ];
+            if ($this->isBrandMandatory) {
+                $requiredData['Brand'] = isset($mappedProduct['brand']) ? $mappedProduct['brand'] : '';
+            }
+            $requiredData = json_encode($requiredData);
 
             $this->output->log([
                'Message' => 'Product Skipped',
