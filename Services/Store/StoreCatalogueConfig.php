@@ -24,6 +24,8 @@ class StoreCatalogueConfig
        self::CATALOGUE_CONFIGURATION_BRANDS . "/brand_identifiable_sub_categories_selection";
     const BRAND_IDENTIFIABLE_ATTRIBUTE_SELECTION =
        self::CATALOGUE_CONFIGURATION_BRANDS . "/brand_identifiable_attribute_selection";
+    const BRAND_IS_MANDATORY_FOR_SYNC =
+       self::CATALOGUE_CONFIGURATION_BRANDS . "/is_brand_mandatory_for_sync";
 
   // GENDER CONFIGURATION SETTINGS
     const CATALOGUE_CONFIGURATION_GENDER = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_genders";
@@ -50,6 +52,11 @@ class StoreCatalogueConfig
     const IS_SIZES_VARIABLE_PRODUCTS = self::CATALOGUE_CONFIGURATION_SIZES . "/has_size_variable_products";
     const SIZES_IDENTIFIABLE_ATTRIBUTES =
        self::CATALOGUE_CONFIGURATION_SIZES . "/sizes_identifiable_attributes_selection";
+
+   // PRICES CONFIGURATION
+    const CATALOGUE_CONFIGURATION_PRICES = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_prices";
+
+    const HAS_TO_USE_MSRP_AS_ORIGINAL_PRICE = self::CATALOGUE_CONFIGURATION_PRICES . "/use_msrp_as_original_price";
 
     private $storeId;
 
@@ -155,5 +162,19 @@ class StoreCatalogueConfig
     public function brandsIdentityAttributes()
     {
         return $this->configManager->getStoreConfig(self::BRAND_IDENTIFIABLE_ATTRIBUTE_SELECTION, $this->storeId);
+    }
+
+    public function isBrandMandatoryForSync()
+    {
+        return ($this->configManager->getStoreConfig(self::BRAND_IS_MANDATORY_FOR_SYNC, $this->storeId)) ? true : false;
+    }
+
+    public function hasToUseMsrpAsOriginalPrice()
+    {
+        return ($this->configManager->getStoreConfig(
+            self::HAS_TO_USE_MSRP_AS_ORIGINAL_PRICE,
+            $this->storeId
+        )
+        ) ? true : false;
     }
 }

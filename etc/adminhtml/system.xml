@@ -269,6 +269,19 @@
                         <field id="brand_identifiable_by">attributes</field>
                     </depends>
                 </field>
+                <field id="is_brand_mandatory_for_sync" translate="label" type="select" sortOrder="7" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Is brand mandatory for sync?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Set it as yes if brand is mandatory data for products to sync.
+                            If brand is not preset for any product, It will be added under Skipped Entities.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="is_multi_brand_store">1</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="catalogue_configuration_colors" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
@@ -320,6 +333,20 @@
                     <depends>
                         <field id="has_size_variable_products">1</field>
                     </depends>
+                </field>
+            </group>
+
+            <group id="catalogue_configuration_prices" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Prices Configuration</label>
+                <field id="use_msrp_as_original_price" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Use MSRP price as original price?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If yes, Wizzy will consider MSRP as the original price of products and discounts will be calculated based on it.
+                            If MSRP price is not preset regular_price will be used as fallback.
+                        ]]>
+                    </comment>
                 </field>
             </group>
 

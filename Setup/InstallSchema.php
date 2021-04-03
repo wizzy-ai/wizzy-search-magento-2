@@ -2,18 +2,17 @@
 
 namespace Wizzy\Search\Setup;
 
-use Magento\Framework\App\ProductMetadataInterface;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\DB\Ddl\Table;
 use Wizzy\Search\Helpers\DB\WizzyTables;
 
-use Magento\Framework\App\Config\ConfigResource\ConfigInterface;
 use Wizzy\Search\Model\Admin\Source\InstantSearchBehaviours;
 use Wizzy\Search\Model\Admin\Source\PaginationType;
+use Wizzy\Search\Services\Setup\SetupUtils;
 use Wizzy\Search\Services\Setup\Version118;
-use Wizzy\Search\Services\Store\StoreManager;
+use Wizzy\Search\Services\Setup\Version125;
 
 class InstallSchema implements InstallSchemaInterface
 {
@@ -95,21 +94,18 @@ class InstallSchema implements InstallSchemaInterface
       ],
     ];
 
-    private $config;
-    private $storeManager;
-    private $productMetadata;
     private $version118;
+    private $setupUtils;
+    private $version125;
 
     public function __construct(
-        ConfigInterface $config,
-        StoreManager $storeManager,
-        ProductMetadataInterface $productMetadata,
-        Version118 $version118
+        Version118 $version118,
+        Version125 $version125,
+        SetupUtils $setupUtils
     ) {
-        $this->config = $config;
-        $this->storeManager = $storeManager;
-        $this->productMetadata = $productMetadata;
         $this->version118 = $version118;
+        $this->version125 = $version125;
+        $this->setupUtils = $setupUtils;
     }
 
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
@@ -125,33 +121,13 @@ class InstallSchema implements InstallSchemaInterface
     private function versionInstalls(SchemaSetupInterface $setup)
     {
         $this->version118->install($setup);
+        $this->version125->install($setup);
     }
 
     private function setDefaultConfig()
     {
         $defaultConfigs = $this->defaultConfigs;
-        $allStores = $this->storeManager->getAllStores();
-
-        foreach ($allStores as $storeId) {
-            foreach ($defaultConfigs as $path => $value) {
-                $this->config->saveConfig($path, $this->getConfigValue($value), 'stores', $storeId);
-            }
-        }
-    }
-
-    private function getConfigValue($value)
-    {
-        $serializeMethod = 'serialize';
-
-        if (is_array($value)) {
-            $magentoVersion = $this->productMetadata->getVersion();
-            if (version_compare($magentoVersion, '2.2.0-dev', '>=') === true) {
-                $serializeMethod = 'json_encode';
-            }
-            return $serializeMethod($value);
-        }
-
-        return $value;
+        $this->setupUtils->setDefaultConfig($defaultConfigs);
     }
 
     private function createEntitiesSyncTable(SchemaSetupInterface $setup)

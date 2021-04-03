@@ -5,6 +5,7 @@ namespace Wizzy\Search\Services\Catalogue\Mappers;
 use Magento\Catalog\Helper\Data as TexHelper;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Wizzy\Search\Services\Currency\CurrencyManager;
+use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Services\Store\StoreTaxConfig;
 
 class ProductPrices
@@ -23,11 +24,16 @@ class ProductPrices
     private $storeTaxConfig;
     private $taxHelper;
 
+    private $incTax = null;
+    private $storeCatalogueConfig;
+    private $hasToUseMsrp = false;
+
     public function __construct(
         CurrencyManager $currencyManager,
         PriceCurrencyInterface $priceHelper,
         StoreTaxConfig $storeTaxConfig,
-        TexHelper $taxHelper
+        TexHelper $taxHelper,
+        StoreCatalogueConfig $storeCatalogueConfig
     ) {
         $this->productPrices = [
 
@@ -36,18 +42,29 @@ class ProductPrices
         $this->priceHelper = $priceHelper;
         $this->storeTaxConfig = $storeTaxConfig;
         $this->taxHelper = $taxHelper;
+        $this->storeCatalogueConfig = $storeCatalogueConfig;
     }
 
     public function setStore($storeId)
     {
         $this->storeId = $storeId;
         $this->storeTaxConfig->setStore($storeId);
+        $this->storeCatalogueConfig->setStore($storeId);
         $this->defaultCurrency = $this->currencyManager->getDefaultCurrency($this->storeId);
         $this->productPrices[$storeId] = [
            self::PRODUCT_PRICE_FINAL_TYPE => [],
            self::PRODUCT_PRICE_ORIGINAL_TYPE => [],
            self::PRODUCT_PRICE_SELLING_TYPE => [],
         ];
+
+        if ($this->storeTaxConfig->isCatalogPriceIncludeTax() === false) {
+            if ($this->storeTaxConfig->getTaxCatalogPricesDisplayType() ==
+              \Magento\Tax\Model\Config::DISPLAY_TYPE_BOTH) {
+                $this->incTax = true;
+            }
+        }
+
+        $this->hasToUseMsrp = $this->storeCatalogueConfig->hasToUseMsrpAsOriginalPrice();
     }
 
     public function getOriginalPrice($product)
@@ -58,6 +75,13 @@ class ProductPrices
 
         $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
         $originalPrice = $this->getDefaultCurrncyValue($originalPrice);
+
+        if ($this->hasToUseMsrp) {
+            $originalMsrpPrice = $this->taxHelper->getTaxPrice($product, $product->getMsrp(), $this->incTax);
+            if ($originalMsrpPrice) {
+                $originalPrice = $originalMsrpPrice;
+            }
+        }
 
         $this->productPrices[$this->storeId][self::PRODUCT_PRICE_ORIGINAL_TYPE][$product->getId()] = $originalPrice;
 
@@ -92,15 +116,7 @@ class ProductPrices
 
         $finalPrice = $this->getFinalPrice($product);
 
-        $includingTax = null;
-
-        if ($this->storeTaxConfig->isCatalogPriceIncludeTax() === false) {
-            if ($this->storeTaxConfig->getTaxCatalogPricesDisplayType() ==
-            \Magento\Tax\Model\Config::DISPLAY_TYPE_BOTH) {
-                $includingTax = true;
-            }
-        }
-        $sellingPrice = $this->taxHelper->getTaxPrice($product, $finalPrice, $includingTax);
+        $sellingPrice = $this->taxHelper->getTaxPrice($product, $finalPrice, $this->incTax);
         $this->productPrices[$this->storeId][self::PRODUCT_PRICE_SELLING_TYPE][$product->getId()] = $sellingPrice;
 
         return $sellingPrice;
