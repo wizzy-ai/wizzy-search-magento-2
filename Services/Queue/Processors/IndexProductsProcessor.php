@@ -81,7 +81,7 @@ class IndexProductsProcessor extends QueueProcessorBase
         $products = $this->productsManager->getProductsByIds($productIds, $storeId);
         $this->setSessionData($products, $productIds, $storeId);
 
-        $productIdsToDelete = $this->findDeletedAndInactiveProducts($productIds, $products);
+        list($productIdsToDelete, $products) = $this->findDeletedAndActiveProducts($productIds, $products);
         $productIdsForReview = array_merge($productIds, $this->getChildProductIds($products));
         $productReviews = $this->reviewRatingsManager->getSummary($productIdsForReview, $storeId);
         $orderItems = $this->orderItemManager->getSummary($productIdsForReview, $storeId);
@@ -90,6 +90,10 @@ class IndexProductsProcessor extends QueueProcessorBase
 
         if (count($products) == 0) {
             $this->output->writeln(__('No Products to sync in Store #' . $storeId));
+            if (count($productIdsToDelete) > 0) {
+                $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
+            }
+            $this->stopEmulation();
             return true;
         }
 
@@ -259,18 +263,23 @@ class IndexProductsProcessor extends QueueProcessorBase
         return $response;
     }
 
-    private function findDeletedAndInactiveProducts($productIds, $products)
+    private function findDeletedAndActiveProducts($productIds, $products)
     {
         $retrievedProductIds = [];
+        $activeProducts = [];
 
         foreach ($products as $product) {
             if (!$product->isDisabled() &&
                 $product->getVisibility() != ((string)Visibility::VISIBILITY_IN_CATALOG)
             ) {
                 $retrievedProductIds[] = $product->getId();
+                $activeProducts[] = $product;
             }
         }
 
-        return array_values(array_diff($productIds, $retrievedProductIds));
+        return [
+           array_values(array_diff($productIds, $retrievedProductIds)),
+           $activeProducts,
+        ];
     }
 }
