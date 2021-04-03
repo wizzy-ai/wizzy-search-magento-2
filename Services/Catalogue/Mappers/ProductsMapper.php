@@ -120,7 +120,7 @@ class ProductsMapper
         $this->mapCategories($product, $mappedProduct);
         $this->mapImages($product, $mappedProduct);
 
-        $isValidURL = $this->isValidUrl($mappedProduct['url']);
+        $isValidURL = $this->isValidUrl($product, $mappedProduct['url']);
 
         if ($mappedProduct['mainImage'] == "" ||
            empty($mappedProduct['categories']) ||
@@ -138,7 +138,7 @@ class ProductsMapper
                 $requiredData['Brand'] = isset($mappedProduct['brand']) ? $mappedProduct['brand'] : '';
             }
             if ($isValidURL === false) {
-               $requiredData[SkippedEntityData::URL_KEY] = $mappedProduct['url'];
+                $requiredData[SkippedEntityData::URL_KEY] = $mappedProduct['url'];
             }
             $requiredData = json_encode($requiredData);
 
@@ -561,9 +561,13 @@ class ProductsMapper
         return $value;
     }
 
-    private function isValidUrl($url) {
-       $url = str_replace(" ", "%20", $url);
-       return ($url !== "" && is_string($url) && filter_var($url, FILTER_VALIDATE_URL) !== false);
+    private function isValidUrl($product, $url)
+    {
+        $url = str_replace(" ", "%20", $url);
+        return (
+         ($url !== "" && is_string($url) && filter_var($url, FILTER_VALIDATE_URL) !== false) &&
+         !empty($product->getUrlKey())
+        );
     }
 
     private function mapParentProduct($product, &$mappedProduct)

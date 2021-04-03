@@ -28,7 +28,7 @@ class SkippedEntityData extends Column
                 $content .= "<li><b>" . $key . "</b> : " . $value;
             }
             if ($key === self::URL_KEY && $value != "") {
-               $content .= "<li><b>" . $key . "</b> : " . $value . " (Invalid URL)";
+                $content .= "<li><b>" . $key . "</b> : " . $value . " (Invalid URL)";
             }
         }
 
