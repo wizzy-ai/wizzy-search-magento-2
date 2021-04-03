@@ -217,7 +217,13 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
                 var searchValue = autocompleteFilters[index]['value'].toLowerCase();
                 pageStore.set(pageStore.keys.searchInputValue, searchValue);
 
-                displayTopProductsOfSuggestion(index, 'page');
+                searchElement.val(searchValue);
+                sF.execute({
+                    q: searchValue
+                });
+                if (searchValue.length !== 0) {
+                    urlUtils.updateQuery(searchValue);
+                }
             }
         }
     }

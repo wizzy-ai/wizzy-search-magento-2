@@ -54,7 +54,9 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
                 return;
             }
             shootSearchRequest(isBySubmit, isByTrigger);
-            searchElement.blur();
+            if (behavior != "ontype") {
+                searchElement.blur();
+            }
         }
     }
 
