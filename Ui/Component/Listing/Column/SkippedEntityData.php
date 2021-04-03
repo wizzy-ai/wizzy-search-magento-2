@@ -7,6 +7,7 @@ use Magento\Ui\Component\Listing\Columns\Column;
 class SkippedEntityData extends Column
 {
     const ENTITY_DATA_KEY = "entity_data";
+    const URL_KEY = "URL";
 
     protected function prepareItem(array $item)
     {
@@ -25,6 +26,9 @@ class SkippedEntityData extends Column
                     $value = "(empty)";
                 }
                 $content .= "<li><b>" . $key . "</b> : " . $value;
+            }
+            if ($key === self::URL_KEY && $value != "") {
+               $content .= "<li><b>" . $key . "</b> : " . $value . " (Invalid URL)";
             }
         }
 

@@ -13,6 +13,7 @@ use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
+use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
 
 class ProductsMapper
 {
@@ -119,11 +120,14 @@ class ProductsMapper
         $this->mapCategories($product, $mappedProduct);
         $this->mapImages($product, $mappedProduct);
 
+        $isValidURL = $this->isValidUrl($mappedProduct['url']);
+
         if ($mappedProduct['mainImage'] == "" ||
            empty($mappedProduct['categories']) ||
            empty($mappedProduct['sellingPrice']) ||
            $mappedProduct['sellingPrice'] == 0 ||
-           ($this->isBrandMandatory && (!isset($mappedProduct) || empty($mappedProduct['brand'])))
+           ($this->isBrandMandatory && (!isset($mappedProduct) || empty($mappedProduct['brand']))) ||
+           $isValidURL === false
         ) {
             $requiredData = [
                'Main Image' => $mappedProduct['mainImage'],
@@ -132,6 +136,9 @@ class ProductsMapper
             ];
             if ($this->isBrandMandatory) {
                 $requiredData['Brand'] = isset($mappedProduct['brand']) ? $mappedProduct['brand'] : '';
+            }
+            if ($isValidURL === false) {
+               $requiredData[SkippedEntityData::URL_KEY] = $mappedProduct['url'];
             }
             $requiredData = json_encode($requiredData);
 
@@ -552,6 +559,11 @@ class ProductsMapper
         }
 
         return $value;
+    }
+
+    private function isValidUrl($url) {
+       $url = str_replace(" ", "%20", $url);
+       return ($url !== "" && is_string($url) && filter_var($url, FILTER_VALIDATE_URL) !== false);
     }
 
     private function mapParentProduct($product, &$mappedProduct)
