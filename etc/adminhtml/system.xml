@@ -84,6 +84,20 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="category_click_behaviour" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Category Click Behaviour (From Autocomplete)</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoryClickBehaviours</source_model>
+                    <depends>
+                        <field id="enable_autocomplete">1</field>
+                        <field id="enable_instant_search">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                            Select behaviour when user clicks on category suggestion from autocomplete menu.
+                            You can either hit search with category keyword or open the category page. (Former one is preferred as it will load the results faster)
+                        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
 

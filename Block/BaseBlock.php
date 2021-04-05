@@ -7,6 +7,7 @@ use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Template;
 use Wizzy\Search\Helpers\AddToWishlistHelper;
 use Wizzy\Search\Helpers\UrlHelper;
+use Wizzy\Search\Model\Admin\Source\CategoryClickBehaviours;
 use Wizzy\Search\Services\Request\CategoryManager;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Wizzy\Search\Services\Store\StoreCredentialsConfig;
@@ -181,6 +182,15 @@ class BaseBlock extends Template
          ],
          'autocomplete' => [
             'enabled' => $this->storeGeneralConfig->isAutocompleteEnabled(),
+            'configs' => [
+               'general' => [
+                  'openCategoryPage' =>
+                     (
+                        $this->storeGeneralConfig->getCategoryClickBehaviour() ===
+                        CategoryClickBehaviours::OPEN_CATEGORY_PAGE
+                     )
+               ]
+            ],
             'menu' => [
                'suggestionsCount' => $this->storeAutocompleteConfig->getSuggestionsCount(),
                'alignment' => $this->storeAutocompleteConfig->getMenuAlignment(),

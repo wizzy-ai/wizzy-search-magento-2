@@ -209,7 +209,10 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
             if (autocompleteFilters[index]['group'] == "pages" && autocompleteFilters[index]['filters']['pages'].length > 0) {
                 window.location.href = autocompleteFilters[index]['filters']['pages'][0].url;
             }
-            else if (autocompleteFilters[index]['group'] == "categories" && typeof autocompleteFilters[index]['data'] !== "undefined" && typeof autocompleteFilters[index]['data']['url'] !== "undefined") {
+            else if (autocompleteFilters[index]['group'] == "categories" &&
+                wizzyConfig.autocomplete.configs.general.openCategoryPage &&
+                typeof autocompleteFilters[index]['data'] !== "undefined" &&
+                typeof autocompleteFilters[index]['data']['url'] !== "undefined") {
                 window.location.href = autocompleteFilters[index]['data']['url'];
             }
             else {
