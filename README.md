@@ -3,6 +3,8 @@ Wizzy Search & Autocomplete for Magento 2
 
 Wizzy is an enterprise grade AI-Powered eCommerce search engine. It's a NLP enabled search which understands the user's intent and helps them to discover your store's products rapidly.
 
+<img src="https://wizzy.ai/images/m2screenshot.png" />
+
 Wizzy helps to increase your sales and retain your customers. It replaces the default Magento Search with following features.
 
 - Self Learning & NLP Enabled Search
