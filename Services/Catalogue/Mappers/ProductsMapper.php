@@ -7,7 +7,6 @@ use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductImageManager;
-use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
@@ -28,7 +27,6 @@ class ProductsMapper
     private $attributesManager;
 
     private $stockRegistry;
-    private $productsManager;
 
     private $productReviews;
     private $orderItems;
@@ -44,7 +42,6 @@ class ProductsMapper
 
     public function __construct(
         Configurable $configurable,
-        ProductsManager $productsManager,
         ConfigurableProductsData $configurableProductsData,
         AttributesManager $attributesManager,
         StockRegistry $stockRegistry,
@@ -61,7 +58,6 @@ class ProductsMapper
 
         $this->attributesManager = $attributesManager;
         $this->stockRegistry = $stockRegistry;
-        $this->productsManager = $productsManager;
         $this->productReviews = [];
         $this->orderItems = [];
         $this->configManager = $configManager;
