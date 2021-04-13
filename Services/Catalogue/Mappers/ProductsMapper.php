@@ -13,6 +13,7 @@ use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
+use Magento\Backend\Model\Url as BackendUrl;
 
 class ProductsMapper
 {
@@ -39,6 +40,8 @@ class ProductsMapper
     private $storeCatalogueConfig;
 
     private $isBrandMandatory;
+    private $backendUrl;
+    private $adminUrl;
 
     public function __construct(
         Configurable $configurable,
@@ -51,7 +54,8 @@ class ProductsMapper
         ProductImageManager $productImageManager,
         ProductPrices $productPrices,
         SyncSkippedEntities $syncSkippedEntities,
-        StoreCatalogueConfig $storeCatalogueConfig
+        StoreCatalogueConfig $storeCatalogueConfig,
+        BackendUrl $backendUrl
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -68,12 +72,21 @@ class ProductsMapper
         $this->syncSkippedEntities = $syncSkippedEntities;
         $this->skippedProducts = [];
         $this->storeCatalogueConfig = $storeCatalogueConfig;
+        $this->backendUrl = $backendUrl;
+        $this->adminUrl = null;
     }
 
     private function resetEntitiesToIgnore()
     {
         $this->attributesToIgnore = array_flip($this->configurableProductsData->getAttributesToIgnore($this->storeId));
         $this->categoriesToIgnore = array_flip($this->configurableProductsData->getCategoriesToIgnore($this->storeId));
+    }
+
+    private function setAdminUrl()
+    {
+        $routePath = 'product/edit';
+        $this->adminUrl = $this->backendUrl->getUrl($routePath);
+        $this->adminUrl = substr($this->adminUrl, 0, strpos($this->adminUrl, $routePath));
     }
 
     public function mapAll($products, $productReviews, $orderItems, $storeId)
@@ -83,6 +96,7 @@ class ProductsMapper
         $this->orderItems = $orderItems;
         $this->productPrices->setStore($storeId);
         $this->storeCatalogueConfig->setStore($storeId);
+        $this->setAdminUrl();
 
         $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();
 
@@ -116,7 +130,7 @@ class ProductsMapper
         $this->mapCategories($product, $mappedProduct);
         $this->mapImages($product, $mappedProduct);
 
-        $isValidURL = $this->isValidUrl($product, $mappedProduct['url']);
+        $isValidURL = $this->isValidUrl($mappedProduct['url']);
 
         if ($mappedProduct['mainImage'] == "" ||
            empty($mappedProduct['categories']) ||
@@ -557,12 +571,12 @@ class ProductsMapper
         return $value;
     }
 
-    private function isValidUrl($product, $url)
+    private function isValidUrl($url)
     {
         $url = str_replace(" ", "%20", $url);
         return (
          ($url !== "" && is_string($url) && filter_var($url, FILTER_VALIDATE_URL) !== false) &&
-         !empty($product->getUrlKey())
+         strpos($url, $this->adminUrl) === false
         );
     }
 
