@@ -129,6 +129,7 @@ class ProductsMapper
         $this->mapConfigurableData($product, $mappedProduct);
         $this->mapCategories($product, $mappedProduct);
         $this->mapImages($product, $mappedProduct);
+        $this->mapParentProduct($product, $mappedProduct);
 
         $isValidURL = $this->isValidUrl($mappedProduct['url']);
 
@@ -170,7 +171,6 @@ class ProductsMapper
         $this->mapReviews($product, $mappedProduct);
         $this->mapOrderData($product, $mappedProduct);
         $this->mapDiscounts($product, $mappedProduct);
-        $this->mapParentProduct($product, $mappedProduct);
         $this->mapAttributes($product, $mappedProduct, $mappedProduct['inStock']);
         $this->addParentDataInChild($mappedProduct);
 
