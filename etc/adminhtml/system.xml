@@ -72,6 +72,16 @@
                         <field id="enable_instant_search">1</field>
                     </depends>
                 </field>
+                <field id="enable_analytics" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Enable Analytics?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Enable/Disable Wizzy's search analytics on Store.<br>
+                            If turned off, Wizzy won't be able to track click & conversion analytics.
+                        ]]>
+                    </comment>
+                </field>
                 <field id="replace_category_page" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Replace Category Page?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -609,6 +619,26 @@
                 </field>
             </group>
 
+        </section>
+
+        <section id="wizzy_advanced_configuration" translate="label" sortOrder="190" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Advanced Setup</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="advanced_configuration" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Advanced Configuration</label>
+                <field id="overriding_eventsjs" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Overriding events.js?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If selected as yes, Module will load events.js file which you can override to add listeners.<br>
+                            This helps to just override the JS and not the layout files.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
         </section>
 
     </system>

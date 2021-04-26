@@ -76,6 +76,10 @@ $displayAddToWishlistButton = $configs['search']['addToWishlist']['display'];
                                               class="wizzy-tocart-productid" name="product" value="{{id}}">
                                        <input type="hidden"
                                               class="wizzy-tocart-uenc" name="uenc" value="{{ cart.uenc }}">
+                                       <input type="hidden"
+                                              class="wizzy-tocart-responseId"
+                                              name="searchResponseId"
+                                              value="{{ cart.searchResponseId }}">
                                        <input name="form_key" type="hidden" value="{{ cart.formKey }}">
                                        <button type="submit" title="<?= $block->escapeHtmlAttr(__('Add to Cart')) ?>"
                                                class="action tocart primary wizzy-tocart-button"

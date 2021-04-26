@@ -27,7 +27,6 @@ var wizzy = {
             eventArguments = Array.prototype.slice.call(arguments, 2);
 
         var data = this.getRegisteredEvents(eventName).reduce(function(eventData, event) {
-            console.log("EventData", eventData);
             if (Array.isArray(eventData)) {
                 eventData = [eventData];
             }

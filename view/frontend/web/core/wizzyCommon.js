@@ -4,6 +4,8 @@ define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyB
     var wizzyClient;
     var isOpened = false;
     var wizzyUtils = wizzyBundle.WizzyUtils;
+    var wizzyDataStorage = wizzyBundle.WizzyDataStorage;
+    var wizzyEvents = wizzyBundle.WizzyEvents;
 
     function addSocketListeners() {
         wizzyClient
@@ -29,11 +31,19 @@ define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyB
 
     function connect() {
         connectionTries++;
-        wizzyClient = new wizzyBundle.WizzyClient(window.wizzyConfig.credentials.apiKey, window.wizzyConfig.credentials.storeId, {
-            "USER_ID": window.wizzyUserConfig.loggedInUser.id,
-        });
+        wizzyClient = new wizzyBundle.WizzyClient(window.wizzyConfig.credentials.apiKey, window.wizzyConfig.credentials.storeId, getClientData());
         wizzyClient.connect();
         addSocketListeners();
+    }
+
+    function updateClientData() {
+        wizzyClient.updateData(getClientData());
+    }
+
+    function getClientData() {
+        return {
+            "USER_ID": window.wizzyUserConfig.loggedInUser.id,
+        };
     }
 
     function getClient() {
@@ -49,5 +59,8 @@ define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyB
         getClient: getClient,
         isConnected: isConnected,
         utils: (new wizzyUtils()),
+        events: wizzyEvents,
+        updateClientData: updateClientData,
+        dataStorage: (wizzyDataStorage.singleton()),
     };
 });

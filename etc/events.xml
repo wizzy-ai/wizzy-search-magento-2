@@ -18,4 +18,7 @@
     <event name="controller_action_postdispatch_adminhtml_system_currency_saveRates">
         <observer name="custom_controller_action_postdispatch_adminhtml_system_currency_saveRates" instance="Wizzy\Search\Model\Observer\AdminForms\CurrencyRatesUpdated"/>
     </event>
+    <event name="checkout_submit_all_after">
+        <observer name="wizzy_track_order" instance="Wizzy\Search\Model\Observer\CheckoutObserver" />
+    </event>
 </config>

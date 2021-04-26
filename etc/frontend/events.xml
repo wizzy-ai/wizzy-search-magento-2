@@ -3,4 +3,10 @@
     <event name="layout_load_before">
         <observer name="wizzy_search_common" instance="Wizzy\Search\Model\Observer\PageLoadObserver" />
     </event>
+    <event name="checkout_cart_add_product_complete">
+        <observer name="wizzy_track_add_to_cart" instance="Wizzy\Search\Model\Observer\AddToCartObserver" />
+    </event>
+    <event name="wishlist_add_product">
+        <observer name="wizzy_track_add_to_wishlist" instance="Wizzy\Search\Model\Observer\AddToWishlistObserver" />
+    </event>
 </config>

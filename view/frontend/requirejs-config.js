@@ -40,5 +40,8 @@ var config = {
         'wizzy/renderers/components/filters/commonRangeAbove': 'Wizzy_Search/renderers/components/filters/commonRangeAbove',
         'wizzy/renderers/components/filters/swatch': 'Wizzy_Search/renderers/components/filters/swatch',
         'wizzy/renderers/components/filters/range': 'Wizzy_Search/renderers/components/filters/range',
+        'wizzy/analytics/clicks' : 'Wizzy_Search/analytics/clicks',
+        'wizzy/analytics/views' : 'Wizzy_Search/analytics/views',
+        'wizzy/analytics/sessions' : 'Wizzy_Search/analytics/sessions',
     }
 };

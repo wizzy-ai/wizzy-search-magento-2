@@ -214,6 +214,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
             if (groupId != "") {
                 addToWishlistPayload['data']['product'] = groupId;
             }
+            addToWishlistPayload['data']['searchResponseId'] = pageStore.get(pageStore.keys.lastResponseId);
             button.attr('data-post', JSON.stringify(addToWishlistPayload));
         });
     }

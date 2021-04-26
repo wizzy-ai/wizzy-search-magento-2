@@ -3,12 +3,14 @@
 namespace Wizzy\Search\Block;
 
 use Magento\Framework\App\ActionInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Template;
 use Wizzy\Search\Helpers\AddToWishlistHelper;
 use Wizzy\Search\Helpers\UrlHelper;
 use Wizzy\Search\Model\Admin\Source\CategoryClickBehaviours;
 use Wizzy\Search\Services\Request\CategoryManager;
+use Wizzy\Search\Services\Request\ProductManager;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Wizzy\Search\Services\Store\StoreCredentialsConfig;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
@@ -36,6 +38,7 @@ class BaseBlock extends Template
 
     private $addToWishlistHelper;
     private $storeStockConfig;
+    private $productManager;
 
     public function __construct(
         Template\Context $context,
@@ -52,6 +55,7 @@ class BaseBlock extends Template
         FormKey $formKey,
         UrlHelper $urlHelper,
         AddToWishlistHelper $addToWishlistHelper,
+        ProductManager $productManager,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -78,6 +82,7 @@ class BaseBlock extends Template
         $this->urlHelper = $urlHelper;
 
         $this->addToWishlistHelper = $addToWishlistHelper;
+        $this->productManager = $productManager;
     }
 
     private function getAddToCartParams()
@@ -169,7 +174,10 @@ class BaseBlock extends Template
          ],
          'common' => [
             'isOnCategoryPage' => ($hasToReplaceCategoryPage && $isCategoryPage),
+            'isOnCategoryListing' => ($isCategoryPage),
+            'isOnProductViewPage' => $this->productManager->isOnProductPage(),
             'categoryUrlKey' => $categoryKey,
+            'currentProductId' => $this->productManager->getProductId(),
             'view' => [
                'templates' =>[
                   'progress' => '#wizzy-progress',

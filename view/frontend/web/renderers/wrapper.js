@@ -5,6 +5,8 @@ define(['wizzy/renderers/autocomplete', 'wizzy/renderers/search', 'wizzy/rendere
         }
 
         var requestId = data.requestId;
+        var responseId = data.responseId;
+        pageStore.set(pageStore.keys.lastResponseId, responseId);
 
         if (data.api == "autocomplete" && pageStore.get(pageStore.keys.lastRequestIdAutocomplete) == requestId) {
             autocompleteRenderer.render(data.response);

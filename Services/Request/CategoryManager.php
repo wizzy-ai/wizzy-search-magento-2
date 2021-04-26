@@ -26,9 +26,16 @@ class CategoryManager
     {
         $category = $this->getCategory();
         return (
-            $this->request->getControllerName() === "category" &&
-            $this->request->getFullActionName() === 'catalog_category_view' &&
+            $this->isOnCategoryPage() &&
             $category->getDisplayMode() !== "PAGE"
+        );
+    }
+
+    public function isOnCategoryPage()
+    {
+        return (
+         $this->request->getControllerName() === "category" &&
+         $this->request->getFullActionName() === 'catalog_category_view'
         );
     }
 }

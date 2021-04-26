@@ -18,7 +18,8 @@ $currency = $configs['store']['currency']['symbol'];
         <ul class="autocomplete-top-products">
             {{#products}}
 
-                <li class="topproduct-item" title="{{{ name }}}">
+                <li class="topproduct-item" title="{{{ name }}}" data-id="{{id}}"
+                    {{#groupId}}data-groupId="{{groupId}}"{{/groupId}}>
                     <a href="{{{url}}}" class="topproduct-item-link">
                         <div class="topproduct-item-image">
                             <img src="{{ mainImage }}" class="topproduct-image" />

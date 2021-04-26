@@ -9,6 +9,7 @@ class WizzyAPIEndPoints
     const PRODUCTS_BASE_AUTH = self::BASE_END_POINT.'/products';
     const CURRENCIES_BASE_AUTH = self::BASE_END_POINT.'/currencies';
     const PAGES_BASE_AUTH = self::BASE_END_POINT.'/pages';
+    const EVENTS_BASE_AUTH = self::BASE_END_POINT.'/events';
 
     const STORE_AUTH = self::STORES_BASE_AUTH . '/auth';
 
@@ -25,4 +26,8 @@ class WizzyAPIEndPoints
     const SAVE_PAGES = self::PAGES_BASE_AUTH . '/';
     const GET_PAGES = self::PAGES_BASE_AUTH . '/';
     const DELETE_PAGES = self::PAGES_BASE_AUTH . '/';
+
+    const COLLECT_CLICK_EVENT = self::EVENTS_BASE_AUTH . '/click';
+    const COLLECT_VIEW_EVENT = self::EVENTS_BASE_AUTH . '/view';
+    const COLLECT_CONVERTED_EVENT = self::EVENTS_BASE_AUTH . '/converted';
 }

@@ -62,9 +62,9 @@ class IndexerOutput
     private function isValidLogType($type)
     {
         $validLogTypes = [
-         'error' => true,
-         'warning' => true,
-         'info' => true,
+         self::LOG_ERROR_TYPE => true,
+         self::LOG_WARNING_TYPE => true,
+         self::LOG_INFO_TYPE => true,
         ];
 
         return isset($validLogTypes[$type]);

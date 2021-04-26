@@ -55,10 +55,19 @@
                 resource="Wizzy_Search::main"
         />
         <add
+                id="Wizzy_Search::advanced"
+                title="Advanced Setup"
+                module="Wizzy_Search"
+                sortOrder="60"
+                parent="Wizzy_Search::main"
+                action="adminhtml/system_config/edit/section/wizzy_advanced_configuration/store/1/"
+                resource="Wizzy_Search::main"
+        />
+        <add
             id="Wizzy_Search::queue"
             title="Queue Processors Status"
             module="Wizzy_Search"
-            sortOrder="60"
+            sortOrder="70"
             parent="Wizzy_Search::main"
             action="wizzy_search/queue/status"
             resource="Wizzy_Search::main"
@@ -67,7 +76,7 @@
             id="Wizzy_Search::skippedEntities"
             title="Skipped Entities"
             module="Wizzy_Search"
-            sortOrder="70"
+            sortOrder="80"
             parent="Wizzy_Search::main"
             action="wizzy_search/sync/skippedentities"
             resource="Wizzy_Search::main"

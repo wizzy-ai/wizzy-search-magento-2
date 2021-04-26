@@ -94,7 +94,8 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
         product['cart'] = {
             'action': cartAction,
             'uenc': window.btoa(cartAction),
-            'formKey': cartFormKey
+            'formKey': cartFormKey,
+            'searchResponseId': pageStore.get(pageStore.keys.lastResponseId),
         };
 
         return product

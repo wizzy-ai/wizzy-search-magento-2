@@ -5,6 +5,7 @@ namespace Wizzy\Search\Model\Observer;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Event\ObserverInterface;
 use Wizzy\Search\Services\Request\CategoryManager;
+use Wizzy\Search\Services\Store\StoreAdvancedConfig;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
 use Magento\Framework\Event\Observer;
 
@@ -14,14 +15,17 @@ class PageLoadObserver implements ObserverInterface
     private $storeGeneralConfig;
     private $categoryRequestManager;
     private $request;
+    private $storeAdvancedConfig;
 
     public function __construct(
         StoreGeneralConfig $storeGeneralConfig,
         CategoryManager $categoryRequestManager,
+        StoreAdvancedConfig $storeAdvancedConfig,
         RequestInterface $request
     ) {
         $this->storeGeneralConfig = $storeGeneralConfig;
         $this->categoryRequestManager = $categoryRequestManager;
+        $this->storeAdvancedConfig = $storeAdvancedConfig;
         $this->request = $request;
     }
 
@@ -32,6 +36,8 @@ class PageLoadObserver implements ObserverInterface
         $isAutocompleteEnabled = $this->storeGeneralConfig->isAutocompleteEnabled();
         $isInstantSearchEnabled = $this->storeGeneralConfig->isInstantSearchEnabled();
         $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
+        $isAnalyticsEnabled = $this->storeGeneralConfig->isAnalyticsEnabled();
+        $isOverridingEventsjs = $this->storeAdvancedConfig->isOverridingEventsjs();
 
         if ($this->request->getModuleName() === "checkout"
            && $this->request->getFullActionName() === "checkout_index_index"
@@ -42,6 +48,14 @@ class PageLoadObserver implements ObserverInterface
         if ($isAutocompleteEnabled || $isInstantSearchEnabled) {
             $layout->getUpdate()->addHandle('wizzy_search_common');
             $layout->getUpdate()->addHandle('wizzy_search_formmini');
+
+            if ($isOverridingEventsjs) {
+                $layout->getUpdate()->addHandle('wizzy_search_events');
+            }
+
+            if ($isAnalyticsEnabled) {
+                $layout->getUpdate()->addHandle('wizzy_search_analytics');
+            }
 
             if ($isAutocompleteEnabled) {
                 $layout->getUpdate()->addHandle('wizzy_search_autocomplete');

@@ -46,6 +46,7 @@ define(['jquery'], function($) {
             isCategoryPageRendered: 'isCategoryPageRendered',
             hasMoreResults: 'hasMoreResults',
             isNumberPaginating: 'isNumberPaginating',
+            lastResponseId: 'lastResponseId',
         }
     };
 

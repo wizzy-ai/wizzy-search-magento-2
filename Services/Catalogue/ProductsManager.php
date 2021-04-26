@@ -141,6 +141,11 @@ class ProductsManager
         return $products;
     }
 
+    public function getById($productId)
+    {
+        return $this->productRepository->getById($productId);
+    }
+
     public function getProductsByAttribute($attributeCode, $storeId)
     {
         $filters = [

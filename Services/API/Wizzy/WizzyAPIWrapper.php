@@ -30,6 +30,57 @@ class WizzyAPIWrapper
         $this->authHeaders = $authHeaders;
     }
 
+    public function collectClick(array $clickData, $storeId, array $headers): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::COLLECT_CLICK_EVENT,
+            'POST',
+            $clickData,
+            array_merge($headers, $this->authHeaders->getFromArray($credentials, true)),
+            true
+        );
+    }
+
+    public function collectView(array $viewData, $storeId, array $headers): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::COLLECT_VIEW_EVENT,
+            'POST',
+            $viewData,
+            array_merge($headers, $this->authHeaders->getFromArray($credentials, true)),
+            true
+        );
+    }
+
+    public function collectConverted(array $data, $storeId, array $headers): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::COLLECT_CONVERTED_EVENT,
+            'POST',
+            $data,
+            array_merge($headers, $this->authHeaders->getFromArray($credentials, true)),
+            true
+        );
+    }
+
     public function saveProducts(array $products, $storeId): Response
     {
         $credentials = $this->getStoreCredentials($storeId);
