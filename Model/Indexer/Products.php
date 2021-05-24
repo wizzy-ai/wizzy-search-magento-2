@@ -3,6 +3,7 @@ namespace Wizzy\Search\Model\Indexer;
 
 use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
+use Wizzy\Search\Services\Indexer\ProductPricesHelper;
 use Wizzy\Search\Services\Model\EntitiesSync;
 use Wizzy\Search\Services\Queue\Processors\IndexProductsProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
@@ -18,12 +19,14 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
     private $entitesSync;
     private $storeManager;
     private $output;
+    private $productPricesHelper;
 
     public function __construct(
         ProductsManager $productsManager,
         QueueManager $queueManager,
         EntitiesSync $entitiesSync,
         StoreManager $storeManager,
+        ProductPricesHelper $productPricesHelper,
         IndexerOutput $output
     ) {
         $this->productsManager = $productsManager;
@@ -35,6 +38,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         $this->entitesSync = $entitiesSync;
         $this->storeManager = $storeManager;
         $this->output = $output;
+        $this->productPricesHelper = $productPricesHelper;
     }
 
   /*
@@ -53,6 +57,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
     {
         $products = $this->getAllProductIds();
         $this->addProductsInQueue($products);
+        $this->productPricesHelper->markAllProductPricesSynced();
     }
 
     private function getAllProductIds()
@@ -161,7 +166,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         $mergedIds = array_map(function ($value) {
             return (string) $value;
         }, $mergedIds);
-        
+
         return $mergedIds;
     }
 

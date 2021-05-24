@@ -88,6 +88,18 @@ class StoreManager
         return $storeIds;
     }
 
+    public function getActiveWizzyWebsites()
+    {
+        $websiteIds = [];
+
+        foreach ($this->storeManager->getStores() as $store) {
+            $websiteId = $store->getWebsiteId();
+            $websiteIds[$websiteId] = true;
+        }
+
+        return array_keys($websiteIds);
+    }
+
     public function getAllStores()
     {
         $storeIds = [];

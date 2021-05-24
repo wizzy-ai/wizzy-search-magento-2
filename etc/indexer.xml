@@ -28,4 +28,14 @@
         </description>
     </indexer>
 
+    <indexer id="wizzy_products_prices_indexer" view_id="wizzy_products_prices_indexer" class="Wizzy\Search\Model\Indexer\ProductsPrices">
+        <title translate="true">Wizzy Search Products Prices</title>
+        <description translate="true">
+            Rebuild product prices index for Wizzy Search. (This doesn't need to be executed manually)
+        </description>
+        <dependencies>
+            <indexer id="catalog_product_price" />
+        </dependencies>
+    </indexer>
+
 </config>
