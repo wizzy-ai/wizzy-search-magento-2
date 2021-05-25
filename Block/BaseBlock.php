@@ -210,6 +210,7 @@ class BaseBlock extends Template
                'alignment' => $this->storeAutocompleteConfig->getMenuAlignment(),
                'noResultsBehaviour' => $this->storeAutocompleteConfig->getNoResultsBehaviour(),
                'noResultsText' => __($this->storeAutocompleteConfig->getNoResultsText()),
+               'firstSection' => $this->storeAutocompleteConfig->getFirstSection(),
                'categories' => [
                   'title' => __($this->storeAutocompleteConfig->getCategoriesTitle()),
                ],

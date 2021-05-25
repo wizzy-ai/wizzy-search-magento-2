@@ -122,6 +122,10 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
             "others",
             "pages",
         ];
+        if (wizzyConfig.autocomplete.menu.firstSection == "others") {
+            suggestionGroups[0] = 'others';
+            suggestionGroups[1] = 'categories';
+        }
         var totalSuggestionGroups = suggestionGroups.length;
 
         var suggestions = [];
