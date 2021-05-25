@@ -37,9 +37,46 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
             products[i] = appendModifiedSwatches(products[i]);
             products[i] = appendCartValues(products[i]);
             products[i] = formatPrices(products[i]);
+            products[i] = addTemplateAttrbutes(products[i]);
         }
         products = wizzy.triggerEvent(wizzy.allowedEvents.AFTER_PRODUCTS_TRANSFORMED, products);
         return products;
+    }
+
+    function addTemplateAttrbutes(product)
+    {
+        var templateAttributes = wizzyConfig.common.templateAttributes;
+        if (templateAttributes.length === 0) {
+            return product;
+        }
+
+        if (typeof product.attributes !== "undefined" && Array.isArray(product.attributes)) {
+            var totalAttributes = product.attributes.length;
+
+            for (var j = 0; j < totalAttributes; j++) {
+                var attributeName = product.attributes[j].id;
+
+                if (templateAttributes.includes(attributeName)) {
+                    if (typeof product.attributes[j].values !== "undefined" && product.attributes[j].values.length > 0) {
+
+                        var attributeValues = product.attributes[j].values;
+                        var totalValues = attributeValues.length;
+
+                        if (totalValues > 0) {
+                            product[attributeName] = [];
+                        }
+
+                        for (var k = 0; k < totalValues; k++) {
+                            if (typeof product.attributes[j].values[k].value !== "undefined" && product.attributes[j].values[k].variationId == product.id && product.attributes[j].values[k].value.length > 0) {
+                                product[attributeName].push(product.attributes[j].values[k].value[0]);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return product;
     }
 
     function resetFormKey() {
@@ -207,17 +244,17 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
 
         return Object.values(swatchesToReturn);
     }
-    
+
     function getModifiedSwatchObject(swatchObject, value, isSelected) {
         swatchObject['value'] = value;
         swatchObject['isSelected'] = isSelected;
         swatchObject['variationId'] = swatchObject['variationId'];
-        
+
         if (typeof swatchObject['swatch'] !== "undefined") {
             swatchObject['data'] = {};
             swatchObject['data']['swatch'] = swatchObject['swatch'];
         }
-        
+
         return swatchObject;
     }
 

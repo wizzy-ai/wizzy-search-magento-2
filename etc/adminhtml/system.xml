@@ -638,6 +638,17 @@
                         ]]>
                     </comment>
                 </field>
+
+                <field id="template_attributes" translate="label" type="multiselect" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Template Attributes</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\AttributesListNameKey</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select all attributes which values you want to access in overridden search/autocomplete templates.<br><br>
+                            Mustache tags for selected attributes will be the attribute keys.
+                        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
 

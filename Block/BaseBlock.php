@@ -11,6 +11,7 @@ use Wizzy\Search\Helpers\UrlHelper;
 use Wizzy\Search\Model\Admin\Source\CategoryClickBehaviours;
 use Wizzy\Search\Services\Request\CategoryManager;
 use Wizzy\Search\Services\Request\ProductManager;
+use Wizzy\Search\Services\Store\StoreAdvancedConfig;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Wizzy\Search\Services\Store\StoreCredentialsConfig;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
@@ -39,6 +40,7 @@ class BaseBlock extends Template
     private $addToWishlistHelper;
     private $storeStockConfig;
     private $productManager;
+    private $storeAdvancedConfig;
 
     public function __construct(
         Template\Context $context,
@@ -55,6 +57,7 @@ class BaseBlock extends Template
         FormKey $formKey,
         UrlHelper $urlHelper,
         AddToWishlistHelper $addToWishlistHelper,
+        StoreAdvancedConfig $storeAdvancedConfig,
         ProductManager $productManager,
         array $data = []
     ) {
@@ -67,6 +70,7 @@ class BaseBlock extends Template
         $this->storeGeneralConfig = $storeGeneralConfig;
         $this->storeSearchFormConfig = $storeSearchFormConfig;
         $this->storeStockConfig = $storeStockConfig;
+        $this->storeAdvancedConfig = $storeAdvancedConfig;
 
         $currentStoreId = $this->storeManager->getCurrentStoreId();
 
@@ -74,6 +78,7 @@ class BaseBlock extends Template
         $this->storeSearchConfig->setStore($currentStoreId);
         $this->storeStockConfig->setStore($currentStoreId);
         $this->storeCredentialsConfig->setStore($currentStoreId);
+        $this->storeAdvancedConfig->setStore($currentStoreId);
 
         $this->priceCurrency = $priceCurrency;
         $this->categoryRequestManager = $categoryRequestManager;
@@ -187,6 +192,7 @@ class BaseBlock extends Template
                   ]
                ],
             ],
+            'templateAttributes' => $this->storeAdvancedConfig->getTemplateAttributes(),
          ],
          'autocomplete' => [
             'enabled' => $this->storeGeneralConfig->isAutocompleteEnabled(),
