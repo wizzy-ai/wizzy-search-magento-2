@@ -46,14 +46,14 @@ define(['jquery', 'Mustache', 'wizzy/utils/facets', 'wizzy/renderers/components/
                 var selectedFilter = selectedFacets[key][filterKey];
 
                 var label = selectedFilter['label'];
+                if (typeof label === "undefined" || label === "" || label === null) {
+                    continue;
+                }
+
                 if (typeof selectedFilter['facetData'] !== "undefined" && typeof selectedFilter['facetData']['parentkey'] !== "undefined" && selectedFilter['facetData']['parentkey'] !== "") {
                     if (typeof selectedFilter['facetData']['label'] !== "undefined" && selectedFilter['facetData']['label'] !== "") {
                         label = selectedFilter['facetData']['label'] + ": " + label;
                     }
-                }
-
-                if (typeof label === "undefined" || label === "" || label === null) {
-                    continue;
                 }
 
                 var selectedFacet = {
