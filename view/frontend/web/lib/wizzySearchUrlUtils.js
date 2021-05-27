@@ -8,6 +8,13 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
         pushWindowState(searchData, title, getQueryUrl(searchData));
     }
 
+    function redirectToQuery(query) {
+        var searchData = {
+            q: query,
+        };
+        redirectWindow(getQueryUrl(searchData));
+    }
+
     function updateFilters(filters) {
         var searchData = filters;
         var q = getQueryFromFilters(searchData, true);
@@ -31,6 +38,10 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     function pushWindowState(data, title, url) {
         history.pushState(data, title, url);
         changeDocumentTitle(title);
+    }
+
+    function redirectWindow(url) {
+        window.location.href = url;
     }
 
     function changeDocumentTitle(title) {
@@ -150,6 +161,7 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
 
     return {
         updateQuery: updateQuery,
+        redirectToQuery: redirectToQuery,
         updatePage: updatePage,
         updateFilters: updateFilters,
         hasSearchEndPointInUrl: hasSearchEndPointInUrl,

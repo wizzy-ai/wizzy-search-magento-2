@@ -2,10 +2,12 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
     var searchElement;
     var behavior;
     var elementInputTypingTimer;
+    var formSubmissionBehaviour;
 
     function search(options) {
         searchElement = options['element'];
         behavior = options['behavior'];
+        formSubmissionBehaviour = options['formSubmissionBehaviour'];
 
         if (behavior == "ontype") {
             searchElement.keyup(function(e) {
@@ -63,12 +65,19 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
     function executeSearchRequest(isByTrigger) {
         var searchInputValue = pageStore.get(pageStore.keys.searchInputValue);
         if (searchInputValue.length >= 3 || searchInputValue.length === 0) {
-            sF.execute({
-                q: searchInputValue,
-                fS: true,
-            });
+            if (formSubmissionBehaviour != 'redirect_page') {
+                sF.execute({
+                    q: searchInputValue,
+                    fS: true,
+                });
+            }
             if (searchInputValue.length !== 0 && !isByTrigger) {
-                urlUtils.updateQuery(searchInputValue);
+                if (formSubmissionBehaviour != 'redirect_page') {
+                    urlUtils.updateQuery(searchInputValue);
+                }
+                else {
+                    urlUtils.redirectToQuery(searchInputValue);
+                }
             }
         }
 
@@ -199,7 +208,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
             }, 100);
         });
     }
-    
+
     function addInfiniteScrollListener() {
         if (paginationUtils.isInfiniteScroll()) {
             $(window).on("scroll", function() {

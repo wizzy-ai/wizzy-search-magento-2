@@ -11,6 +11,8 @@ requirejs(['jquery', 'wizzy/libs/instantSearch'], function($, wI) {
             else {
                 config['behavior'] = "onenter";
             }
+
+            config ['formSubmissionBehaviour'] = window.wizzyConfig.search.configs.general.formSubmissionBehaviour;
             wI.search(config);
         });
     });

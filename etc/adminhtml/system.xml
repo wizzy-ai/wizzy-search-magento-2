@@ -72,6 +72,19 @@
                         <field id="enable_instant_search">1</field>
                     </depends>
                 </field>
+                <field id="instant_search_form_submission_behavior" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Instant Search Form Submission Behaviour</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\FormSubmissionBehaviours</source_model>
+                    <depends>
+                        <field id="enable_instant_search">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                            Behaviour of instance search form submission.<br>
+                            <em>This config is used when autocomplete and instant search is enabled or only instant search is enabled with form submission as behaviour.</em>
+                        ]]>
+                    </comment>
+                </field>
                 <field id="enable_analytics" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Enable Analytics?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

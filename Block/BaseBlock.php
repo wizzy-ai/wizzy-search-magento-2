@@ -137,6 +137,7 @@ class BaseBlock extends Template
                   'noOfProducts' => $this->storeSearchConfig->getNoOfProducts(),
                   'includeOutOfStock' => $this->storeStockConfig->hasToIncludeOutOfStockProducts(),
                   'behaviour' => $this->storeGeneralConfig->getInstantSearchBehaviour(),
+                  'formSubmissionBehaviour' => $this->storeGeneralConfig->getFormSubmissionBehaviour(),
                ],
                'facets' => [
                   'configs' => $this->storeSearchConfig->getFacetsConfiguration(),
