@@ -156,7 +156,7 @@ class BaseBlock extends Template
                ],
             ],
             'view' => [
-               'domSelector' => '.columns',
+               'domSelector' => $this->storeSearchConfig->getDOMSelector(),
                'templates' => [
                   'summary' => '#wizzy-search-summary',
                   'wrapper' => '#wizzy-search-wrapper',
