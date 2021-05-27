@@ -1,6 +1,8 @@
 var wizzy = {
     allowedEvents: {
-        AFTER_PRODUCTS_TRANSFORMED: 'afterProductsTransformed'
+        AFTER_PRODUCTS_TRANSFORMED: 'afterProductsTransformed',
+        BEFORE_SEARCH_EXECUTED: 'beforeSearchExecuted',
+        BEFORE_FILTERS_EXECUTED: 'beforeFiltersExecuted'
     },
     registeredEvents: [],
     registerEvent: function (eventName, callback) {

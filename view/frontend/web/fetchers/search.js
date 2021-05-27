@@ -33,6 +33,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/searc
     }
 
     function executeSearch(payload) {
+        payload = wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_SEARCH_EXECUTED, payload);
         var response = wizzyCommon.getClient().search(payload);
         pageStore.set(pageStore.keys.lastRequestIdSearch, response.requestId);
     }

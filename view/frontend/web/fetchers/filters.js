@@ -63,6 +63,8 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         if (filteringFor === 'page') {
             searchRenderer.showIndicator(true, !isCategorySearch);
         }
+
+        payload = wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_FILTERS_EXECUTED, payload);
         var response = wizzyCommon.getClient().filter(payload);
         pageStore.set(pageStore.keys.lastRequestIdFilters, response.requestId);
     }
