@@ -326,7 +326,7 @@ class ProductsMapper
                 $mappedProduct['finalPrice'] = $this->getFloatVal($finalPrice);
             }
 
-            if ($sellingPrice != 0 && $sellingPrice < $mappedProduct['sellingPrice']) {
+            if ($sellingPrice != 0 && ($sellingPrice < $mappedProduct['sellingPrice'] || !$mappedProduct['sellingPrice'])) {
                 $mappedProduct['sellingPrice'] = $this->getFloatVal($sellingPrice);
             }
 

@@ -24,7 +24,7 @@ class IndexerOutput
     public function writeln($message)
     {
         if (php_sapi_name() === 'cli') {
-            $this->output->writeln($message);
+            $this->output->writeln([$message]);
         }
     }
 
