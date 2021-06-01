@@ -13,7 +13,7 @@
     }
   ],
   "require": {
-    "php": "~7.3|~7.4",
+    "php": "~7.2|~7.3|~7.4",
     "magento/framework": "@stable",
     "magento/module-backend": "@stable",
     "magento/module-store": "@stable",
