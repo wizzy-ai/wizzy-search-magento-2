@@ -602,6 +602,10 @@ class ProductsMapper
                     $mappedProduct['isVisibleInCatalog'] = (
                        $visibility == Visibility::VISIBILITY_IN_CATALOG ||
                        $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
+
+                    if (!$mappedProduct['mainImage']) {
+                        $this->mapImages($parentProduct, $mappedProduct);
+                    }
                     break;
                 }
             }
