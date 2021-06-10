@@ -240,6 +240,8 @@ class ProductsMapper
             'finalPrices' => [],
             ];
 
+            $isAllChildOutOfStock = true;
+
             foreach ($children as $child) {
                 $childFinalPrice = $this->productPrices->getFinalPrice($child);
                 $childOriginalPrice = $this->productPrices->getOriginalPrice($child);
@@ -277,6 +279,7 @@ class ProductsMapper
 
                 $stockItem = $this->stockRegistry->getStockItem($child->getId());
                 if ($stockItem && $stockItem->getIsInStock()) {
+                    $isAllChildOutOfStock = false;
                     $mappedProduct['inStock'] = true;
                 }
 
@@ -320,6 +323,10 @@ class ProductsMapper
                 array_push($sizes, ...$childSizes);
 
                 $this->mapAttributes($child, $mappedProduct, $variationInStock, true);
+            }
+
+            if ($isAllChildOutOfStock) {
+                $mappedProduct['inStock'] = false;
             }
 
             if ($finalPrice != 0 && $finalPrice < $mappedProduct['finalPrice']) {
