@@ -610,7 +610,9 @@ class ProductsMapper
                        $visibility == Visibility::VISIBILITY_IN_CATALOG ||
                        $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
 
-                    if (!$mappedProduct['mainImage']) {
+                    if (!$mappedProduct['mainImage'] ||
+                        $mappedProduct['mainImage'] ==
+                            $this->productImageManager->getPlaceholderImage($this->storeId)) {
                         $this->mapImages($parentProduct, $mappedProduct);
                     }
                     break;
