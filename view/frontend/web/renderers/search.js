@@ -245,7 +245,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
     }
 
     function handleFailedSearch() {
-        $('.columns').html(resultsComponent.getEmptyHTML());
+        $(domRenderer.getDOMHandler()).html(resultsComponent.getEmptyHTML());
         pageStore.set(pageStore.keys.searchedResponse, null);
     }
 
