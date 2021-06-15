@@ -5,6 +5,7 @@ namespace Wizzy\Search\Services\Catalogue\Mappers;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Wizzy\Search\Helpers\GalleryReadHandler;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductImageManager;
 use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
@@ -48,6 +49,7 @@ class ProductsMapper
     private $hasWordsToRemove;
     private $productsAttributesManager;
     private $productURLManager;
+    private $galleryReadHandler;
 
     public function __construct(
         Configurable $configurable,
@@ -63,7 +65,8 @@ class ProductsMapper
         StoreCatalogueConfig $storeCatalogueConfig,
         BackendUrl $backendUrl,
         ProductsAttributesManager $productsAttributesManager,
-        ProductURLManager $productURLManager
+        ProductURLManager $productURLManager,
+        GalleryReadHandler $galleryReadHandler
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -86,6 +89,7 @@ class ProductsMapper
         $this->hasWordsToRemove = false;
         $this->productsAttributesManager = $productsAttributesManager;
         $this->productURLManager = $productURLManager;
+        $this->galleryReadHandler = $galleryReadHandler;
     }
 
     private function resetEntitiesToIgnore()
@@ -845,7 +849,7 @@ class ProductsMapper
 
         $thumbnail = $this->getImageByType($this->storeCatalogueConfig->getThumbnailImageType(), $product);
         $hoverImage = $this->getImageByType($this->storeCatalogueConfig->getHoverImageType(), $product);
-
+        $this->galleryReadHandler->addGallery($product);
         foreach ($product->getMediaGalleryImages() as $productImage) {
             $productImageData = $productImage->getData();
             if ($productImageData['disabled'] == 1) {

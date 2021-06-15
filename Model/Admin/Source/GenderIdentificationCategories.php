@@ -45,7 +45,7 @@ class GenderIdentificationCategories extends AbstractFieldArray
    * @param DataObject $row
    * @throws LocalizedException
    */
-    protected function _prepareArrayRow(DataObject $row): void
+    protected function _prepareArrayRow(DataObject $row)
     {
         $options = [];
         $categories = $row->getCategories();
