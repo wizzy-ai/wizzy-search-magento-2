@@ -1,6 +1,18 @@
 Wizzy Search & Autocomplete for Magento 2
 ==================
 
+---
+**Note:** 
+We've branched Wizzy module to support **Magento Version >= 2.2.4 AND <= 2.2.10** with **PHP 7.0 / 7.1**
+
+We do not distribute this releases separately through packagist and urge you to clone the repo and install the module.
+
+Install module from this branch **only if** your server and magento version falls in above range. Otherwise our stable releases works well with latest Magento (>= M2.2.11) and PHP (>=7.2) versions.
+
+Please do not consider these versions as stable releases and consider upgrading your outdated Magento and PHP.
+
+---
+
 Wizzy is an enterprise grade AI-Powered eCommerce search engine. It's a NLP enabled search which understands the user's intent and helps them to discover your store's products rapidly.
 
 <img src="https://wizzy.ai/images/m2screenshot.png" />

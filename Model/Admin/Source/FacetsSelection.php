@@ -45,7 +45,7 @@ class FacetsSelection extends AbstractFieldArray
     * @param DataObject $row
     * @throws LocalizedException
     */
-    protected function _prepareArrayRow(DataObject $row): void
+    protected function _prepareArrayRow(DataObject $row)
     {
         $options = [];
         $row->setData('option_extra_attrs', $options);

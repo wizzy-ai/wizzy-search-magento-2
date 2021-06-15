@@ -5,6 +5,7 @@ namespace Wizzy\Search\Services\Catalogue\Mappers;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Wizzy\Search\Helpers\GalleryReadHandler;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductImageManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
@@ -42,6 +43,7 @@ class ProductsMapper
     private $isBrandMandatory;
     private $backendUrl;
     private $adminUrl;
+    private $galleryReadHandler;
 
     public function __construct(
         Configurable $configurable,
@@ -55,7 +57,8 @@ class ProductsMapper
         ProductPrices $productPrices,
         SyncSkippedEntities $syncSkippedEntities,
         StoreCatalogueConfig $storeCatalogueConfig,
-        BackendUrl $backendUrl
+        BackendUrl $backendUrl,
+        GalleryReadHandler $galleryReadHandler
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -74,6 +77,7 @@ class ProductsMapper
         $this->storeCatalogueConfig = $storeCatalogueConfig;
         $this->backendUrl = $backendUrl;
         $this->adminUrl = null;
+        $this->galleryReadHandler = $galleryReadHandler;
     }
 
     private function resetEntitiesToIgnore()
@@ -789,7 +793,7 @@ class ProductsMapper
         $index = 0;
         $thumbnail = $product->getThumbnail();
         $mainImageUrl = "";
-
+        $this->galleryReadHandler->addGallery($product);
         foreach ($product->getMediaGalleryImages() as $productImage) {
             $productImageData = $productImage->getData();
             if ($productImageData['disabled'] == 1) {

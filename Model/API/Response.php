@@ -33,12 +33,12 @@ class Response extends DataObject
         return $this->getData(self::$RESPONSE_STATUS_KEY);
     }
 
-    public function getMessage(): ?string
+    public function getMessage()
     {
         return $this->getData(self::$RESPONSE_MESSAGE_KEY);
     }
 
-    public function getPayload(): ?array
+    public function getPayload()
     {
         return $this->getData(self::$RESPONSE_PAYLOAD_KEY);
     }

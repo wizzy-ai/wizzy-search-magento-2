@@ -21,7 +21,7 @@ class StoreManager
      * @return StoreInterface|null
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function getStoreById($storeId) : ?StoreInterface
+    public function getStoreById($storeId)
     {
         return $this->storeManager->getStore($storeId);
     }
