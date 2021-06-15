@@ -24,7 +24,7 @@ class StoreFilterFixer
                 if ($filter['attribute'] == 'website_id' && isset($filter['eq'])) {
                     $subject->addWebsiteFilter([$filter['eq']]);
                     unset($fields[$key]);
-                } else if ($filter['attribute'] == 'store_id' && isset($filter['eq'])) {
+                } elseif ($filter['attribute'] == 'store_id' && isset($filter['eq'])) {
                     $subject->addStoreFilter($filter['eq']);
                     unset($fields[$key]);
                 }
