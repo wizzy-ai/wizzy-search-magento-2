@@ -216,7 +216,9 @@ class ProductsMapper
             $childIds = [];
 
             foreach ($children as $child) {
-                $childIds[] = $child->getId();
+                if (!$child->isDisabled()) {
+                    $childIds[] = $child->getId();
+                }
             }
 
             $children = $this->productsSessionStorage->getByIds($childIds);
@@ -281,7 +283,6 @@ class ProductsMapper
                 $stockItem = $this->stockRegistry->getStockItem($child->getId());
                 if ($stockItem && $stockItem->getIsInStock()) {
                     $isAllChildOutOfStock = false;
-                    $mappedProduct['inStock'] = true;
                 }
 
                 $childVisibility = $child->getVisibility();
