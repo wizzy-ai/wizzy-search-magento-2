@@ -97,7 +97,7 @@ class ProductPrices
         $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->getBaseAmount();
         $finalPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getBaseAmount();
 
-        if ($specialPrice !== false && $specialPrice !== 0) {
+        if ($specialPrice !== false && $specialPrice !== 0 && $specialPrice < $finalPrice) {
             $finalPrice = $this->getDefaultCurrncyValue($specialPrice);
         } else {
             $finalPrice = $this->getDefaultCurrncyValue($finalPrice);
