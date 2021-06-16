@@ -210,6 +210,7 @@ class ProductsMapper
         if ($product->getTypeID() == Configurable::TYPE_CODE) {
             $children = $product->getTypeInstance()->getUsedProducts($product);
             if (count($children) == 0) {
+                $mappedProduct['inStock'] = false;
                 return;
             }
             $childIds = [];
