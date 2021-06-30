@@ -1,0 +1,19 @@
+<?php
+
+?>
+<script>
+    document.addEventListener("DOMContentLoaded", function(event) {
+        require([
+            'jquery',
+            'Magento_Theme/js/sortable'
+        ], function ($) {
+            setTimeout(function () {
+                $('form[action*="wizzy"] .admin__control-table tbody').sortable({
+                    containment: "parent",
+                    items: 'tr',
+                    tolerance: 'pointer',
+                });
+            }, 1000);
+        });
+    });
+</script>
