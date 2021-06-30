@@ -334,10 +334,11 @@ $autoCompleteMenuRadius: 4px;
       width: 100%;
       background: $whiteBg;
       padding: 15px;
-      display: none;
+      display: block;
       padding-left: 0;
       padding-right: 0;
       padding-bottom: 0;
+      order: 2 !important;
 
       p.top-products-title {
         padding-left: 20px;
