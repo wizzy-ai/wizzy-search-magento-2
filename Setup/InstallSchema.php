@@ -15,6 +15,7 @@ use Wizzy\Search\Services\Setup\Version118;
 use Wizzy\Search\Services\Setup\Version125;
 use Wizzy\Search\Services\Setup\Version130;
 use Wizzy\Search\Services\Setup\Version131;
+use Wizzy\Search\Services\Setup\Version135;
 
 class InstallSchema implements InstallSchemaInterface
 {
@@ -101,19 +102,22 @@ class InstallSchema implements InstallSchemaInterface
     private $version125;
     private $version130;
     private $version131;
+    private $version135;
 
     public function __construct(
         Version118 $version118,
         Version125 $version125,
         SetupUtils $setupUtils,
         Version130 $version130,
-        Version131 $version131
+        Version131 $version131,
+        Version135 $version135
     ) {
         $this->version118 = $version118;
         $this->version125 = $version125;
         $this->setupUtils = $setupUtils;
         $this->version130 = $version130;
         $this->version131 = $version131;
+        $this->version135 = $version135;
     }
 
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
@@ -132,6 +136,7 @@ class InstallSchema implements InstallSchemaInterface
         $this->version125->install($setup);
         $this->version130->install($setup);
         $this->version131->install($setup);
+        $this->version135->install($setup);
     }
 
     private function setDefaultConfig()

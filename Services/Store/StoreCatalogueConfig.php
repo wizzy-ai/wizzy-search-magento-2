@@ -58,6 +58,12 @@ class StoreCatalogueConfig
 
     const HAS_TO_USE_MSRP_AS_ORIGINAL_PRICE = self::CATALOGUE_CONFIGURATION_PRICES . "/use_msrp_as_original_price";
 
+    // IMAGES CONFIGURATION
+    const CATALOGUE_CONFIGURATION_IMAGES = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_images";
+
+    const THUMBNAIL_IMAGE_WIDTH = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_width";
+    const THUMBNAIL_IMAGE_HEIGHT = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_height";
+
     private $storeId;
 
     private $cachedGnderIdentityConsiderParentCategories;
@@ -176,5 +182,15 @@ class StoreCatalogueConfig
             $this->storeId
         )
         ) ? true : false;
+    }
+
+    public function getThumbnailWidth()
+    {
+        return $this->configManager->getStoreConfig(self::THUMBNAIL_IMAGE_WIDTH, $this->storeId);
+    }
+
+    public function getThumbnailHeight()
+    {
+        return $this->configManager->getStoreConfig(self::THUMBNAIL_IMAGE_HEIGHT, $this->storeId);
     }
 }

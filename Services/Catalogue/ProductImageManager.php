@@ -2,6 +2,7 @@
 
 namespace Wizzy\Search\Services\Catalogue;
 
+use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Services\Store\StoreImageConfig;
 use Wizzy\Search\Services\Store\StoreManager;
 use Magento\Framework\UrlInterface;
@@ -13,18 +14,40 @@ class ProductImageManager
     private $placeholderImage;
     private $storeManager;
     private $imageHelper;
+    private $catalogConfig;
 
-    public function __construct(StoreImageConfig $storeImageConfig, StoreManager $storeManager, Image $imageHelper)
-    {
+    private $thumbWidth;
+    private $thumbHeight;
+
+    public function __construct(
+        StoreImageConfig $storeImageConfig,
+        StoreManager $storeManager,
+        Image $imageHelper,
+        StoreCatalogueConfig $storeCatalogueConfig
+    ) {
         $this->storeImageConfig = $storeImageConfig;
         $this->placeholderImage = false;
         $this->storeManager = $storeManager;
         $this->imageHelper = $imageHelper;
+        $this->catalogConfig = $storeCatalogueConfig;
+
+        $this->thumbHeight = 0;
+        $this->thumbWidth = 0;
     }
 
     public function getThumbnail($product, $imageFile)
     {
-        return $this->imageHelper->init($product, 'category_page_grid')->setImageFile($imageFile)->getUrl();
+        $this->setThumbnailSize();
+        return $this->imageHelper->init($product, 'category_page_grid')->setImageFile($imageFile)
+            ->keepAspectRatio(true)->resize($this->thumbWidth, $this->thumbHeight)->getUrl();
+    }
+
+    private function setThumbnailSize()
+    {
+        if ($this->thumbHeight === 0) {
+            $this->thumbHeight = $this->catalogConfig->getThumbnailHeight();
+            $this->thumbWidth = $this->catalogConfig->getThumbnailWidth();
+        }
     }
 
     public function getPlaceholderImage($storeId)
