@@ -13,7 +13,10 @@ define(['jquery', 'Mustache'], function($, Mustache) {
             'key'  : options['key'],
             'withSearch': options['withSearch'],
             'isLeft' : options['isLeft'],
-            'divKey' : options['key'].replace(" ", "")
+            'divKey' : options['key'].replace(" ", ""),
+            'leftFacetCollapsible': window.wizzyConfig.search.configs.facets.leftFacets.collapsible,
+            'leftDefaultCollapsed': window.wizzyConfig.search.configs.facets.leftFacets.defaultCollapsed,
+            'firstLeftDefaultOpened': window.wizzyConfig.search.configs.facets.leftFacets.firstLeftDefaultOpened,
         });
 
         return facetTemplate;

@@ -9,6 +9,7 @@ use Magento\Framework\View\Element\Template;
 use Wizzy\Search\Helpers\AddToWishlistHelper;
 use Wizzy\Search\Helpers\UrlHelper;
 use Wizzy\Search\Model\Admin\Source\CategoryClickBehaviours;
+use Wizzy\Search\Model\Admin\Source\LeftFacetsDefaultBehaviourSelection;
 use Wizzy\Search\Services\Request\CategoryManager;
 use Wizzy\Search\Services\Request\ProductManager;
 use Wizzy\Search\Services\Store\StoreAdvancedConfig;
@@ -142,6 +143,15 @@ class BaseBlock extends Template
                'facets' => [
                   'configs' => $this->storeSearchConfig->getFacetsConfiguration(),
                   'categoryDisplay' => $this->storeSearchConfig->getCategoryDisplayMethod(),
+                  'leftFacets' => [
+                      'collapsible' => $this->storeSearchConfig->leftFacetsHasToBeCollapsible(),
+                      'defaultCollapsed' =>
+                          ($this->storeSearchConfig->leftFacetsCollapsibleBehaviour() ===
+                              LeftFacetsDefaultBehaviourSelection::COLLAPSED),
+                      'firstLeftDefaultOpened' =>
+                          ($this->storeSearchConfig->leftFirstFacetCollapsibleBehaviour() ===
+                              LeftFacetsDefaultBehaviourSelection::OPENED),
+                  ],
                ],
                'sorts' => [
                   'configs' => $this->storeSearchConfig->getSortConfiguration(),

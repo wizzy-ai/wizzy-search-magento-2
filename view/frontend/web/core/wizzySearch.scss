@@ -317,7 +317,6 @@
       width: 100%;
       display: flex;
       justify-content: flex-end;
-      z-index: 2;
 
       .facet-head-search-input {
         background-color: $lightGreyBg;
@@ -332,6 +331,7 @@
         padding-left: 15px;
         font-size: 12px;
         display: none;
+        z-index: 3;
 
         &:focus {
           outline: none;
@@ -663,6 +663,44 @@
         .facet-search-wrapper {
           display: none;
         }
+      }
+
+      &.collapsible {
+          .wizzy-facet-head {
+              padding-right: 15px;
+              cursor: pointer;
+
+              .facet-head-right:after {
+                  content: "\25B2";
+                  padding-left: 5px;
+                  font-size: 12px;
+              }
+
+              .facet-head-title {
+                  width: 100%;
+                  z-index: 3;
+              }
+          }
+
+          &.collapsed {
+              .wizzy-facet-head {
+                  .facet-head-right:after {
+                      content: "\25BC";
+                  }
+              }
+
+              .wizzy-facet-body {
+                  display: none;
+              }
+
+              &.first-opened {
+                  &:first-child {
+                      .wizzy-facet-body {
+                          display: block;
+                      }
+                  }
+              }
+          }
       }
     }
   }
@@ -1423,6 +1461,33 @@
           border-right: solid 1px $midGreyBg;
           z-index: $searchZIndex;
         }
+          .wizzy-filters-facet-block {
+              &.collapsible {
+                  .wizzy-facet-head {
+                      cursor: auto;
+
+                      .facet-head-right:after {
+                          content: "";
+                      }
+
+                      .facet-head-title {
+                          z-index: 0;
+                      }
+                  }
+
+                  &.collapsed {
+                      .wizzy-facet-head {
+                          .facet-head-right:after {
+                              content: "";
+                          }
+                      }
+
+                      .wizzy-facet-body {
+                          display: block;
+                      }
+                  }
+              }
+          }
 
       }
 

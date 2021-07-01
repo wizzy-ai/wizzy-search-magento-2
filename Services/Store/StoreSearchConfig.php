@@ -21,6 +21,11 @@ class StoreSearchConfig
     const WIZZY_SEARCH_FACETS_CONFIGURATION = self::WIZZY_SEARCH_CONFIGURATION . "/search_results_facets_configuration";
     const WIZZY_FACETS = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/facets_configuration";
     const WIZZY_FACET_CATEGORY_DISPLAY = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/category_facet_display_method";
+    const WIZZY_LEFT_FACETS_COLLAPSIBLE = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/left_facets_has_to_collapsible";
+    const WIZZY_LEFT_FACETS_DEFAULT_COLLAPSIBLE_BEHAVIOUR =
+        self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/left_facets_default_collapsible_behaviour";
+    const WIZZY_LEFT_FIRST_FACET_DEFAULT_COLLAPSIBLE_BEHAVIOUR =
+        self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/left_first_facet_default_collapsible_behaviour";
 
     const WIZZY_SEARCH_SORT_CONFIGURATION = self::WIZZY_SEARCH_CONFIGURATION . "/search_results_sorts_configuration";
     const WIZZY_SORT_CONFIGURATION =
@@ -91,6 +96,27 @@ class StoreSearchConfig
     public function getCategoryDisplayMethod()
     {
         return $this->configManager->getStoreConfig(self::WIZZY_FACET_CATEGORY_DISPLAY, $this->storeId);
+    }
+
+    public function leftFacetsHasToBeCollapsible()
+    {
+        return ($this->configManager->getStoreConfig(self::WIZZY_LEFT_FACETS_COLLAPSIBLE, $this->storeId) == 1);
+    }
+
+    public function leftFacetsCollapsibleBehaviour()
+    {
+        return $this->configManager->getStoreConfig(
+            self::WIZZY_LEFT_FACETS_DEFAULT_COLLAPSIBLE_BEHAVIOUR,
+            $this->storeId
+        );
+    }
+
+    public function leftFirstFacetCollapsibleBehaviour()
+    {
+        return $this->configManager->getStoreConfig(
+            self::WIZZY_LEFT_FIRST_FACET_DEFAULT_COLLAPSIBLE_BEHAVIOUR,
+            $this->storeId
+        );
     }
 
     public function getSortConfiguration()

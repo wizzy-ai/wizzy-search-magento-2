@@ -492,6 +492,46 @@
                     <validate>required-entry</validate>
                 </field>
 
+                <field id="left_facets_has_to_collapsible" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Left Facets Collapsible?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Choose yes if you want to make the left facets collapsible.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                </field>
+
+                <field id="left_facets_default_collapsible_behaviour" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Left Facets Default Behaviour</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\LeftFacetsDefaultBehaviourSelection</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select collapsed if you want the facets to be closed by default, otherwise Opened.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="left_facets_has_to_collapsible">1</field>
+                    </depends>
+                </field>
+
+                <field id="left_first_facet_default_collapsible_behaviour" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Facet Left Facet Default Behaviour</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\LeftFacetsDefaultBehaviourSelection</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select collapsed if you want the first facet to be closed by default, otherwise Opened.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                    <depends>
+                        <field id="left_facets_has_to_collapsible">1</field>
+                        <field id="left_facets_default_collapsible_behaviour">COLLAPSED</field>
+                    </depends>
+                </field>
+
             </group>
 
             <group id="search_results_sorts_configuration" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">

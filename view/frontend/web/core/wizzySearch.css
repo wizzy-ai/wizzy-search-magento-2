@@ -263,7 +263,6 @@
   width: 100%;
   display: flex;
   justify-content: flex-end;
-  z-index: 2;
 }
 .wizzy-search-wrapper .wizzy-search-filters-left .facet-search-wrapper .facet-head-search-input, .wizzy-search-wrapper .wizzy-search-filters-top .facet-search-wrapper .facet-head-search-input {
   background-color: #f7f7f7;
@@ -278,6 +277,7 @@
   padding-left: 15px;
   font-size: 12px;
   display: none;
+  z-index: 3;
 }
 .wizzy-search-wrapper .wizzy-search-filters-left .facet-search-wrapper .facet-head-search-input:focus, .wizzy-search-wrapper .wizzy-search-filters-top .facet-search-wrapper .facet-head-search-input:focus {
   outline: none;
@@ -514,6 +514,28 @@
 }
 .wizzy-search-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.facet-block--top .facet-search-wrapper, .wizzy-search-wrapper .wizzy-search-filters-top .wizzy-filters-facet-block.facet-block--top .facet-search-wrapper {
   display: none;
+}
+.wizzy-search-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible .wizzy-facet-head, .wizzy-search-wrapper .wizzy-search-filters-top .wizzy-filters-facet-block.collapsible .wizzy-facet-head {
+  padding-right: 15px;
+  cursor: pointer;
+}
+.wizzy-search-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible .wizzy-facet-head .facet-head-right:after, .wizzy-search-wrapper .wizzy-search-filters-top .wizzy-filters-facet-block.collapsible .wizzy-facet-head .facet-head-right:after {
+  content: "▲";
+  padding-left: 5px;
+  font-size: 12px;
+}
+.wizzy-search-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible .wizzy-facet-head .facet-head-title, .wizzy-search-wrapper .wizzy-search-filters-top .wizzy-filters-facet-block.collapsible .wizzy-facet-head .facet-head-title {
+  width: 100%;
+  z-index: 3;
+}
+.wizzy-search-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible.collapsed .wizzy-facet-head .facet-head-right:after, .wizzy-search-wrapper .wizzy-search-filters-top .wizzy-filters-facet-block.collapsible.collapsed .wizzy-facet-head .facet-head-right:after {
+  content: "▼";
+}
+.wizzy-search-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible.collapsed .wizzy-facet-body, .wizzy-search-wrapper .wizzy-search-filters-top .wizzy-filters-facet-block.collapsible.collapsed .wizzy-facet-body {
+  display: none;
+}
+.wizzy-search-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible.collapsed.first-opened:first-child .wizzy-facet-body, .wizzy-search-wrapper .wizzy-search-filters-top .wizzy-filters-facet-block.collapsible.collapsed.first-opened:first-child .wizzy-facet-body {
+  display: block;
 }
 .wizzy-search-wrapper .wizzy-search-results-container {
   width: 100%;
@@ -1077,6 +1099,21 @@
     overflow: auto;
     border-right: solid 1px #e3e3e3;
     z-index: 100000;
+  }
+  .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible .wizzy-facet-head {
+    cursor: auto;
+  }
+  .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible .wizzy-facet-head .facet-head-right:after {
+    content: "";
+  }
+  .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible .wizzy-facet-head .facet-head-title {
+    z-index: 0;
+  }
+  .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible.collapsed .wizzy-facet-head .facet-head-right:after {
+    content: "";
+  }
+  .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-filters-left .wizzy-filters-facet-block.collapsible.collapsed .wizzy-facet-body {
+    display: block;
   }
   .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-pagination-container {
     padding-top: 20px;

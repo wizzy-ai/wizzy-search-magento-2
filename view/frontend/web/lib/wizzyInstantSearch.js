@@ -104,6 +104,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
         addOnPageFacetSearch();
         addFilterListItemClickListener();
         addSelectedFacetItemClickListener();
+        addLeftFacetsClickListener();
         addTopFacetsClickListener();
         declareFilterFunctions();
         addSortChangeListener();
@@ -333,6 +334,19 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
                 checkbox.prop('checked', true);
             }
         }
+    }
+
+    function addLeftFacetsClickListener() {
+        $('body').on('click', '.facet-block-left .wizzy-facet-head', function(e) {
+            e.preventDefault();
+            if ($(window).width() > 768) {
+                $(this).parent().toggleClass('collapsed');
+                if ($(this).parent().hasClass('first-opened') && $(this).parent().index() == 0) {
+                    $(this).parent().addClass('collapsed');
+                }
+                $(this).parent().removeClass('first-opened');
+            }
+        });
     }
 
     function addTopFacetsClickListener() {
