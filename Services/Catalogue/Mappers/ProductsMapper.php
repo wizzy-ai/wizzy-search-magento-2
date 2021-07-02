@@ -788,6 +788,8 @@ class ProductsMapper
         $mainImage = "";
         $index = 0;
         $thumbnail = $product->getThumbnail();
+        $mainImageUrl = "";
+
         foreach ($product->getMediaGalleryImages() as $productImage) {
             $productImageData = $productImage->getData();
             if ($productImageData['disabled'] == 1) {
@@ -796,6 +798,7 @@ class ProductsMapper
 
             if ($index == 0 || $thumbnail == $productImageData['file']) {
                 $mainImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
+                $mainImageUrl = $productImageData['url'];
             } else {
                 $images[] = $productImageData['url'];
             }
@@ -803,7 +806,11 @@ class ProductsMapper
         }
 
         if ($mainImage === '') {
-            $mainImage = $this->productImageManager->getPlaceholderImage($this->storeId);
+            if ($mainImageUrl !== "") {
+                $mainImage = $mainImageUrl;
+            } else {
+                $mainImage = $this->productImageManager->getPlaceholderImage($this->storeId);
+            }
         }
 
         return [
