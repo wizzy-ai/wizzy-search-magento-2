@@ -518,7 +518,7 @@
                 </field>
 
                 <field id="left_first_facet_default_collapsible_behaviour" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
-                    <label>Facet Left Facet Default Behaviour</label>
+                    <label>First Left Facet Default Behaviour</label>
                     <source_model>Wizzy\Search\Model\Admin\Source\LeftFacetsDefaultBehaviourSelection</source_model>
                     <comment>
                         <![CDATA[
