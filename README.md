@@ -12,6 +12,7 @@ Wizzy helps to increase your sales and retain your customers. It replaces the de
 - Spell Check & Correction
 - Synonyms
 - Advanced Facets & Filters
+- 360° Analytics
 - SEO Friendly
 - Mobile Friendly
 - Multiple Currencies
