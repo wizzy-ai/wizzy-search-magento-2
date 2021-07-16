@@ -658,8 +658,6 @@ class ProductsMapper
          'url' => $product->getUrlModel()->getUrl($product, $this->getUrlOptions()),
          'inStock' => ($stockItem && $stockItem->getIsInStock()),
          'stockQty' => ($stockItem && $stockItem->getQty() > 0) ? $stockItem->getQty() : 0,
-         'createdAt' => $product->getCreatedAt(),
-         'updatedAt' => $product->getUpdatedAt(),
          'isSearchable' => (
             $visibility == Visibility::VISIBILITY_IN_SEARCH ||
             $visibility == Visibility::VISIBILITY_BOTH) ? true : false,
@@ -667,6 +665,17 @@ class ProductsMapper
             $visibility == Visibility::VISIBILITY_IN_CATALOG ||
             $visibility == Visibility::VISIBILITY_BOTH) ? true : false,
         ];
+
+        $createdAt = $product->getCreatedAt();
+        $updatedAt = $product->getUpdatedAt();
+
+        if ($createdAt != "0000-00-00 00:00:00") {
+            $mappedProduct['createdAt'] = $createdAt;
+        }
+
+        if ($updatedAt != "0000-00-00 00:00:00") {
+            $mappedProduct['updatedAt'] = $updatedAt;
+        }
 
         return $mappedProduct;
     }
