@@ -11,6 +11,7 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
     var autocompleteOptions;
     var elementInputTypingTimer;
     var suggestionLink;
+    var formSubmissionBehaviour;
 
     function assignTextWrapperClick() {
         $('body').on('click', textWrapper, function(e) {
@@ -39,6 +40,7 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
         searchterm = typeof options['searchterm'] !== "undefined" ? options['searchterm'] : "searchterm";
         textWrapper = typeof options['text-wrapper'] !== "undefined" ? options['text-wrapper'] : "autocomplete-text-wrapper";
         suggestionLink = typeof options['suggestionLink'] !== "undefined" ? options['suggestionLink'] : ".autocomplete-link";
+        formSubmissionBehaviour = options['formSubmissionBehaviour'];
 
         assignTextWrapperClick();
 
@@ -221,11 +223,18 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
                 pageStore.set(pageStore.keys.searchInputValue, searchValue);
 
                 searchElement.val(searchValue);
-                sF.execute({
-                    q: searchValue
-                });
+                if (formSubmissionBehaviour != 'redirect_page') {
+                    sF.execute({
+                        q: searchValue
+                    });
+                }
                 if (searchValue.length !== 0) {
-                    urlUtils.updateQuery(searchValue);
+                    if (formSubmissionBehaviour != 'redirect_page') {
+                        urlUtils.updateQuery(searchValue);
+                    }
+                    else {
+                        urlUtils.redirectToQuery(searchValue);
+                    }
                 }
             }
         }
