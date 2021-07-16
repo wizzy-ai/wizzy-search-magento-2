@@ -4,5 +4,8 @@
         <route id="search" frontName="search">
             <module name="Wizzy_Search" />
         </route>
+        <route id="wtrack" frontName="wtrack">
+            <module name="Wizzy_Search" />
+        </route>
     </router>
 </config>

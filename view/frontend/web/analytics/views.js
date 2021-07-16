@@ -11,7 +11,7 @@ define(['jquery', 'wizzy/common', 'wizzy/analytics/sessions'], function($, wizzy
         };
 
         $.ajax({
-            url: "/search/analytics/collect",
+            url: "/wtrack/analytics/collect",
             type: "POST",
             data: JSON.stringify({
                 'type' : 'view',

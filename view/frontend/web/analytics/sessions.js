@@ -3,7 +3,7 @@ define(['jquery', 'wizzy/common'], function($, wizzyCommon) {
         var payload = {};
 
         $.ajax({
-            url: "/search/analytics/session",
+            url: "/wtrack/analytics/session",
             type: "POST",
             data: JSON.stringify({
                 'headers': wizzyCommon.getClient().getCommonHeaders(),
