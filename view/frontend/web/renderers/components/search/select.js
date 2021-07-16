@@ -41,6 +41,7 @@ define(['jquery', 'Mustache'], function($, Mustache) {
             var text = $(this).text();
             $(this).parents('.wizzy-common-select-container').find('.wizzy-common-select-selectedItem').text(text);
             $(this).parents('.wizzy-common-select-options').hide();
+            $(this).parents('.wizzy-common-select-overlay').hide();
             $(this).parents('.wizzy-common-select-wrapper').siblings('select').find('option:eq('+index+')').prop('selected', true);
             $(this).parents('.wizzy-common-select-wrapper').siblings('select').trigger('change');
         });
@@ -52,6 +53,7 @@ define(['jquery', 'Mustache'], function($, Mustache) {
                 of: $(this),
                 collision: "none flipfit"
             });
+            $(this).siblings('.wizzy-common-select-overlay').toggle();
         });
 
         $(document).mouseup(function(e) {
@@ -59,6 +61,7 @@ define(['jquery', 'Mustache'], function($, Mustache) {
             var selectContainer = container.siblings('.wizzy-common-select-selector');
             if (!container.is(e.target) && container.has(e.target).length === 0 && !selectContainer.is(e.target) && selectContainer.has(e.target).length === 0)  {
                 container.hide();
+                container.siblings('.wizzy-common-select-overlay').hide();
             }
         });
     });

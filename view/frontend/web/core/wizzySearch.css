@@ -981,6 +981,9 @@
   .wizzy-search-wrapper.has-left-facets .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-results {
     padding-left: 0;
   }
+  .wizzy-search-wrapper.has-left-facets .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .wizzy-product-actions .product_item-actions .actions-secondary {
+    margin-left: 5px;
+  }
   .wizzy-search-wrapper.has-left-facets .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-filters-top {
     margin: 0;
     border: 0;
@@ -1193,6 +1196,16 @@
   .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-filters-top .search-filters-top-wrapper .wizzy-search-sort-wrapper .wizzy-sort-container .wizzy-common-select-wrapper {
     width: 100%;
   }
+  .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-filters-top .search-filters-top-wrapper .wizzy-search-sort-wrapper .wizzy-sort-container .wizzy-common-select-wrapper .wizzy-common-select-container .wizzy-common-select-overlay {
+    z-index: 2;
+    background: rgba(0, 0, 0, 0.35);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    display: none;
+  }
   .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-filters-top .search-filters-top-wrapper .wizzy-search-sort-wrapper .wizzy-sort-container .wizzy-common-select-wrapper .wizzy-common-select-container .wizzy-common-select-options {
     border-left: 0;
     border-right: 0;
@@ -1208,9 +1221,10 @@
     box-sizing: border-box;
     border-radius: 0;
     border-left: 0;
-    border-bottom: 0;
     padding: 15px;
     height: 53px;
+    z-index: 4;
+    position: relative;
   }
   .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-filters-top .search-filters-top-wrapper .wizzy-search-sort-wrapper .wizzy-sort-container .wizzy-common-select-wrapper .wizzy-common-select-container .wizzy-common-select-selector .wizzy-common-select-label {
     text-align: center;
@@ -1257,6 +1271,10 @@
 
   .wizzy-progress-bg.for-filter {
     z-index: 100002;
+  }
+
+  .wizzy-tocart-button.action.primary {
+    padding: 7px 10px;
   }
 }
 
