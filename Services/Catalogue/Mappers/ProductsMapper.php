@@ -42,6 +42,8 @@ class ProductsMapper
     private $isBrandMandatory;
     private $backendUrl;
     private $adminUrl;
+    private $commonWordsToRemove;
+    private $hasWordsToRemove;
 
     public function __construct(
         Configurable $configurable,
@@ -74,6 +76,8 @@ class ProductsMapper
         $this->storeCatalogueConfig = $storeCatalogueConfig;
         $this->backendUrl = $backendUrl;
         $this->adminUrl = null;
+        $this->commonWordsToRemove = null;
+        $this->hasWordsToRemove = false;
     }
 
     private function resetEntitiesToIgnore()
@@ -640,6 +644,20 @@ class ProductsMapper
         ];
     }
 
+    private function getProductDescription($product)
+    {
+        if ($this->commonWordsToRemove === null) {
+            $this->commonWordsToRemove = $this->storeCatalogueConfig->getCommonDescriptionWordsToRemove();
+            $this->hasWordsToRemove = (count($this->commonWordsToRemove) > 0);
+        }
+        $description = $product->getDescription();
+        if ($this->hasWordsToRemove) {
+            $description = str_replace($this->commonWordsToRemove, "", $description);
+        }
+
+        return $description;
+    }
+
     private function mapBasicDetails($product, &$mappedProduct)
     {
         $stockItem = $this->stockRegistry->getStockItem($product->getId());
@@ -654,7 +672,7 @@ class ProductsMapper
          'name' => $product->getName(),
          'sellingPrice' => $sellingPrice,
          'finalPrice' => $sellingPriceWithoutTax,
-         'description' => $product->getDescription(),
+         'description' => $this->getProductDescription($product),
          'url' => $product->getUrlModel()->getUrl($product, $this->getUrlOptions()),
          'inStock' => ($stockItem && $stockItem->getIsInStock()),
          'stockQty' => ($stockItem && $stockItem->getQty() > 0) ? $stockItem->getQty() : 0,

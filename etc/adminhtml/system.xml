@@ -373,6 +373,20 @@
                 </field>
             </group>
 
+            <group id="catalogue_configuration_description" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Description Configuration</label>
+                <field id="common_words_to_remove" translate="label" type="textarea" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Common Words to Remove</label>
+                    <comment>
+                        <![CDATA[
+                            Product description content sometimes has common words which is breaking the search relevance.
+                            Mention all words line by line in textarea which needs to removed from description during sync.
+                            <br><br>Each word MUST be in different line.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+
             <group id="catalogue_configuration_prices" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Prices Configuration</label>
                 <field id="use_msrp_as_original_price" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">

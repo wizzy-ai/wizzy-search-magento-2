@@ -64,6 +64,12 @@ class StoreCatalogueConfig
     const THUMBNAIL_IMAGE_WIDTH = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_width";
     const THUMBNAIL_IMAGE_HEIGHT = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_height";
 
+    // DESCRIPTION CONFIGURATION
+    const CATALOGUE_CONFIGURATION_DESCRIPTION = self::WIZZY_CATALOGUE_CONFIGURATION
+        . "/catalogue_configuration_description";
+
+    const COMMON_WORDS_TO_REMOVE = self::CATALOGUE_CONFIGURATION_DESCRIPTION . "/common_words_to_remove";
+
     private $storeId;
 
     private $cachedGnderIdentityConsiderParentCategories;
@@ -192,5 +198,14 @@ class StoreCatalogueConfig
     public function getThumbnailHeight()
     {
         return $this->configManager->getStoreConfig(self::THUMBNAIL_IMAGE_HEIGHT, $this->storeId);
+    }
+
+    public function getCommonDescriptionWordsToRemove()
+    {
+        $wordsToRemove = $this->configManager->getStoreConfig(self::COMMON_WORDS_TO_REMOVE, $this->storeId);
+        if (!$wordsToRemove) {
+            $wordsToRemove = "";
+        }
+        return preg_split('/\r\n|\r|\n/', $wordsToRemove);
     }
 }
