@@ -31,11 +31,18 @@
     <indexer id="wizzy_products_prices_indexer" view_id="wizzy_products_prices_indexer" class="Wizzy\Search\Model\Indexer\ProductsPrices">
         <title translate="true">Wizzy Search Products Prices</title>
         <description translate="true">
-            Rebuild product prices index for Wizzy Search. (This doesn't need to be executed manually)
+            Rebuild product prices index for Wizzy Search. (This doesn't need to be executed manually, Set it in CRON)
         </description>
         <dependencies>
             <indexer id="catalog_product_price" />
         </dependencies>
+    </indexer>
+
+    <indexer id="wizzy_invalidate_unresponsive_sync_indexer" view_id="wizzy_invalidate_unresponsive_sync_indexer" class="Wizzy\Search\Model\Indexer\InvalidateUnresponsiveSyncIndexer">
+        <title translate="true">Wizzy Invalidate Unresponsive Sync</title>
+        <description translate="true">
+            Invalidate unresponsive sync. (This doesn't need to be executed manually, Set it in CRON)
+        </description>
     </indexer>
 
 </config>

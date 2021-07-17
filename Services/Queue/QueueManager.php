@@ -145,6 +145,12 @@ class QueueManager
         return $jobsData;
     }
 
+    public function enqueueAllInProgress()
+    {
+        $jobs = $this->getAllClearableJobs();
+        $this->changeStatus($jobs, self::JOB_TO_EXECUTE_STATUS);
+    }
+
     private function getAllInProgressJobs($storeId, $jobClass = null)
     {
         $jobs = $this->queueFactory->create()->getCollection()

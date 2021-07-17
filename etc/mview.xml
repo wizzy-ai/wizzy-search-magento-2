@@ -22,4 +22,5 @@
     <view id="wizzy_pages_indexer" class="Wizzy\Search\Model\Indexer\Pages" group="indexer"></view>
     <view id="wizzy_currencies_indexer" class="Wizzy\Search\Model\Indexer\Currencies" group="indexer"></view>
     <view id="wizzy_products_prices_indexer" class="Wizzy\Search\Model\Indexer\ProductsPrices" group="indexer"></view>
+    <view id="wizzy_invalidate_unresponsive_sync_indexer" class="Wizzy\Search\Model\Indexer\InvalidateUnresponsiveSyncIndexer" group="indexer"></view>
 </config>
