@@ -12,12 +12,18 @@ class AttributesManager
     private $attributesCollection;
     private $storeManager;
     private $swatchHelper;
+    private $productsAttributesManager;
 
-    public function __construct(CollectionFactory $attributesCollection, StoreManager $storeManager, Data $swatchHelper)
-    {
+    public function __construct(
+        CollectionFactory $attributesCollection,
+        StoreManager $storeManager,
+        Data $swatchHelper,
+        ProductsAttributesManager $productsAttributesManager
+    ) {
         $this->attributesCollection = $attributesCollection;
         $this->storeManager = $storeManager;
         $this->swatchHelper = $swatchHelper;
+        $this->productsAttributesManager = $productsAttributesManager;
     }
 
     public function fetchAll()
@@ -68,7 +74,10 @@ class AttributesManager
     {
         $swatchType = $this->getSwatchType($attribute);
         if ($swatchType) {
-            $value = $attribute->getFrontend()->getValue($product);
+            $value = $this->productsAttributesManager->getValue($attribute->getId(), $product->getId());
+            if ($value === null) {
+                return null;
+            }
             $optionIds = [];
             if (is_string($value)) {
                 $optionIds = [$attribute->getSource()->getOptionId($value)];

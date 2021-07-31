@@ -7,6 +7,7 @@ use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductImageManager;
+use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
@@ -44,6 +45,7 @@ class ProductsMapper
     private $adminUrl;
     private $commonWordsToRemove;
     private $hasWordsToRemove;
+    private $productsAttributesManager;
 
     public function __construct(
         Configurable $configurable,
@@ -57,7 +59,8 @@ class ProductsMapper
         ProductPrices $productPrices,
         SyncSkippedEntities $syncSkippedEntities,
         StoreCatalogueConfig $storeCatalogueConfig,
-        BackendUrl $backendUrl
+        BackendUrl $backendUrl,
+        ProductsAttributesManager $productsAttributesManager
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -78,6 +81,7 @@ class ProductsMapper
         $this->adminUrl = null;
         $this->commonWordsToRemove = null;
         $this->hasWordsToRemove = false;
+        $this->productsAttributesManager = $productsAttributesManager;
     }
 
     private function resetEntitiesToIgnore()
@@ -106,6 +110,8 @@ class ProductsMapper
 
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
+        $this->productsAttributesManager->setAttributeValues($products);
+
         foreach ($products as $product) {
             $mappedProduct = $this->map($product);
             if ($mappedProduct) {
@@ -569,7 +575,7 @@ class ProductsMapper
 
     private function getAttributeValue($product, $attribute)
     {
-        $value = $attribute->getFrontend()->getValue($product);
+        $value = $this->productsAttributesManager->getValue($attribute->getId(), $product->getId());
         $frontendInputType = $attribute->getFrontendInput();
 
         if ($frontendInputType == "multiselect") {

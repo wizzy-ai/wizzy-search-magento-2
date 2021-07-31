@@ -8,6 +8,7 @@ use Wizzy\Search\Services\Catalogue\Configurables\BrandConfigurable;
 use Wizzy\Search\Services\Catalogue\Configurables\ColorConfigurable;
 use Wizzy\Search\Services\Catalogue\Configurables\GenderConfigurable;
 use Wizzy\Search\Services\Catalogue\Configurables\SizeConfigurable;
+use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
 use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 
@@ -28,6 +29,8 @@ class ConfigurableProductsData
     private $categoriesSessionStorage;
     private $rootCategory;
 
+    private $productsAttributesManager;
+
     public function __construct(
         BrandConfigurable $brandConfigurable,
         CategoriesManager $categoriesManager,
@@ -36,7 +39,8 @@ class ConfigurableProductsData
         SizeConfigurable $sizeConfigurable,
         StoreAutocompleteConfig $storeAutocompleteConfig,
         AttributesManager $attributesManager,
-        CategoriesSessionStorage $categoriesSessionStorage
+        CategoriesSessionStorage $categoriesSessionStorage,
+        ProductsAttributesManager $productsAttributesManager
     ) {
         $this->brandConfigurable = $brandConfigurable;
         $this->genderConfigurable = $genderConfigurable;
@@ -48,6 +52,7 @@ class ConfigurableProductsData
         $this->categoriesSessionStorage = $categoriesSessionStorage;
         $this->autocompleteAttributes = [];
         $this->rootCategory = false;
+        $this->productsAttributesManager = $productsAttributesManager;
     }
 
     public function getBrand($categories, $attributes, $storeId)
@@ -140,13 +145,14 @@ class ConfigurableProductsData
         $productAttributes = $product->getAttributes();
         foreach ($productAttributes as $attribute) {
 
-            if (!isset($attributesToConsider[$attribute->getId()])) {
+            $value = $this->productsAttributesManager->getValue($attribute->getId(), $product->getId());
+            if (!isset($attributesToConsider[$attribute->getId()]) || $value === null) {
                 continue;
             }
 
             $attributeArr = [
             'id' => $attribute->getId(),
-            'value' => $attribute->getFrontend()->getValue($product),
+            'value' => $value,
             ];
 
             $swatch = $this->attributesManager->getSwatchDetails($product, $attribute);
