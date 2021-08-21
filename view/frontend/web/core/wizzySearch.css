@@ -1025,6 +1025,9 @@
     height: 16px;
     margin-right: 10px;
   }
+  .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-filters-mobile-entry.only-filters {
+    width: 100%;
+  }
   .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-filters-left, .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-filters-list-top {
     display: none;
   }

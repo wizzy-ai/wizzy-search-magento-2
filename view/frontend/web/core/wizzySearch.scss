@@ -1365,6 +1365,10 @@
           height: 16px;
           margin-right: 10px;
         }
+
+        &.only-filters {
+            width: 100%;
+        }
       }
 
       .wizzy-search-filters-left, .wizzy-search-filters-list-top {

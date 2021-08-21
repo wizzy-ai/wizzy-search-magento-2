@@ -2,7 +2,8 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore'], function($, Mustache, pag
 
     function getHTML() {
         var sort = window.wizzyConfig.search.configs.sorts.configs;
-        if (typeof sort === "undefined" || sort === null || sort.length <= 1 ) {
+
+        if (typeof sort === "undefined" || sort === null || sort.length <= 1 || (isOneResultResponse())) {
             return null;
         }
 
@@ -13,6 +14,19 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore'], function($, Mustache, pag
         });
 
         return sortTemplate;
+    }
+
+    function isOneResultResponse() {
+        var response = getSearchedResponse();
+        if (typeof response !== "undefined" && typeof response.filters !== "undefined" && response.filters.page == 1 && typeof response.result !== "undefined" && response.result.length == 1) {
+            return true;
+        }
+
+        return false;
+    }
+
+    function getSearchedResponse() {
+        return pageStore.get(pageStore.keys.searchedResponse, null);
     }
 
     function getSortOptionsArray(sort) {

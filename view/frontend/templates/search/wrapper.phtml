@@ -17,7 +17,7 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
 
       <div class="wizzy-search-results-wrapper">
           {{#hasFacets}}
-                <a href="#" class="wizzy-filters-mobile-entry">Filters</a>
+                <a href="#" class="wizzy-filters-mobile-entry {{^sort}}only-filters{{/sort}}">Filters</a>
           {{/hasFacets}}
 
          {{#hasLeftFacets}}
