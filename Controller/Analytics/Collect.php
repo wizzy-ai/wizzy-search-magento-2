@@ -69,8 +69,7 @@ class Collect extends Action
                     }
 
                     if ($this->storeGeneralConfig->isAnalyticsEnabled()) {
-                        if ($content['type'] === 'view' && isset($content['data']['searchResponseId']) &&
-                            $content['data']['searchResponseId'] != "") {
+                        if ($content['type'] === 'view') {
                             $this->analytics->collectView($content['data'], $currentStoreId, $headers);
                         }
 
