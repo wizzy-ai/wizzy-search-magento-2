@@ -45,25 +45,9 @@ class ProductsManager
 
     public function fetchAll()
     {
-        $this->filterGroup->setFilters([
-         $this->filterBuilder
-            ->setField('status')
-            ->setConditionType('in')
-            ->setValue($this->status->getVisibleStatusIds())
-            ->create(),
-         $this->filterBuilder
-            ->setField('visibility')
-            ->setConditionType('in')
-            ->setValue([
-               Visibility::VISIBILITY_BOTH, Visibility::VISIBILITY_IN_CATALOG, Visibility::VISIBILITY_IN_SEARCH
-            ])
-            ->create(),
-        ]);
-
-        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-        $products = $this->productRepository->getList($this->searchCriteria);
-        $products = $products->getItems();
-
+        $products = $this->productCollectionFactory->create();
+        $products->addAttributeToSelect('id');
+        $products->addAttributeToFilter('status', ['in' => $this->status->getVisibleStatusIds()]);
         return $products;
     }
 
