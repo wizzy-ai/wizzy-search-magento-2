@@ -9,6 +9,7 @@ use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\Search\FilterGroup;
 use Magento\Framework\Api\Search\SearchCriteriaInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 
 class ProductsManager
 {
@@ -20,6 +21,7 @@ class ProductsManager
     private $status;
     private $visibility;
     private $configurable;
+    private $productCollectionFactory;
 
     public function __construct(
         ProductRepository $productRepository,
@@ -28,7 +30,8 @@ class ProductsManager
         FilterBuilder $filterBuilder,
         Status $status,
         Configurable $configurable,
-        Visibility $visibility
+        Visibility $visibility,
+        CollectionFactory $productCollectionFactory
     ) {
         $this->productRepository = $productRepository;
         $this->searchCriteria = $searchCriteria;
@@ -37,6 +40,7 @@ class ProductsManager
         $this->status = $status;
         $this->visibility = $visibility;
         $this->configurable = $configurable;
+        $this->productCollectionFactory = $productCollectionFactory;
     }
 
     public function fetchAll()
@@ -148,23 +152,13 @@ class ProductsManager
 
     public function getProductsByAttribute($attributeCode, $storeId)
     {
-        $filters = [
-         $this->filterBuilder
-            ->setField($attributeCode)
-            ->setConditionType('notnull')
-            ->create(),
-         $this->filterBuilder
-            ->setField('store_id')
-            ->setConditionType('eq')
-            ->setValue($storeId)
-            ->create()
-        ];
+        $products = $this->productCollectionFactory->create();
 
-        $this->filterGroup->setFilters($filters);
-
-        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-        $products = $this->productRepository->getList($this->searchCriteria);
-        $products = $products->getItems();
+        $products->addAttributeToSelect('id');
+        $products->addStoreFilter($storeId);
+        $products->addAttributeToFilter($attributeCode, [
+            'notnull' => true,
+        ]);
 
         return $products;
     }
