@@ -331,8 +331,12 @@ class ProductsMapper
                 $this->addProductVariationDetails($childColors, $child, $variationInStock);
                 $this->addProductVariationDetails($childSizes, $child, $variationInStock);
 
-                array_push($colors, ...$childColors);
-                array_push($sizes, ...$childSizes);
+                if (count($childColors)) {
+                    array_push($colors, ...$childColors);
+                }
+                if (count($childSizes)) {
+                    array_push($sizes, ...$childSizes);
+                }
 
                 $this->mapAttributes($child, $mappedProduct, $variationInStock, true);
             }
