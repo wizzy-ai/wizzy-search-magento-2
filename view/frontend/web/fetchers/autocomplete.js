@@ -8,6 +8,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore'], function($, wizzyComm
                 q: q,
                 currency: window.wizzyConfig.store.currency.code,
                 suggestionsCount: window.wizzyConfig.autocomplete.menu.suggestionsCount,
+                includeOutOfStock: window.wizzyConfig.search.configs.general.includeOutOfStock + "",
             };
             if (window.wizzyConfig.autocomplete.topProducts.suggestTopProduts && window.wizzyConfig.autocomplete.topProducts.count > 0) {
                 payload['productsCount'] = window.wizzyConfig.autocomplete.topProducts.count;
