@@ -477,7 +477,8 @@ class ProductsMapper
                 $value = $this->getAttributeValue($product, $attribute);
                 $label = $attribute->getFrontendLabel();
 
-                if (count($value) === 0 || (count($value) == 1 && empty($value[0]))) {
+                if (count($value) === 0 || (count($value) == 1 && empty($value[0]))
+                    || (count($value) == 1 && $value[0] === null)) {
                     continue;
                 }
 
