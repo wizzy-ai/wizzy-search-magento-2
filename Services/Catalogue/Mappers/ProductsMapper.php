@@ -503,7 +503,7 @@ class ProductsMapper
                 ];
                 $swatch = $this->attributesManager->getSwatchDetails($product, $attribute);
                 if ($swatch) {
-                    $attributeToPush['value']['swatch'] = $swatch;
+                    $attributeToPush['values']['swatch'] = $swatch;
                 }
 
                 if (isset($attributes[$id])) {
