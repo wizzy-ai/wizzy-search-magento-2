@@ -489,6 +489,11 @@ class ProductsMapper
                 'inStock' => $variationInStock,
                 'variationId' => $product->getId(),
                 ];
+                $swatch = $this->attributesManager->getSwatchDetails($product, $attribute);
+                if ($swatch) {
+                    $attributeValueToAdd['swatch'] = $swatch;
+                }
+
                 $attributeToPush = [
                 'id' => (string) $code,
                 'name' => $label,
@@ -501,10 +506,6 @@ class ProductsMapper
                 'autocompletePosition' => $autocompleteConfig['position'],
                 'autocompleteGlue' => $autocompleteConfig['glue'],
                 ];
-                $swatch = $this->attributesManager->getSwatchDetails($product, $attribute);
-                if ($swatch) {
-                    $attributeToPush['values']['swatch'] = $swatch;
-                }
 
                 if (isset($attributes[$id])) {
                     $attributes[$id]['values'][] = $attributeValueToAdd;
