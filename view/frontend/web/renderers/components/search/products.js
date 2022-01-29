@@ -225,6 +225,10 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
             }
         }
 
+        if (variationIdsToCheck == null) {
+            return [];
+        }
+
         var totalVariationsToCheck = variationIdsToCheck.length;
         for (var i = 0; i < totalVariationsToCheck; i++) {
             var variationIdToCheck = variationIdsToCheck[i];
