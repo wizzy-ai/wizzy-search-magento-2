@@ -119,6 +119,9 @@ class BaseBlock extends Template
 
         $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
 
+        $currencyCode = $this->storeManager->getCurrentStoreCurrency()->getCode();
+        $currencySymbol = $this->priceCurrency->getCurrencySymbol();
+
         $configs = [
          'credentials' => [
             'apiKey' => $this->storeCredentialsConfig->getApiKey(),
@@ -258,8 +261,8 @@ class BaseBlock extends Template
          ],
          'store' => [
             'currency' => [
-               'code' => $this->storeManager->getCurrentStoreCurrency()->getCode(),
-               'symbol' => $this->priceCurrency->getCurrencySymbol(),
+               'code' => $currencyCode,
+               'symbol' => ($currencySymbol) ? $currencySymbol : ($currencyCode . " "),
             ],
          ],
         ];

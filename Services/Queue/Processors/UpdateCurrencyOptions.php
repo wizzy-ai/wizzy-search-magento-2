@@ -117,10 +117,11 @@ class UpdateCurrencyOptions extends QueueProcessorBase
 
         foreach ($supportedCurrencies as $supportedCurrency) {
             $currency = $this->currencyManager->getCurrencyByCode($supportedCurrency);
+            $symbol = $currency->getSymbol();
             $currencies[] = [
             'code' => $supportedCurrency,
             'label' => $currency->getName(),
-            'symbol' => $currency->getSymbol(),
+            'symbol' => ($symbol) ? $symbol : $supportedCurrency,
             ];
         }
 
