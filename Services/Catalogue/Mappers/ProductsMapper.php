@@ -790,7 +790,6 @@ class ProductsMapper
          'url' => $category['url'],
          'position' => (int) $category['position'],
          'level'  => (int) $category['level'],
-         'description' => $category['description'],
          'parentId' => $category['parentUrlKey'],
          'image' => $category['image'],
          'pathIds' => $category['pathIds'],
