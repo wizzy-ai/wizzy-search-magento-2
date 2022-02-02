@@ -215,7 +215,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
             $(window).on("scroll", function() {
                 if (urlUtils.isOnSearchPage() || wizzyConfig.common.isOnCategoryPage) {
                     var scrollHeight = $(document).height();
-                    var scrollPos = $(window).height() + $(window).scrollTop();
+                    var scrollPos = window.innerHeight + $(window).scrollTop();
                     if((((scrollHeight - 600) >= scrollPos) / scrollHeight) == 0){
                         var isExecuting = (pageStore.get(pageStore.keys.isPaginating, false) || pageStore.get(pageStore.keys.lastRequestIdFilters, null) !== null || pageStore.get(pageStore.keys.lastRequestIdSearch, null) !== null);
                         var hasMoreResults = pageStore.get(pageStore.keys.hasMoreResults, false);

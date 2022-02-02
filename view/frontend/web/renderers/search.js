@@ -245,7 +245,15 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
     }
 
     function handleFailedSearch() {
-        $(domRenderer.getDOMHandler()).html(resultsComponent.getEmptyHTML());
+        var isPaginating = pageStore.get(pageStore.keys.isPaginating, false);
+        var isNumberPaginating = pageStore.get(pageStore.keys.isNumberPaginating, false);
+
+        if ((!isPaginating && !isNumberPaginating)) {
+            $(domRenderer.getDOMHandler()).html(resultsComponent.getEmptyHTML());
+        }
+        else {
+            $('.wizzy-search-pagination').html('');
+        }
         pageStore.set(pageStore.keys.searchedResponse, null);
     }
 

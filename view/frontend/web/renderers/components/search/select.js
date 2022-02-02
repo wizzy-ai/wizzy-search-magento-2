@@ -48,7 +48,7 @@ define(['jquery', 'Mustache'], function($, Mustache) {
 
         $('body').on('click', '.wizzy-common-select-selector', function(e) {
             $(this).siblings('.wizzy-common-select-options').toggle().position({
-                my: "left top",
+                my: "left bottom-49",
                 at: "left bottom-3",
                 of: $(this),
                 collision: "none flipfit"
