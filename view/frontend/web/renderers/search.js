@@ -226,7 +226,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         var updatedUenc = btoaHelper(window.location.href);
         var cartAction = window.wizzyConfig.search.addToCart.formAction;
         var uencMatch = cartAction.match(/\/uenc\/(.*)\//);
-        if (uencMatch.length <= 1) {
+        if (uencMatch === null || uencMatch.length <= 1) {
             return;
         }
 
