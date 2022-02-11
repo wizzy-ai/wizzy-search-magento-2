@@ -8,6 +8,7 @@ use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\ProductImageManager;
 use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
+use Wizzy\Search\Services\Catalogue\ProductURLManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
@@ -46,6 +47,7 @@ class ProductsMapper
     private $commonWordsToRemove;
     private $hasWordsToRemove;
     private $productsAttributesManager;
+    private $productURLManager;
 
     public function __construct(
         Configurable $configurable,
@@ -60,7 +62,8 @@ class ProductsMapper
         SyncSkippedEntities $syncSkippedEntities,
         StoreCatalogueConfig $storeCatalogueConfig,
         BackendUrl $backendUrl,
-        ProductsAttributesManager $productsAttributesManager
+        ProductsAttributesManager $productsAttributesManager,
+        ProductURLManager $productURLManager
     ) {
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
@@ -82,6 +85,7 @@ class ProductsMapper
         $this->commonWordsToRemove = null;
         $this->hasWordsToRemove = false;
         $this->productsAttributesManager = $productsAttributesManager;
+        $this->productURLManager = $productURLManager;
     }
 
     private function resetEntitiesToIgnore()
@@ -104,6 +108,8 @@ class ProductsMapper
         $this->orderItems = $orderItems;
         $this->productPrices->setStore($storeId);
         $this->storeCatalogueConfig->setStore($storeId);
+        $this->productURLManager->setStore($storeId);
+        $this->productURLManager->fetchUrls($products);
         $this->setAdminUrl();
 
         $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();
@@ -616,10 +622,7 @@ class ProductsMapper
             $parentProducts = $this->productsSessionStorage->getByIds([$parentProductId]);
             if (count($parentProducts)) {
                 foreach ($parentProducts as $parentProduct) {
-                    $mappedProduct['url'] = $parentProduct->getUrlModel()->getUrl(
-                        $parentProduct,
-                        $this->getUrlOptions()
-                    );
+                    $mappedProduct['url'] = $this->productURLManager->getUrl($parentProduct);
                     $visibility = $parentProduct->getVisibility();
                     $mappedProduct['isSearchable'] = (
                        $visibility == Visibility::VISIBILITY_IN_SEARCH ||
@@ -646,14 +649,6 @@ class ProductsMapper
         }
 
         return $value;
-    }
-
-    private function getUrlOptions()
-    {
-        return [
-           '_secure' => $this->configManager->hasToUseSecureUrls($this->storeId),
-           '_nosid' => true,
-        ];
     }
 
     private function getProductDescription($product)
@@ -685,7 +680,7 @@ class ProductsMapper
          'sellingPrice' => $sellingPrice,
          'finalPrice' => $sellingPriceWithoutTax,
          'description' => $this->getProductDescription($product),
-         'url' => $product->getUrlModel()->getUrl($product, $this->getUrlOptions()),
+         'url' => $this->productURLManager->getUrl($product),
          'inStock' => ($stockItem && $stockItem->getIsInStock()),
          'stockQty' => ($stockItem && $stockItem->getQty() > 0) ? $stockItem->getQty() : 0,
          'isSearchable' => (
