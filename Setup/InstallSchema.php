@@ -51,50 +51,7 @@ class InstallSchema implements InstallSchemaInterface
       'wizzy_search_configuration/search_results_general_configuration/display_add_to_cart_button' => '1',
       'wizzy_search_configuration/search_results_general_configuration/display_add_to_wishlist_button' => '1',
 
-      'wizzy_search_configuration/search_results_facets_configuration/facets_configuration' => [
-         [
-            'key' => 'all',
-            'label' => 'All Fields',
-            'position' => 'left',
-         ]
-      ],
       'wizzy_search_configuration/search_results_facets_configuration/category_facet_display_method' => 'hierarchy',
-
-      'wizzy_search_configuration/search_results_sorts_configuration/sorts_configuration' => [
-         [
-            'field' => 'relevance',
-            'label' => 'Recommended',
-            'order' => 'asc',
-         ],
-         [
-            'field' => 'sellingPrice',
-            'label' => 'Price Low to High',
-            'order' => 'asc',
-         ],
-         [
-            'field' => 'sellingPrice',
-            'label' => 'Price High to Low',
-            'order' => 'desc',
-         ],
-         [
-            'field' => 'discountPercentage',
-            'label' => 'Better Discount',
-            'order' => 'desc',
-         ],
-         [
-            'field' => 'createdAt',
-            'label' => 'Recently Launched',
-            'order' => 'desc',
-         ],
-      ],
-      'wizzy_search_configuration/search_results_swatches_configuration/swatches_configuration' => [
-         [
-            'key' => 'colors',
-         ],
-         [
-            'key' => 'sizes',
-         ],
-      ],
     ];
 
     private $version118;
