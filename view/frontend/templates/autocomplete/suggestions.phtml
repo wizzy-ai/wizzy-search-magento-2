@@ -11,13 +11,13 @@
                 {{#suggestions}}
                     {{#isHead}}
                         {{#label}}
-                            <li class="autocomplete-item-head" data-index="{{index}}">
+                            <li class="autocomplete-item-head {{group}}" data-index="{{index}}">
                                 {{{label}}}
                             </li><!-- ending of autocomplete-item-head -->
                         {{/label}}
                     {{/isHead}}
                     {{^isHead}}
-                        <li class="autocomplete-item">
+                        <li class="autocomplete-item {{group}}">
                             <a data-selectable="true" data-searchterm="{{{searchTerm}}}" href="#"
                                class="autocomplete-link" data-index="{{index}}">
                             {{{label}}}

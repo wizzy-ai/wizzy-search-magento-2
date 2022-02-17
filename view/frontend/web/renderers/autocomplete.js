@@ -266,7 +266,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
         if (type === "head") {
             return {
                 'label' : getHeadLabel(data),
-                'group' : type,
+                'group' : data,
                 'isHead': true,
                 'hasLabelPath': false,
                 'searchTerm': '',
