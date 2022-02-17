@@ -33,6 +33,7 @@ class InvalidateUnresponsiveSyncIndexer implements
         if ($hasInvalidated) {
             $this->queueManager->enqueueAllInProgress();
         }
+        $this->indexerManager->invalidateProductsIndexer();
     }
 
     public function executeList(array $ids)

@@ -45,10 +45,21 @@ class IndexerManager
         return $this->get('wizzy_sync_queue_runner_indexer');
     }
 
+    public function invalidateProductsIndexer()
+    {
+        $productsIndexer = $this->getProductsIndexer();
+        return $this->isStuck($productsIndexer);
+    }
+
     public function invalidateSync()
     {
         $syncIndexer = $this->getSyncIndexer();
-        $latestUpdated = $syncIndexer->getLatestUpdated();
+        return $this->isStuck($syncIndexer);
+    }
+
+    private function isStuck($indexer)
+    {
+        $latestUpdated = $indexer->getLatestUpdated();
 
         if ($latestUpdated != "") {
             $latestUpdated = \DateTime::createFromFormat("Y-m-d H:i:s", $latestUpdated);
