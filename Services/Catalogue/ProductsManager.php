@@ -10,6 +10,7 @@ use Magento\Framework\Api\Search\FilterGroup;
 use Magento\Framework\Api\Search\SearchCriteriaInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Wizzy\Search\Model\Indexer\Products;
 
 class ProductsManager
 {
@@ -22,6 +23,8 @@ class ProductsManager
     private $visibility;
     private $configurable;
     private $productCollectionFactory;
+
+    const MAX_PRODUCTS_TO_FETCH = 20000;
 
     public function __construct(
         ProductRepository $productRepository,
@@ -43,20 +46,32 @@ class ProductsManager
         $this->productCollectionFactory = $productCollectionFactory;
     }
 
-    public function fetchAll()
+    public function fetchAll($page, $storeId)
     {
         $products = $this->productCollectionFactory->create();
         $products->addAttributeToSelect('id');
         $products->addAttributeToFilter('status', ['in' => $this->status->getVisibleStatusIds()]);
+        $products->addStoreFilter($storeId);
+        $products->setPage($page, self::MAX_PRODUCTS_TO_FETCH);
         return $products;
     }
 
-    public function getAllProductIds()
+    public function getAllProductIds($storeId)
     {
-        $products = $this->fetchAll();
-        $products = $this->getProductIds($products);
+        $page = 1;
+        $productIds = [];
 
-        return $products;
+        while (true) {
+            $products = $this->fetchAll($page, $storeId);
+            $products = $this->getProductIds($products);
+            $productIds = array_merge($productIds, $products);
+            $page++;
+            if (count($products) < self::MAX_PRODUCTS_TO_FETCH) {
+                break;
+            }
+        }
+
+        return $productIds;
     }
 
     public function getProductIds($products)

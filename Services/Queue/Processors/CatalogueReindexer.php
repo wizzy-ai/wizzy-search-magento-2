@@ -39,7 +39,7 @@ class CatalogueReindexer extends QueueProcessorBase
             return true;
         }
         $this->entitiesSync->markAllEntitiesSynced($storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
-        $productIds = $this->productsManager->getAllProductIds();
+        $productIds = $this->productsManager->getAllProductIds($storeId);
         $this->output->writeln(__('Added '.count($productIds).' Products for processing.'));
         $this->productsIndexer->reindexList($productIds);
 

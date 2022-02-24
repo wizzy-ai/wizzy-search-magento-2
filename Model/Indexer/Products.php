@@ -55,14 +55,18 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
    */
     public function executeFull()
     {
-        $products = $this->getAllProductIds();
-        $this->addProductsInQueue($products);
-        $this->productPricesHelper->markAllProductPricesSynced();
+        $storeIds = $this->storeManager->getToSyncStoreIds('');
+
+        foreach ($storeIds as $storeId) {
+            $products = $this->getAllProductIds($storeId);
+            $this->addProductsInQueue($products, $storeId);
+            $this->productPricesHelper->markAllProductPricesSynced();
+        }
     }
 
-    private function getAllProductIds()
+    private function getAllProductIds($storeId)
     {
-        $products = $this->productsManager->getAllProductIds();
+        $products = $this->productsManager->getAllProductIds($storeId);
         return $products;
     }
 
