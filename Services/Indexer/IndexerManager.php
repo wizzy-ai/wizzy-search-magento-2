@@ -66,8 +66,8 @@ class IndexerManager
             $now = (new \DateTime())->modify("-1 hour");
 
             if ($latestUpdated <= $now &&
-                $syncIndexer->getStatus() == StateInterface::STATUS_WORKING) {
-                $syncIndexer->invalidate();
+                $indexer->getStatus() == StateInterface::STATUS_WORKING) {
+                $indexer->invalidate();
                 return true;
             }
         }
