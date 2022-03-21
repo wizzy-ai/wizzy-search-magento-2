@@ -13,6 +13,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore'], function($, wizzyComm
             if (window.wizzyConfig.autocomplete.topProducts.suggestTopProduts && window.wizzyConfig.autocomplete.topProducts.count > 0) {
                 payload['productsCount'] = window.wizzyConfig.autocomplete.topProducts.count;
             }
+            payload = wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_AUTOCOMPLETE_EXECUTED, payload);
             var response = wizzyCommon.getClient().autocomplete(payload);
             pageStore.set(pageStore.keys.lastRequestIdAutocomplete, response.requestId);
         }

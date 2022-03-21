@@ -164,6 +164,15 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         if (isOnCategoryPage()) {
             pageStore.set(pageStore.keys.isCategoryPageRendered, true);
         }
+        triggerResultsRenderedEvent();
+    }
+
+    function triggerEmptyResultsRenderedEvent() {
+        wizzy.triggerEvent(wizzy.allowedEvents.EMPTY_RESULTS_RENDERED, {});
+    }
+
+    function triggerResultsRenderedEvent() {
+        wizzy.triggerEvent(wizzy.allowedEvents.PRODUCTS_RESULTS_RENDERED, {});
     }
 
     function getFilters() {
@@ -250,11 +259,13 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
 
         if ((!isPaginating && !isNumberPaginating)) {
             $(domRenderer.getDOMHandler()).html(resultsComponent.getEmptyHTML());
+            triggerEmptyResultsRenderedEvent();
         }
         else {
             $('.wizzy-search-pagination').html('');
         }
         pageStore.set(pageStore.keys.searchedResponse, null);
+        triggerResultsRenderedEvent();
     }
 
     return {

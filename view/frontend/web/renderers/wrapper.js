@@ -40,5 +40,9 @@ define(['wizzy/renderers/autocomplete', 'wizzy/renderers/search', 'wizzy/rendere
         if (data.api == "variation") {
             variationRenderer.displayVariation(data);
         }
+
+        wizzy.triggerEvent(wizzy.allowedEvents.VIEW_RENDERED, {
+            data: data,
+        });
     }
 });

@@ -2,7 +2,14 @@ var wizzy = {
     allowedEvents: {
         AFTER_PRODUCTS_TRANSFORMED: 'afterProductsTransformed',
         BEFORE_SEARCH_EXECUTED: 'beforeSearchExecuted',
-        BEFORE_FILTERS_EXECUTED: 'beforeFiltersExecuted'
+        BEFORE_FILTERS_EXECUTED: 'beforeFiltersExecuted',
+        PRODUCT_SWATCH_CLICKED: 'productSwatchClicked',
+        VIEW_RENDERED: 'viewRendered',
+        PRODUCTS_RESULTS_RENDERED: 'productsResultsRendered',
+        EMPTY_RESULTS_RENDERED: 'emptyResultsRendered',
+        BEFORE_AUTOCOMPLETE_EXECUTED: 'beforeAutocompleteExecuted',
+        AFTER_FILTER_ITEM_CLICKED: 'afterFilterItemClicked',
+        BEFORE_SORT_EXECUTED: 'beforeSortExecuted',
     },
     registeredEvents: [],
     registerEvent: function (eventName, callback) {

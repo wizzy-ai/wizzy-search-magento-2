@@ -160,6 +160,9 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
             var groupId = $(this).parents('.wizzy-result-product').data('groupid');
 
             if (typeof groupId !== "undefined" && typeof  variationId !== "undefined" && groupId !== null && variationId !== null) {
+                wizzy.triggerEvent(wizzy.allowedEvents.PRODUCT_SWATCH_CLICKED, {
+                    element: $(this),
+                });
                 vF.execute({
                     groupId: groupId,
                     variationId: variationId,
@@ -215,8 +218,12 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
             $(window).on("scroll", function() {
                 if (urlUtils.isOnSearchPage() || wizzyConfig.common.isOnCategoryPage) {
                     var scrollHeight = $(document).height();
-                    var scrollPos = window.innerHeight + $(window).scrollTop();
-                    if((((scrollHeight - 600) >= scrollPos) / scrollHeight) == 0){
+                    var windowHeight = window.innerHeight;
+                    var bodyScrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                    var scrollPos = windowHeight + (bodyScrollTop);
+                    var scrollOffset = paginationUtils.getScrollOffset();
+
+                    if((((scrollHeight - scrollOffset) >= scrollPos) / scrollHeight) == 0){
                         var isExecuting = (pageStore.get(pageStore.keys.isPaginating, false) || pageStore.get(pageStore.keys.lastRequestIdFilters, null) !== null || pageStore.get(pageStore.keys.lastRequestIdSearch, null) !== null);
                         var hasMoreResults = pageStore.get(pageStore.keys.hasMoreResults, false);
                         if (!isExecuting && hasMoreResults) {
@@ -232,6 +239,10 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
         $('body').on('change', '.wizzy-sort-select', function(e) {
             var value = $(this).val();
             var order = $(this).find(':selected').data('order');
+            wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_SORT_EXECUTED, {
+                value: value,
+                order: order
+            });
             updateSortMethod(value, order);
             $.fn.applySort();
         });
@@ -256,6 +267,11 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
             e.preventDefault();
             var filterKey = $(this).data('key');
             var facetKey = $(this).data('facetkey');
+
+            wizzy.triggerEvent(wizzy.allowedEvents.AFTER_FILTER_ITEM_CLICKED, {
+                facetKey: facetKey,
+                filterKey: filterKey
+            });
 
             $.fn.applyWizzyFilters(facetKey, filterKey, true);
         });
