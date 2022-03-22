@@ -104,7 +104,7 @@ class ConfigurableProductsData
     public function getAttributesToIgnore($storeId)
     {
         $brandAttributes = $this->brandConfigurable->getConfiguredAttributes($storeId);
-        $genderAttributes = array_column($this->genderConfigurable->getConfiguredAttributes($storeId), 'id');
+        $genderAttributes = array_keys($this->genderConfigurable->getConfiguredAttributes($storeId));
         $colorAttributes = array_column($this->colorConfigurable->getConfiguredAttributes($storeId), 'value');
         $sizeAttributes = array_column($this->sizeConfigurable->getConfiguredAttributes($storeId), 'value');
 

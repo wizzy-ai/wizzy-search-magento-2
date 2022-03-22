@@ -45,7 +45,7 @@ class GenderConfigurable implements ConfigurableImplInterface
 
         foreach ($configuredAttributes as $attributeId => $configuredAttribute) {
             if (isset($attributes[$attributeId])) {
-                $attributeValue = strtolower($attributes[$attributeId]['value']);
+                $attributeValue = $attributes[$attributeId]['value'];
                 if (isset($configuredAttribute[$attributeValue])) {
                      return [
                       'id' => $attributeId,
@@ -113,7 +113,7 @@ class GenderConfigurable implements ConfigurableImplInterface
 
                         $attributes[$attributeMapping['attribute']][$attributeMapping['attribute_value']] = [
                         'id'     => $attributeMapping['attribute'],
-                        'gender' => strtolower($attributeMapping['gender']),
+                        'gender' => $attributeMapping['gender'],
                         ];
 
                     }
