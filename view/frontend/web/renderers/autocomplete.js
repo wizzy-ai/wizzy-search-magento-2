@@ -119,12 +119,12 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
 
         var suggestionGroups = [
             "categories",
+            "brands",
             "others",
             "pages",
         ];
-        if (wizzyConfig.autocomplete.menu.firstSection == "others") {
-            suggestionGroups[0] = 'others';
-            suggestionGroups[1] = 'categories';
+        if (typeof wizzyConfig.autocomplete.menu.sections !== "undefined" && wizzyConfig.autocomplete.menu.sections.length > 0) {
+            suggestionGroups = wizzyConfig.autocomplete.menu.sections;
         }
         var totalSuggestionGroups = suggestionGroups.length;
 
@@ -135,8 +135,12 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
         for(var i = 0; i < totalSuggestionGroups; i++) {
             var groupKey = suggestionGroups[i];
             var groupsData = typeof data[groupKey] !== "undefined" ? data[groupKey] : [];
+
             if (groupKey == 'categories' && groupsData.length == 0) {
-                groupsData = getCategoriesFromOthers(data['others']);
+                var categoriesFromOthers = getCategoriesFromOthers(data['others']);
+                if (categoriesFromOthers !== null) {
+                    groupsData = categoriesFromOthers;
+                }
             }
 
             if (groupsData.length > 0) {
@@ -161,7 +165,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
 
     function getCategoriesFromOthers(others) {
         if (typeof others === "undefined" || others.length === 0) {
-            return [];
+            return null;
         }
 
         var totalOthersData = others.length;
@@ -256,6 +260,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
         var groupLabels= {
           "categories": window.wizzyConfig.autocomplete.menu.categories.title,
           "others": window.wizzyConfig.autocomplete.menu.others.title,
+          "brands": window.wizzyConfig.autocomplete.menu.brands.title,
           "pages": window.wizzyConfig.autocomplete.pages.title,
         };
 
@@ -286,7 +291,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
     }
 
     function getSubLabelPath(data, type) {
-        if (type == "others") {
+        if (type == "others" || type == "brands") {
             return [];
         }
         var payload = (typeof data["payload"] !== "undefined") ? data["payload"] : [];

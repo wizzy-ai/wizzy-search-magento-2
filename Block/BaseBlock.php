@@ -224,12 +224,15 @@ class BaseBlock extends Template
                'alignment' => $this->storeAutocompleteConfig->getMenuAlignment(),
                'noResultsBehaviour' => $this->storeAutocompleteConfig->getNoResultsBehaviour(),
                'noResultsText' => __($this->storeAutocompleteConfig->getNoResultsText()),
-               'firstSection' => $this->storeAutocompleteConfig->getFirstSection(),
+               'sections' => $this->storeAutocompleteConfig->getSectionsConfiguration(),
                'categories' => [
                   'title' => __($this->storeAutocompleteConfig->getCategoriesTitle()),
                ],
                'others' => [
                   'title' => __($this->storeAutocompleteConfig->getOthersTitle()),
+               ],
+               'brands' => [
+                   'title' => __($this->storeAutocompleteConfig->getBrandsTitle()),
                ],
                'view' => [
                   'menu' => '.wizzy-autocomplete-wrapper',

@@ -19,7 +19,8 @@ class StoreAutocompleteConfig
     const WIZZY_AUTOCOMPLETE_MENU_SUGGESTIONS_COUNT = self::WIZZY_AUTTOCOMPLETE_MENU . "/suggestions_count";
     const WIZZY_AUTOCOMPLETE_MENU_CATEGOIRES_TITLE = self::WIZZY_AUTTOCOMPLETE_MENU . "/categories_title";
     const WIZZY_AUTOCOMPLETE_MENU_OTHERS_TITLE = self::WIZZY_AUTTOCOMPLETE_MENU . "/others_title";
-    const WIZZY_AUTOCOMPLETE_FIRST_SECTION = self::WIZZY_AUTTOCOMPLETE_MENU . "/first_section";
+    const WIZZY_AUTOCOMPLETE_MENU_BRANDS_TITLE = self::WIZZY_AUTTOCOMPLETE_MENU . "/brands_title";
+    const WIZZY_AUTOCOMPLETE_MENU_SECTIONS = self::WIZZY_AUTTOCOMPLETE_MENU . "/sections_configuration";
     const WIZZY_AUTOCOMPLETE_MENU_ALIGNMENT = self::WIZZY_AUTTOCOMPLETE_MENU . "/alignment";
     const WIZZY_AUTOCOMPLETE_NO_RESULTS_BEHAVIOUR = self::WIZZY_AUTTOCOMPLETE_MENU . "/no_results_behaviour";
     const WIZZY_AUTOCOMPLETE_NO_RESULTS_TEXT = self::WIZZY_AUTTOCOMPLETE_MENU . "/no_results_text";
@@ -60,14 +61,26 @@ class StoreAutocompleteConfig
         return $this->configManager->getStoreConfig(self::WIZZY_AUTOCOMPLETE_MENU_OTHERS_TITLE, $this->storeId);
     }
 
-    public function getFirstSection()
+    public function getBrandsTitle()
     {
-        $section = $this->configManager->getStoreConfig(self::WIZZY_AUTOCOMPLETE_FIRST_SECTION, $this->storeId);
-        if (!$section) {
-            return FirstSectionSelection::CATEGORIES_SECTION;
-        }
+        return $this->configManager->getStoreConfig(self::WIZZY_AUTOCOMPLETE_MENU_BRANDS_TITLE, $this->storeId);
+    }
 
-        return $section;
+    public function getSectionsConfiguration()
+    {
+        $sectionsConfig = $this->configManager->getStoreConfig(
+            self::WIZZY_AUTOCOMPLETE_MENU_SECTIONS,
+            $this->storeId
+        );
+        if (!$sectionsConfig) {
+            return [];
+        }
+        $sectionsConfig = json_decode($sectionsConfig, true);
+
+        if ($sectionsConfig) {
+            return array_column($sectionsConfig, 'key');
+        }
+        return [];
     }
 
     public function getMenuAlignment()

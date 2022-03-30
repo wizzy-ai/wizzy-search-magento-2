@@ -625,21 +625,26 @@
                     <comment>Title to display for others section in menu.</comment>
                 </field>
 
-                <field id="first_section" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
-                    <label>First Section</label>
-                    <comment>First section to display in autocomplete menu.</comment>
-                    <source_model>Wizzy\Search\Model\Admin\Source\FirstSectionSelection</source_model>
-                    <validate>required-entry</validate>
+                <field id="brands_title" translate="label" type="text" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Brands Title</label>
+                    <comment>Title to display for brands section in menu.</comment>
                 </field>
 
-                <field id="no_results_behaviour" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                <field id="sections_configuration" translate="label" type="select" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Sections</label>
+                    <comment>Add the sections you want to display in autocomplete menu. If none provided, by default Wizzy display all four sections. Section names must be from ("categories", "pages", "brands" or "others").</comment>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\SectionsSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                </field>
+
+                <field id="no_results_behaviour" translate="label" type="select" sortOrder="7" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>No Results Behaviour</label>
                     <comment>Select behaviour when there are no products or suggestions to display in menu.</comment>
                     <source_model>Wizzy\Search\Model\Admin\Source\NoResultsSelection</source_model>
                     <validate>required-entry</validate>
                 </field>
 
-                <field id="no_results_text" translate="label" type="text" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                <field id="no_results_text" translate="label" type="text" sortOrder="8" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>No Results Text</label>
                     <comment>Text to display when there are no products or suggestions to display in menu.</comment>
                     <validate>required-entry</validate>

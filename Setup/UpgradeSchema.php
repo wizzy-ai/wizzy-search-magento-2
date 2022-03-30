@@ -9,6 +9,7 @@ use Wizzy\Search\Services\Setup\Version118;
 use Wizzy\Search\Services\Setup\Version125;
 use Wizzy\Search\Services\Setup\Version130;
 use Wizzy\Search\Services\Setup\Version131;
+use Wizzy\Search\Services\Setup\Version1316;
 use Wizzy\Search\Services\Setup\Version135;
 
 class UpgradeSchema implements UpgradeSchemaInterface
@@ -18,19 +19,22 @@ class UpgradeSchema implements UpgradeSchemaInterface
     private $version130;
     private $version131;
     private $version135;
+    private $version1316;
 
     public function __construct(
         Version118 $version118,
         Version125 $version125,
         Version130 $version130,
         Version131 $version131,
-        Version135 $version135
+        Version135 $version135,
+        Version1316 $version1316
     ) {
         $this->version118 = $version118;
         $this->version125 = $version125;
         $this->version130 = $version130;
         $this->version131 = $version131;
         $this->version135 = $version135;
+        $this->version1316 = $version1316;
     }
 
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
@@ -55,6 +59,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         if (version_compare($context->getVersion(), '1.3.5', '<')) {
             $this->version135->update($setup);
+        }
+
+        if (version_compare($context->getVersion(), '1.3.16', '<')) {
+            $this->version1316->update($setup);
         }
 
         $setup->endSetup();

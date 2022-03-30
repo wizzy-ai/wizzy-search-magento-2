@@ -25,6 +25,7 @@ var config = {
         'wizzy/utils/keyboard': 'Wizzy_Search/utils/keyboard',
         'wizzy/utils/url': 'Wizzy_Search/utils/url',
         'wizzy/utils/search': 'Wizzy_Search/utils/search',
+        'wizzy/utils/autocomplete': 'Wizzy_Search/utils/autocomplete',
         'wizzy/utils/pagination': 'Wizzy_Search/utils/pagination',
         'wizzy/renderers/components/search/summary': 'Wizzy_Search/renderers/components/search/summary',
         'wizzy/renderers/components/search/sort': 'Wizzy_Search/renderers/components/search/sort',
