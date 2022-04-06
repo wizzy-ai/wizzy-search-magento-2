@@ -484,7 +484,8 @@ class ProductsMapper
                 $label = $attribute->getFrontendLabel();
 
                 if (count($value) === 0 || (count($value) == 1 && empty($value[0]))
-                    || (count($value) == 1 && $value[0] === null)) {
+                    || (count($value) == 1 && $value[0] === null)
+                    || (strlen($value[0]) > 9999)) {
                     continue;
                 }
 
