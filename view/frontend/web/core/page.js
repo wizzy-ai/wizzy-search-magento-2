@@ -6,6 +6,7 @@ var wizzy = {
         PRODUCT_SWATCH_CLICKED: 'productSwatchClicked',
         VIEW_RENDERED: 'viewRendered',
         PRODUCTS_RESULTS_RENDERED: 'productsResultsRendered',
+        BEFORE_PRODUCTS_RESULTS_RENDERED: 'beforeProductsResultsRendered',
         EMPTY_RESULTS_RENDERED: 'emptyResultsRendered',
         BEFORE_AUTOCOMPLETE_EXECUTED: 'beforeAutocompleteExecuted',
         AFTER_FILTER_ITEM_CLICKED: 'afterFilterItemClicked',

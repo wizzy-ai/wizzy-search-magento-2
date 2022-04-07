@@ -137,6 +137,8 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
                 'pagination': paginationComponent.getHTML(),
             });
 
+            $('body').addClass('wizzy-search-results-rendered');
+            triggerBeforeResultsRenderedEvent(wrapperTemplate);
             domRenderer.updateResultsDOM(wrapperTemplate);
             postResultsRender();
         }
@@ -144,17 +146,20 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
             $('.wizzy-progress-container').remove();
             $('.wizzy-progress-bg').remove();
 
+            var html = resultsComponent.getHTML();
+
+            triggerBeforeResultsRenderedEvent(html);
             if (isNumberPaginating) {
                 if ($(window).width() > 768) {
-                    $('.wizzy-search-results').html(resultsComponent.getHTML());
+                    $('.wizzy-search-results').html(html);
                 }
                 else {
-                    $('.wizzy-search-results').append(resultsComponent.getHTML());
+                    $('.wizzy-search-results').append(html);
                 }
                 $('.wizzy-search-pagination').html(paginationComponent.getHTML());
             }
             else {
-                $('.wizzy-search-results').append(resultsComponent.getHTML());
+                $('.wizzy-search-results').append(html);
             }
         }
 
@@ -173,6 +178,12 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
 
     function triggerResultsRenderedEvent() {
         wizzy.triggerEvent(wizzy.allowedEvents.PRODUCTS_RESULTS_RENDERED, {});
+    }
+
+    function triggerBeforeResultsRenderedEvent(html) {
+        window.wizzyConfig.events.triggerEvent(window.wizzyConfig.events.allowedEvents.BEFORE_PRODUCTS_RESULTS_RENDERED, {
+            html: html
+        });
     }
 
     function getFilters() {
@@ -258,6 +269,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         var isNumberPaginating = pageStore.get(pageStore.keys.isNumberPaginating, false);
 
         if ((!isPaginating && !isNumberPaginating)) {
+            $('body').addClass('wizzy-search-results-rendered');
             $(domRenderer.getDOMHandler()).html(resultsComponent.getEmptyHTML());
             triggerEmptyResultsRenderedEvent();
         }
