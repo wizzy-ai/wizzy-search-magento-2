@@ -94,8 +94,12 @@ class ProductPrices
             return $this->productPrices[$this->storeId][self::PRODUCT_PRICE_FINAL_TYPE][$product->getId()];
         }
 
-        $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->getBaseAmount();
-        $finalPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->getBaseAmount();
+        $priceMethod = "getBaseAmount";
+        if ($this->incTax) {
+            $priceMethod = "getValue";
+        }
+        $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->$priceMethod();
+        $finalPrice = $product->getPriceInfo()->getPrice('final_price')->getAmount()->$priceMethod();
 
         if ($specialPrice !== false && $specialPrice !== 0 && $specialPrice < $finalPrice) {
             $finalPrice = $this->getDefaultCurrncyValue($specialPrice);
