@@ -657,6 +657,7 @@
   display: block;
   height: 100%;
   box-sizing: border-box;
+  text-decoration: none;
 }
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item:hover {
   background: #f7f7f7;
@@ -727,9 +728,6 @@
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .result-product-item-info .product-item-swatch-group .product-item-swatch-item .wizzy-facet-item-swatch-wrapper .wizzy-facet-item-swatch.facet-text-swatch {
   border: 0;
   padding: 0;
-}
-.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .result-product-item-info .product-item-swatch-group .product-item-swatch-item .wizzy-facet-item-swatch-wrapper .wizzy-facet-item-swatch .wizzy-facet-swatch-individual-value {
-  display: none;
 }
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item .result-product-item-info .product-item-swatch-group .product-item-swatch-item .wizzy-facet-item-swatch-wrapper.facet-text-swatch {
   border: 0;

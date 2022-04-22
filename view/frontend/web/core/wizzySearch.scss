@@ -847,6 +847,7 @@
             display: block;
             height: 100%;
             box-sizing: border-box;
+            text-decoration: none;
 
             &:hover {
               background: $lightGreyBg;
@@ -941,10 +942,6 @@
                         @extend %wizzy-text-swatch-common;
                         border: 0;
                         padding: 0;
-                      }
-
-                      .wizzy-facet-swatch-individual-value {
-                        display: none;
                       }
                     }
 
