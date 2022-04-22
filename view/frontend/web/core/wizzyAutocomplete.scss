@@ -96,6 +96,12 @@ $autoCompleteMenuRadius: 4px;
             text-decoration: none;
           }
 
+          .topproduct-item-image {
+              img {
+                  max-width: 100%;
+              }
+          }
+
           p.topproduct-in-category {
             color: $darkGreyBg;
           }

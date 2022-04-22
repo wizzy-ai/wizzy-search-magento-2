@@ -83,6 +83,9 @@
   background: #f7f7f7;
   text-decoration: none;
 }
+.wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products ul.autocomplete-top-products li.topproduct-item a.topproduct-item-link .topproduct-item-image img {
+  max-width: 100%;
+}
 .wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products ul.autocomplete-top-products li.topproduct-item a.topproduct-item-link p.topproduct-in-category {
   color: #979797;
 }

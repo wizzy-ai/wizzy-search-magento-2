@@ -648,6 +648,9 @@
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .result-product-item-image {
   min-height: 250px;
 }
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .result-product-item-image .product-item-image {
+  max-width: 100%;
+}
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item {
   color: #343434;
   padding: 15px;

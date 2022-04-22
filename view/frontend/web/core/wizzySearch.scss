@@ -836,6 +836,9 @@
 
           .result-product-item-image {
             min-height: 250px;
+            .product-item-image {
+                  max-width: 100%;
+            }
           }
 
           .wizzy-result-product-item {
