@@ -685,13 +685,24 @@
 
             <group id="autocomplete_pages" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Pages</label>
+                <field id="sync_pages" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Sync Pages?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Want to sync pages?</comment>
+                </field>
                 <field id="pages_title" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Pages Title</label>
+                     <depends> 
+                        <field id="sync_pages">1</field>
+                    </depends> 
                     <comment>Title text for pages section in autocomplete menu.</comment>
                     <validate></validate>
                 </field>
                 <field id="exclude_pages" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Exclude Pages</label>
+                    <depends> 
+                        <field id="sync_pages">1</field>
+                    </depends> 
                     <comment>Select pages to exclude in suggestions.</comment>
                     <frontend_model>Wizzy\Search\Model\Admin\Source\PagesSelection</frontend_model>
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>

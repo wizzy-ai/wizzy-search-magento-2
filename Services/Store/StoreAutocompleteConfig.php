@@ -33,6 +33,7 @@ class StoreAutocompleteConfig
     const WIZZY_AUTTOCOMPLETE_PAGES = self::WIZZY_AUTOCOMPLETE_MENU_CONFIGURATION . "/autocomplete_pages";
     const WIZZY_AUTTOCOMPLETE_PAGES_TITLE = self::WIZZY_AUTTOCOMPLETE_PAGES . "/pages_title";
     const WIZZY_AUTTOCOMPLETE_EXCLUDE_PAGES = self::WIZZY_AUTTOCOMPLETE_PAGES . "/exclude_pages";
+    const WIZZY_AUTTOCOMPLETE_SYNC_PAGES = self::WIZZY_AUTTOCOMPLETE_PAGES . "/sync_pages";
 
     private $storeId;
 
@@ -116,6 +117,11 @@ class StoreAutocompleteConfig
     public function getPagesTitle()
     {
         return $this->configManager->getStoreConfig(self::WIZZY_AUTTOCOMPLETE_PAGES_TITLE, $this->storeId);
+    }
+
+    public function hasToSyncPages()
+    {
+        return ($this->configManager->getStoreConfig(self::WIZZY_AUTTOCOMPLETE_SYNC_PAGES, $this->storeId) == 0);
     }
 
     public function getExcludedPages()
