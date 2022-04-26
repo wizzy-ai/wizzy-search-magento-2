@@ -4,16 +4,21 @@ namespace Wizzy\Search\Model\Indexer;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Queue\Processors\IndexPagesProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
+use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Magento;
 
 class Pages implements Magento\Framework\Indexer\ActionInterface, Magento\Framework\Mview\ActionInterface
 {
-
+    private $storeAutocompleteConfig;
     private $queueManager;
     private $output;
 
-    public function __construct(QueueManager $queueManager, IndexerOutput $output)
-    {
+    public function __construct(
+        QueueManager $queueManager,
+        IndexerOutput $output,
+        StoreAutocompleteConfig $storeAutocompleteConfig
+    ) {
+        $this->storeAutocompleteConfig = $storeAutocompleteConfig;
         $this->queueManager = $queueManager;
         $this->output = $output;
     }
@@ -55,6 +60,10 @@ class Pages implements Magento\Framework\Indexer\ActionInterface, Magento\Framew
 
     private function addPagesForSync($slugs)
     {
+
+        if ($this->storeAutocompleteConfig->hasToSyncPages() == false) {
+            return true;
+        }
         if (!count($slugs)) {
             $this->queueManager->clear(0, IndexPagesProcessor::class);
         }
