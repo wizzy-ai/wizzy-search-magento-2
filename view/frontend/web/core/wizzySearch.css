@@ -1215,6 +1215,8 @@
     border-right: 0;
     border-top: solid 1px #e3e3e3;
     width: 100vw;
+    bottom: 52px;
+    top: auto;
   }
   .wizzy-search-wrapper .wizzy-search-results-wrapper .wizzy-search-results-container .wizzy-search-filters-top .search-filters-top-wrapper .wizzy-search-sort-wrapper .wizzy-sort-container .wizzy-common-select-wrapper .wizzy-common-select-container .wizzy-common-select-options .wizzy-common-select-option.selected {
     font-weight: bold;

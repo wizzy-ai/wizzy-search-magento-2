@@ -1629,6 +1629,8 @@
                       border-right: 0;
                       border-top: solid 1px $midGreyBg;
                       width: 100vw;
+                      bottom: 52px;
+                      top: auto;
 
                       .wizzy-common-select-option {
                         &.selected {
