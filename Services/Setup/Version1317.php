@@ -16,6 +16,7 @@ class Version1317
 
     private $defaultConfigs = [
         "wizzy_autocomplete_configuration/autocomplete_pages/sync_pages" => 0,
+        "wizzy_catalogue_configuration/catalogue_configuration_images/replace_child_with_main_image" => 0,
     ];
 
     public function update(SchemaSetupInterface $setup)
