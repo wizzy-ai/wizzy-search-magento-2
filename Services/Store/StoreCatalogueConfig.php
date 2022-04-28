@@ -60,10 +60,12 @@ class StoreCatalogueConfig
 
     // IMAGES CONFIGURATION
     const CATALOGUE_CONFIGURATION_IMAGES = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_images";
+    const CATALOGUE_CONFIGURATION_NAME = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_name";
 
     const THUMBNAIL_IMAGE_WIDTH = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_width";
     const THUMBNAIL_IMAGE_HEIGHT = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_height";
-    const REPLACE_CHILD_IMAGE = self::CATALOGUE_CONFIGURATION_IMAGES . "/replace_child_with_main_image";
+    const REPLACE_CHILD_IMAGE = self::CATALOGUE_CONFIGURATION_IMAGES . "/replace_child_main_image";
+    const REPLACE_CHILD_NAME = self::CATALOGUE_CONFIGURATION_NAME . "/replace_child_name_with_parent";
 
     // DESCRIPTION CONFIGURATION
     const CATALOGUE_CONFIGURATION_DESCRIPTION = self::WIZZY_CATALOGUE_CONFIGURATION
@@ -204,6 +206,11 @@ class StoreCatalogueConfig
     public function hasToReplaceChildImage()
     {
         return ($this->configManager->getStoreConfig(self::REPLACE_CHILD_IMAGE, $this->storeId) == 1);
+    }
+
+    public function hasToReplaceChildName()
+    {
+        return ($this->configManager->getStoreConfig(self::REPLACE_CHILD_NAME, $this->storeId) == 1);
     }
 
     public function getCommonDescriptionWordsToRemove()

@@ -638,6 +638,9 @@ class ProductsMapper
                             || $this->storeCatalogueConfig->hasToReplaceChildImage()) {
                                 $this->mapImages($parentProduct, $mappedProduct);
                     }
+                    if ($this->storeCatalogueConfig->hasToReplaceChildName()) {
+                        $mappedProduct['name'] = $parentProduct->getName();
+                    }
                     break;
                 }
             }
