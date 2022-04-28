@@ -421,6 +421,16 @@
                     </comment>
                     <validate>required-entry validate-not-negative-number</validate>
                 </field>
+                <field id="replace_child_with_main_image" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Replace child's Main Image with Parent</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Set this to true, If Wizzy has to consider `mainImage` of the
+                            parent product in child products as well? This will override child's main Image even if they are set.
+                        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
 
