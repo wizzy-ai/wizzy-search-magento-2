@@ -634,8 +634,12 @@ class ProductsMapper
 
                     if (!$mappedProduct['mainImage'] ||
                         $mappedProduct['mainImage'] ==
-                            $this->productImageManager->getPlaceholderImage($this->storeId)) {
-                        $this->mapImages($parentProduct, $mappedProduct);
+                            $this->productImageManager->getPlaceholderImage($this->storeId)
+                            || $this->storeCatalogueConfig->hasToReplaceChildImage()) {
+                                $this->mapImages($parentProduct, $mappedProduct);
+                    }
+                    if ($this->storeCatalogueConfig->hasToReplaceChildName()) {
+                        $mappedProduct['name'] = $parentProduct->getName();
                     }
                     break;
                 }
