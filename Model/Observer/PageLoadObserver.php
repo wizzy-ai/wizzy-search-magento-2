@@ -38,6 +38,7 @@ class PageLoadObserver implements ObserverInterface
         $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
         $isAnalyticsEnabled = $this->storeGeneralConfig->isAnalyticsEnabled();
         $isOverridingEventsjs = $this->storeAdvancedConfig->isOverridingEventsjs();
+        $isIncludeCustomCss = $this->storeAdvancedConfig->isIncludeCustomCss();
 
         if ($this->request->getModuleName() === "checkout"
            && $this->request->getFullActionName() === "checkout_index_index"
@@ -51,6 +52,10 @@ class PageLoadObserver implements ObserverInterface
 
             if ($isOverridingEventsjs) {
                 $layout->getUpdate()->addHandle('wizzy_search_events');
+            }
+
+            if ($isIncludeCustomCss) {
+                $layout->getUpdate()->addHandle('wizzy_search_custom');
             }
 
             if ($isAnalyticsEnabled) {

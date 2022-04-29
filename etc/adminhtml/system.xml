@@ -772,8 +772,17 @@
                         ]]>
                     </comment>
                 </field>
-
-                <field id="template_attributes" translate="label" type="multiselect" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                 <field id="include_custom_css" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Include Custom CSS?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If selected as yes, Module will load custom.css <br>
+                            This helps to just override the layout files.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="template_attributes" translate="label" type="multiselect" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Template Attributes</label>
                     <source_model>Wizzy\Search\Model\Admin\Source\AttributesListNameKey</source_model>
                     <comment>
