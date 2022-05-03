@@ -121,7 +121,7 @@ class StoreAutocompleteConfig
 
     public function hasToSyncPages()
     {
-        return ($this->configManager->getStoreConfig(self::WIZZY_AUTTOCOMPLETE_SYNC_PAGES, $this->storeId) == 0);
+        return ($this->configManager->getStoreConfig(self::WIZZY_AUTTOCOMPLETE_SYNC_PAGES, $this->storeId) == 1);
     }
 
     public function getExcludedPages()

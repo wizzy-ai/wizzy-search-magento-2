@@ -38,6 +38,7 @@ class IndexPagesProcessor extends QueueProcessorBase
 
     public function execute(array $data, $storeId)
     {
+        $this->storeAutocompleteConfig->setStore($storeId);
         if ($this->storeAutocompleteConfig->hasToSyncPages() == false) {
             return true;
         }
