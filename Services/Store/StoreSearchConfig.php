@@ -36,7 +36,10 @@ class StoreSearchConfig
     const WIZZY_PAGINATION_TYPE = self::WIZZY_PAGINATION_CONFIGURATION . "/pagination_type";
     const WIZZY_PAGINATION_MOVE_TO_TOP_WIDGET =
        self::WIZZY_PAGINATION_CONFIGURATION . "/pagination_move_to_top_widget";
-
+    const INFINITE_SCROLL_OFFSET_DESKTOP =
+       self::WIZZY_PAGINATION_CONFIGURATION . "/infinite_scroll_offset_desktop";
+    const INFINITE_SCROLL_OFFSET_MOBILE =
+       self::WIZZY_PAGINATION_CONFIGURATION . "/infinite_scroll_offset_mobile";
     const WIZZY_SEARCH_SWATCHES_CONFIGURATION =
        self::WIZZY_SEARCH_CONFIGURATION . "/search_results_swatches_configuration";
     const WIZZY_SWATCHES_CONFIGURATION = self::WIZZY_SEARCH_SWATCHES_CONFIGURATION . "/swatches_configuration";
@@ -145,6 +148,16 @@ class StoreSearchConfig
     public function getPaginationType()
     {
         return $this->configManager->getStoreConfig(self::WIZZY_PAGINATION_TYPE, $this->storeId);
+    }
+    
+    public function getDesktopScrollOffset()
+    {
+        return $this->configManager->getStoreConfig(self::INFINITE_SCROLL_OFFSET_DESKTOP, $this->storeId);
+    }
+
+    public function getMobileScrollOffset()
+    {
+        return $this->configManager->getStoreConfig(self::INFINITE_SCROLL_OFFSET_MOBILE, $this->storeId);
     }
 
     public function hasToAddMoveToTopWidget()

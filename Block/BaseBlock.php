@@ -164,6 +164,10 @@ class BaseBlock extends Template
                ],
                'pagination' => [
                   'type' => $this->storeSearchConfig->getPaginationType(),
+                  'infiniteScrollOffset' => [
+                     'desktop' => $this->storeSearchConfig->getDesktopScrollOffset(),
+                     'mobile' => $this->storeSearchConfig->getMobileScrollOffset(),
+                  ],
                   'moveToTopWidget' => [
                      'add' => $this->storeSearchConfig->hasToAddMoveToTopWidget(),
                   ],

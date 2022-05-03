@@ -578,7 +578,7 @@
                     <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
                 </field>
             </group>
-
+            
             <group id="search_results_pagination_configuration" translate="label" type="text" sortOrder="40" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Pagination</label>
                 <field id="pagination_type" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
@@ -586,6 +586,20 @@
                     <comment>Select the type of pagination for search results page.</comment>
                     <source_model>Wizzy\Search\Model\Admin\Source\PaginationType</source_model>
                     <validate>required-entry</validate>
+                </field>
+                 <field id="infinite_scroll_offset_desktop" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Infinite Scroll Offset (Desktop)</label>
+                    <comment>Enter value for infinite scroll offset (Desktop) </comment>
+                    <depends>
+                        <field id="pagination_type">infinite_scroll</field>
+                    </depends>
+                </field>
+                 <field id="infinite_scroll_offset_mobile" translate="label" type="text" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Infinite Scroll Offset (Mobile)</label>
+                    <comment>Enter value for infinite scroll offset (Mobile)</comment>
+                    <depends>
+                        <field id="pagination_type">infinite_scroll</field>
+                    </depends>
                 </field>
                 <field id="pagination_move_to_top_widget" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Add move to top Widget?</label>
