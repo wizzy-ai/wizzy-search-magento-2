@@ -181,7 +181,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
     }
 
     function triggerBeforeResultsRenderedEvent(html) {
-        window.wizzyConfig.events.triggerEvent(window.wizzyConfig.events.allowedEvents.BEFORE_PRODUCTS_RESULTS_RENDERED, {
+        wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_PRODUCTS_RESULTS_RENDERED, {
             html: html
         });
     }
