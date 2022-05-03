@@ -9,11 +9,13 @@ $configs = $block->getConfigs();
            {{^isVisualSwatch}}facet-text-swatch{{/isVisualSwatch}}"
              style="{{#isVisualSwatch}}{{#isURLSwatch}}background-image:url({{swatchValue}});{{/isURLSwatch}}
              {{^isURLSwatch}}background-color:{{swatchValue}};{{/isURLSwatch}}{{/isVisualSwatch}}">
-           {{#value}}
-                <span class="wizzy-facet-swatch-individual-value">{{value}}</span>
-           {{/value}}
            {{^isVisualSwatch}}
-                <span class="wizzy-facet-swatch-value">{{swatchValue}}</span>
+                {{#value}}
+                    <span class="wizzy-facet-swatch-individual-value">{{value}}</span>
+                {{/value}}
+                {{#swatchValue}}
+                    <span class="wizzy-facet-swatch-value">{{swatchValue}}</span>
+                {{/swatchValue}}
            {{/isVisualSwatch}}
        </span>
    </span>
