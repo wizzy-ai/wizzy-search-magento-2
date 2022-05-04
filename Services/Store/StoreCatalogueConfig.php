@@ -66,6 +66,8 @@ class StoreCatalogueConfig
     const THUMBNAIL_IMAGE_HEIGHT = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_height";
     const REPLACE_CHILD_IMAGE = self::CATALOGUE_CONFIGURATION_IMAGES . "/replace_child_with_main_image";
     const REPLACE_CHILD_NAME = self::CATALOGUE_CONFIGURATION_NAME . "/replace_child_name_with_parent";
+    const HOVER_IMAGE_TYPE = self::CATALOGUE_CONFIGURATION_IMAGES . "/hover_image_type";
+    const THUMBNAIL_IMAGE_TYPE = self::CATALOGUE_CONFIGURATION_IMAGES . "/thumbnail_image_type";
 
     // DESCRIPTION CONFIGURATION
     const CATALOGUE_CONFIGURATION_DESCRIPTION = self::WIZZY_CATALOGUE_CONFIGURATION
@@ -201,6 +203,16 @@ class StoreCatalogueConfig
     public function getThumbnailHeight()
     {
         return $this->configManager->getStoreConfig(self::THUMBNAIL_IMAGE_HEIGHT, $this->storeId);
+    }
+
+    public function getThumbnailImageType()
+    {
+        return $this->configManager->getStoreConfig(self::THUMBNAIL_IMAGE_TYPE, $this->storeId);
+    }
+
+    public function getHoverImageType()
+    {
+        return $this->configManager->getStoreConfig(self::HOVER_IMAGE_TYPE, $this->storeId);
     }
 
     public function hasToReplaceChildImage()

@@ -22,6 +22,8 @@ class Version1317
         600,
         "wizzy_search_configuration/search_results_pagination_configuration/infinite_scroll_offset_mobile" =>
         700,
+        "wizzy_catalogue_configuration/catalogue_configuration_images/hover_image_type" => 'small',
+        "wizzy_catalogue_configuration/catalogue_configuration_images/thumbnail_image_type" => 'thumbnail',
     ];
 
     public function update(SchemaSetupInterface $setup)
