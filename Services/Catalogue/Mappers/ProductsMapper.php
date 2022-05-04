@@ -721,6 +721,7 @@ class ProductsMapper
         $imagesAssoc = $this->getImagesAssoc($product);
         $mappedProduct['mainImage'] = $imagesAssoc['mainImage'];
         $mappedProduct['images'] = $imagesAssoc['images'];
+        $mappedProduct['hoverImage'] = $imagesAssoc['hoverImage'];
     }
 
     private function mapOrderData($product, &$mappedProduct)
@@ -820,6 +821,20 @@ class ProductsMapper
         return $ordersSummary;
     }
 
+    private function getImageByType(string $imageType, $product)
+    {
+        if ($imageType == "thumbnail") {
+            return $product->getThumbnail();
+        }
+        if ($imageType == "base") {
+            return $product->getImage();
+        }
+        if ($imageType == "small") {
+            return $product->getData('small_image');
+        }
+        return null;
+    }
+
     private function getImagesAssoc($product)
     {
         $images = [];
@@ -827,6 +842,9 @@ class ProductsMapper
         $index = 0;
         $thumbnail = $product->getThumbnail();
         $mainImageUrl = "";
+
+        $thumbnail = $this->getImageByType($this->storeCatalogueConfig->getThumbnailImageType(), $product);
+        $hoverImage = $this->getImageByType($this->storeCatalogueConfig->getHoverImageType(), $product);
 
         foreach ($product->getMediaGalleryImages() as $productImage) {
             $productImageData = $productImage->getData();
@@ -841,6 +859,11 @@ class ProductsMapper
                 $images[] = $productImageData['url'];
             }
             $index++;
+
+            if ($hoverImage == $productImageData['file']) {
+                $hoverImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
+                $hoverImageUrl = $productImageData['url'];
+            }
         }
 
         if ($mainImage === '') {
@@ -851,9 +874,16 @@ class ProductsMapper
             }
         }
 
+        if ($hoverImage === '') {
+            if ($hoverImageUrl !== "") {
+                $hoverImage = $hoverImageUrl;
+            }
+        }
+
         return [
          'images' => $images,
          'mainImage' => $mainImage,
+         'hoverImage' => $hoverImage,
         ];
     }
 }

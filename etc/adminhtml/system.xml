@@ -431,6 +431,24 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="hover_image_type" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Hover Image</label>
+                    <comment>
+                        <![CDATA[
+                            Select type of image which you want to show as a Hover Image.
+                        ]]>
+                    </comment>
+                    <source_model>Wizzy\Search\Model\Admin\Source\ImageTypes</source_model>
+                </field>
+                <field id="thumbnail_image_type" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Thumbnail Image</label>
+                    <comment>
+                        <![CDATA[
+                            Select type of image which you want to show as a Thumbnail Image.
+                        ]]>
+                    </comment>
+                    <source_model>Wizzy\Search\Model\Admin\Source\ImageTypes</source_model>
+                </field>
             </group>
             <group id="catalogue_configuration_name" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Name Configuration</label>
