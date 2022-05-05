@@ -619,7 +619,7 @@
                         <field id="pagination_type">infinite_scroll</field>
                     </depends>
                 </field>
-                <field id="pagination_move_to_top_widget" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                <field id="pagination_move_to_top_widget" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Add move to top Widget?</label>
                     <comment>Recommended to set it as Yes if pagination type is infinite scrolling.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
