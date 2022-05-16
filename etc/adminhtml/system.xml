@@ -26,9 +26,11 @@
                     <comment>Paste API key from Wizzy.</comment>
                     <validate>required-entry</validate>
                 </field>
+                <field id="remove_credentials" translate="label" type="button" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <frontend_model>Wizzy\Search\Block\Adminhtml\System\Config\ResetConfigButton</frontend_model>
+                </field>
             </group>
         </section>
-
         <section id="wizzy_general_configuration" translate="label" sortOrder="140" showInDefault="0" showInWebsite="0" showInStore="1">
             <class>separator-top</class>
             <label>General Setup</label>
