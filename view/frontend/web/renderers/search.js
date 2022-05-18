@@ -137,7 +137,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
                 'pagination': paginationComponent.getHTML(),
             });
 
-            $('body').addClass('wizzy-search-results-rendered');
+            $wZ('body').addClass('wizzy-search-results-rendered');
             triggerBeforeResultsRenderedEvent(wrapperTemplate);
             domRenderer.updateResultsDOM(wrapperTemplate);
             postResultsRender();
