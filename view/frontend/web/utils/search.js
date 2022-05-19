@@ -18,6 +18,14 @@ define([''], function() {
         return [];
     }
 
+    function getInputDOM() {
+        if (typeof window.wizzyConfig.search.input.dom !== "undefined") {
+            return window.wizzyConfig.search.input.dom;
+        }
+        
+        return '.wizzy-search-input';
+    }
+
     function getSwatchesToAdd() {
         var swatchesConfig = window.wizzyConfig.search.configs.swatches.configs;
         var swatches = [];
@@ -38,6 +46,7 @@ define([''], function() {
     return {
         getFacetsToAdd: getFacetsToAdd,
         getSwatchesToAdd: getSwatchesToAdd,
+        getInputDOM: getInputDOM,
     };
 
 });

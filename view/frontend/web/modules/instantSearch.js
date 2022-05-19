@@ -1,7 +1,7 @@
-requirejs(['jquery', 'wizzy/libs/instantSearch'], function($, wI) {
+requirejs(['jquery', 'wizzy/libs/instantSearch', 'wizzy/utils/search'], function($, wI, searchUtils) {
     $(document).ready(function(e) {
         wI.init();
-        $('.wizzy-search-input').each(function(e) {
+        $(searchUtils.getInputDOM()).each(function(e) {
             var config = {};
             config['element'] = $(this);
 

@@ -1,4 +1,4 @@
-define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizzy/fetchers/search', 'wizzy/libs/pageStore', 'wizzy/utils/keyboard', 'wizzy/libs/searchUrlUtils'], function($, autocompleteFetcher, filtersFetcher, sF, pageStore, keyUtils, urlUtils) {
+define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizzy/fetchers/search', 'wizzy/libs/pageStore', 'wizzy/utils/keyboard', 'wizzy/libs/searchUrlUtils', 'wizzy/utils/search'], function($, autocompleteFetcher, filtersFetcher, sF, pageStore, keyUtils, urlUtils, searchUtils) {
 
     var searchElement;
     var menu;
@@ -87,7 +87,7 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
             }, 0);
         });
 
-        searchElement.click(function(e) {
+        $('body').on('click', searchUtils.getInputDOM(), function(e) {
             var value = searchElement.val().trim();
             if (value != "" && isMenuHidden()) {
                 showMenu();
