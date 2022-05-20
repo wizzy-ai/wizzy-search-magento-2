@@ -43,10 +43,18 @@ define([''], function() {
         return swatches;
     }
 
+    function getMinQueryLength() {
+        if (typeof window.wizzyConfig.search.configs.general.minQueryLength !== "undefined") {
+            return window.wizzyConfig.search.configs.general.minQueryLength;
+        }
+        return 3;
+    }
+    
     return {
         getFacetsToAdd: getFacetsToAdd,
         getSwatchesToAdd: getSwatchesToAdd,
         getInputDOM: getInputDOM,
+        getMinQueryLength: getMinQueryLength,
     };
 
 });

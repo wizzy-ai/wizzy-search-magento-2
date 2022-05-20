@@ -1,4 +1,4 @@
-define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url', 'wizzy/utils/filters', 'wizzy/renderers/search'], function($, wizzyUtils, urlChangeListener, commonUrlUtils, filterUtils, searchRenderer) {
+define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url', 'wizzy/utils/filters', 'wizzy/renderers/search', 'wizzy/utils/search'], function($, wizzyUtils, urlChangeListener, commonUrlUtils, filterUtils, searchRenderer, searchUtils) {
 
     function updateQuery(query) {
         var searchData = {
@@ -137,7 +137,7 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     }
 
     function isValidQueryString(q) {
-        return (typeof q !== "undefined" && (q.trim().length >= 3 || q.trim().length === 0));
+        return (typeof q !== "undefined" && (q.trim().length >= searchUtils.getMinQueryLength() || q.trim().length === 0));
     }
 
     function executeSearchByElement(searchElement, q) {
