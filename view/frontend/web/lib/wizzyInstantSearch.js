@@ -197,7 +197,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
     function addMoveToTopListener() {
         $(window).on("scroll", function() {
             if (urlUtils.isOnSearchPage() && $(window).width() > 768) {
-                if ($(window).scrollTop() > 100) {
+               if (getBodyScrollTop() > 100) {
                     $('.wizzy-scroll-to-top-wrapper').fadeIn();
                 } else {
                     $('.wizzy-scroll-to-top-wrapper').fadeOut();
@@ -213,13 +213,17 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
         });
     }
 
+    function getBodyScrollTop() {
+       return window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+    }
+
     function addInfiniteScrollListener() {
         if (paginationUtils.isInfiniteScroll()) {
             $(window).on("scroll", function() {
                 if (urlUtils.isOnSearchPage() || wizzyConfig.common.isOnCategoryPage) {
                     var scrollHeight = $(document).height();
                     var windowHeight = window.innerHeight;
-                    var bodyScrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+                    var bodyScrollTop = getBodyScrollTop();
                     var scrollPos = windowHeight + (bodyScrollTop);
                     var scrollOffset = paginationUtils.getScrollOffset();
 
