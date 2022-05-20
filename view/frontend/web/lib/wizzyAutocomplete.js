@@ -12,6 +12,7 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
     var elementInputTypingTimer;
     var suggestionLink;
     var formSubmissionBehaviour;
+    var submittedLock = false;
 
     function assignTextWrapperClick() {
         $('body').on('click', textWrapper, function(e) {
@@ -25,6 +26,10 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
     }
 
     function executeAutoComplete(value) {
+        if (submittedLock) {
+            submittedLock = false;
+            return;
+        }
         autocompleteFetcher({
             'q': value,
             'element': searchElement,
@@ -104,6 +109,10 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
             hideMenuOnClickEvent(e);
         });
 
+        searchElement.parents('form').submit(function(e) {
+            submittedLock = true;
+        });
+        
         addAutocompleteLinkListeners(suggestionLink);
     }
 
