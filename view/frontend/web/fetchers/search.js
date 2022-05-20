@@ -11,6 +11,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/searc
             productsCount: window.wizzyConfig.search.configs.general.noOfProducts,
             facets: searchUtils.getFacetsToAdd(),
             swatch: searchUtils.getSwatchesToAdd(),
+            minQueryLength: searchUtils.getMinQueryLength(),
         };
 
         if (sort) {

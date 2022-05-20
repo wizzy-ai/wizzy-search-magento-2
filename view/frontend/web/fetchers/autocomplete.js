@@ -1,4 +1,4 @@
-define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/autocomplete'], function($, wizzyCommon, pageStore, autocompleteUitls) {
+define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/autocomplete', 'wizzy/utils/search'], function($, wizzyCommon, pageStore, autocompleteUitls, searchUtils) {
     return function(options) {
         var q = typeof options['q'] === "undefined" ? "" : options['q'];
         var element = typeof options['element'] === "undefined" ? null : options['element'];
@@ -9,6 +9,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/autocompl
                 currency: window.wizzyConfig.store.currency.code,
                 suggestionsCount: window.wizzyConfig.autocomplete.menu.suggestionsCount,
                 includeOutOfStock: window.wizzyConfig.search.configs.general.includeOutOfStock + "",
+                minQueryLength: searchUtils.getMinQueryLength(),
             };
             if (window.wizzyConfig.autocomplete.topProducts.suggestTopProduts && window.wizzyConfig.autocomplete.topProducts.count > 0) {
                 payload['productsCount'] = window.wizzyConfig.autocomplete.topProducts.count;
