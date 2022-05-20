@@ -13,9 +13,11 @@ $configs = $block->getConfigs();
                 {{#value}}
                     <span class="wizzy-facet-swatch-individual-value">{{value}}</span>
                 {{/value}}
-                {{#swatchValue}}
-                    <span class="wizzy-facet-swatch-value">{{swatchValue}}</span>
-                {{/swatchValue}}
+                {{^value}}
+                    {{#swatchValue}}
+                        <span class="wizzy-facet-swatch-value">{{swatchValue}}</span>
+                    {{/swatchValue}}
+                {{/value}}
            {{/isVisualSwatch}}
        </span>
    </span>
