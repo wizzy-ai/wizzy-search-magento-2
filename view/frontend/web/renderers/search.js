@@ -215,6 +215,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         if ($('.wizzy-search-form-wrapper').hasClass('mobileTapped')) {
             $('.wizzy-search-wrapper').addClass('mobileTapped');
             $('.wizzy-search-empty-results-wrapper').addClass('mobileTapped');
+            $('body').addClass('wizzyMobileTapped');
         }
         updateAddToCartUenc();
         updateAddToWishlistUenc();
