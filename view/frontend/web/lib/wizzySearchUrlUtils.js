@@ -1,4 +1,4 @@
-define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url', 'wizzy/utils/filters'], function($, wizzyUtils, urlChangeListener, commonUrlUtils, filterUtils) {
+define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url', 'wizzy/utils/filters', 'wizzy/renderers/search'], function($, wizzyUtils, urlChangeListener, commonUrlUtils, filterUtils, searchRenderer) {
 
     function updateQuery(query) {
         var searchData = {
@@ -73,12 +73,17 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
 
         $(document).ready(function(e) {
             if (isOnSearchPage()) {
+                setActivityIndicator();
                 setSearchInputValue(searchElement);
             }
             if (isOnCategoryPage()) {
                 searchCategory(window.wizzyConfig.common.categoryUrlKey);
             }
         });
+    }
+
+    function setActivityIndicator() {
+        searchRenderer.showIndicatorOnPageLoad();
     }
 
     function isOnCategoryPage() {
