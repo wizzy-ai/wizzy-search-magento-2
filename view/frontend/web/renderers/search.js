@@ -71,6 +71,11 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         }
     }
 
+    function showIndicatorOnPageLoad() {
+        var progressTemplate = getProgressTemplate(false, false);
+        domRenderer.updateResultsDOM(progressTemplate);
+    }
+
     function getProgressTemplate(isForFilter, isPaginating) {
         var progressTemplate = $(getCommonConfig().templates.progress).html();
         progressTemplate = Mustache.render(progressTemplate, {
@@ -282,6 +287,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
 
     return {
         revertDOM: revertDOM,
+        showIndicatorOnPageLoad: showIndicatorOnPageLoad,
         showIndicator: showIndicator,
         displayResults: displayResults,
     };
