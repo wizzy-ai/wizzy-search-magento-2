@@ -1,4 +1,4 @@
-define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/libs/autocomplete', 'wizzy/fetchers/search', 'wizzy/utils/keyboard', 'wizzy/fetchers/filters', 'wizzy/utils/pagination', 'wizzy/fetchers/variation', 'wizzy/renderers/components/filters/facets'], function($, pageStore, urlUtils, wizzyAutocomplete, sF, keyUtils, fF, paginationUtils, vF, facetsComponent) {
+define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/libs/autocomplete', 'wizzy/fetchers/search', 'wizzy/utils/keyboard', 'wizzy/fetchers/filters', 'wizzy/utils/pagination', 'wizzy/fetchers/variation', 'wizzy/renderers/components/filters/facets', 'wizzy/utils/search'], function($, pageStore, urlUtils, wizzyAutocomplete, sF, keyUtils, fF, paginationUtils, vF, facetsComponent, searchUtils) {
     var searchElement;
     var behavior;
     var elementInputTypingTimer;
@@ -64,7 +64,8 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
 
     function executeSearchRequest(isByTrigger) {
         var searchInputValue = pageStore.get(pageStore.keys.searchInputValue);
-        if (searchInputValue.length >= 3 || searchInputValue.length === 0) {
+        var minQueryLength = searchUtils.getMinQueryLength();
+        if (searchInputValue.length >= minQueryLength || searchInputValue.length === 0) {
             if (formSubmissionBehaviour != 'redirect_page') {
                 sF.execute({
                     q: searchInputValue,
