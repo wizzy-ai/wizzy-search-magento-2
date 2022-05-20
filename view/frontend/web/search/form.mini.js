@@ -10,6 +10,7 @@ requirejs(['jquery', 'wizzy/libs/searchUrlUtils', 'wizzy/utils/search'], functio
             if (windowWidth < 768) {
                 $(this).parents('.wizzy-search-form-wrapper').addClass('mobileTapped');
                 $('.wizzy-search-empty-results-wrapper').addClass('mobileTapped');
+                $('body').addClass('wizzyMobileTapped');
             }
             $(this).parents('.wizzy-search-form-wrapper').find(searchUtils.getInputDOM()).focus();
             $('.wizzy-search-wrapper').addClass('mobileTapped');
@@ -28,6 +29,7 @@ requirejs(['jquery', 'wizzy/libs/searchUrlUtils', 'wizzy/utils/search'], functio
         $(this).parents('.wizzy-search-form-wrapper').removeClass('mobileTapped');
         $('.wizzy-search-wrapper').removeClass('mobileTapped');
         $('.wizzy-search-empty-results-wrapper').removeClass('mobileTapped');
+        $('body').removeClass('wizzyMobileTapped');
 
         if (!urlUtils.isOnSearchPage()) {
             searchInput.val('');
