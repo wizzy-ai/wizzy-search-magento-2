@@ -2,6 +2,7 @@
 
 namespace Wizzy\Search\Services\Catalogue\Mappers;
 
+use Magento\Framework\DataObject;
 use Wizzy\Search\Services\Catalogue\AttributesManager;
 use Wizzy\Search\Services\Catalogue\CategoriesManager;
 use Wizzy\Search\Services\Catalogue\Configurables\BrandConfigurable;
@@ -11,6 +12,7 @@ use Wizzy\Search\Services\Catalogue\Configurables\SizeConfigurable;
 use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
 use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
+use Magento\Framework\Event\ManagerInterface;
 
 class ConfigurableProductsData
 {
@@ -31,7 +33,10 @@ class ConfigurableProductsData
 
     private $productsAttributesManager;
 
+    private $eventManager;
+
     public function __construct(
+        ManagerInterface $eventManager,
         BrandConfigurable $brandConfigurable,
         CategoriesManager $categoriesManager,
         GenderConfigurable $genderConfigurable,
@@ -42,6 +47,7 @@ class ConfigurableProductsData
         CategoriesSessionStorage $categoriesSessionStorage,
         ProductsAttributesManager $productsAttributesManager
     ) {
+        $this->eventManager = $eventManager;
         $this->brandConfigurable = $brandConfigurable;
         $this->genderConfigurable = $genderConfigurable;
         $this->colorConfigurable = $colorConfigurable;
@@ -215,7 +221,14 @@ class ConfigurableProductsData
             $categoriesAssoc[$category->getId()] = $categoryArr;
         }
 
-        return $categoriesAssoc;
+        $dataObject = new DataObject([
+            'categories' => $categoriesAssoc,
+        ]);
+        $this->eventManager->dispatch(
+            'wizzy_after_product_categories_generated',
+            ['data' => $dataObject, 'product' => $product]
+        );
+        return $dataObject->getDataByKey('categories');
     }
 
     private function getCategoryArray($category)
