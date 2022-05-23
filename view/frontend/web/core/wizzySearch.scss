@@ -808,7 +808,6 @@
               z-index: 2;
               border-radius: 3px;
             }
-
             .wizzy-product-variation-loader {
               border: 2px solid rgba(0,0,0,0);
               border-top: 2px solid $whiteBg;
@@ -831,6 +830,17 @@
 
             &:hover {
               background: none;
+            }
+          }
+          .result-product-item-image.hover-image {
+            display: none;
+          }
+          .wizzy-result-product-item:hover {
+            .result-product-item-image {
+              display: none;
+            }
+            .result-product-item-image.hover-image {
+              display: block;
             }
           }
 

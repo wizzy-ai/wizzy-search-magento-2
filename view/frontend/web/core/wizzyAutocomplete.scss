@@ -84,6 +84,19 @@ $autoCompleteMenuRadius: 4px;
         box-sizing: border-box;
         padding-left: 0;
 
+        a.topproduct-item-link:hover {
+          .topproduct-item-image {
+            display: none;
+          }
+          .topproduct-item-image.hover-image {
+            display: block;
+          }
+        }
+
+        .topproduct-item-image.hover-image {
+          display: none;
+        }
+
         a.topproduct-item-link {
           text-decoration: none;
           color: $linkColor;
