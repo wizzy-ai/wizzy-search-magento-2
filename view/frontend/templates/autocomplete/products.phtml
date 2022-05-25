@@ -24,6 +24,14 @@ $currency = $configs['store']['currency']['symbol'];
                         <div class="topproduct-item-image">
                             <img src="{{ mainImage }}" class="topproduct-image" />
                         </div><!-- ending of topproduct-item-image -->
+                        <div class="topproduct-item-image hover-image">
+                            {{#hoverImage}}
+                                <img src="{{ hoverImage }}" class="topproduct-image" />
+                            {{/hoverImage}}
+                            {{^hoverImage}}
+                                <img src="{{ mainImage }}" class="topproduct-image" />
+                            {{/hoverImage}}
+                        </div><!-- ending of topproduct-item-image -->
                         <div class="topproduct-item-info">
                             <p class="topproduct-title">{{{ name }}}</p>
                             {{#hasCategories}}

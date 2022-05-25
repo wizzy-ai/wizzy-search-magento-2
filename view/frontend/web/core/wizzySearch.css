@@ -645,6 +645,19 @@
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product.isLoading:hover {
   background: none;
 }
+
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .result-product-item-image.hover-image {
+  display: none;
+}
+
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item:hover .result-product-item-image {
+  display: none;
+}
+
+.wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .wizzy-result-product-item:hover .result-product-item-image.hover-image {
+  display: block;
+}
+
 .wizzy-search-wrapper .wizzy-search-results-container .wizzy-search-results .wizzy-search-results-list .wizzy-result-product .result-product-item-image {
   min-height: 250px;
 }

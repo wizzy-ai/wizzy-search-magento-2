@@ -19,6 +19,14 @@ $displayAddToWishlistButton = $configs['search']['addToWishlist']['display'];
          <div class="result-product-item-image">
             <img src="{{ mainImage }}" class="product-item-image" />
          </div><!-- ending of result-product-item-image -->
+         <div class="result-product-item-image hover-image">
+            {{#hoverImage}}
+                <img src="{{ hoverImage }}" class="product-item-image"/>
+            {{/hoverImage}}
+            {{^hoverImage}}
+                <img src="{{ mainImage }}" class="product-item-image"/>
+            {{/hoverImage}}
+        </div><!-- ending of result-product-item-image -->
          <div class="result-product-item-info">
             <p class="product-item-title">{{{ name }}}</p>
             {{#subTitle}}
