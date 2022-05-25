@@ -72,6 +72,17 @@
   box-sizing: border-box;
   padding-left: 0;
 }
+.wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products ul.autocomplete-top-products li.topproduct-item a.topproduct-item-link:hover .topproduct-item-image {
+  display: none;
+}
+
+.wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products ul.autocomplete-top-products li.topproduct-item a.topproduct-item-link:hover .topproduct-item-image.hover-image {
+  display: block;
+}
+
+.wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products ul.autocomplete-top-products li.topproduct-item .topproduct-item-image.hover-image {
+  display: none;
+}
 .wizzy-autocomplete-wrapper .wizzy-autocomplete-top-products ul.autocomplete-top-products li.topproduct-item a.topproduct-item-link {
   text-decoration: none;
   color: #343434;
