@@ -839,12 +839,14 @@ class ProductsMapper
     {
         $images = [];
         $mainImage = "";
+        $hoverImage = "";
+
         $index = 0;
-        $thumbnail = $product->getThumbnail();
         $mainImageUrl = "";
+        $hoverImageUrl = "";
 
         $thumbnail = $this->getImageByType($this->storeCatalogueConfig->getThumbnailImageType(), $product);
-        $hoverImage = $this->getImageByType($this->storeCatalogueConfig->getHoverImageType(), $product);
+        $hoverImageFile = $this->getImageByType($this->storeCatalogueConfig->getHoverImageType(), $product);
 
         foreach ($product->getMediaGalleryImages() as $productImage) {
             $productImageData = $productImage->getData();
@@ -860,7 +862,7 @@ class ProductsMapper
             }
             $index++;
 
-            if ($hoverImage == $productImageData['file']) {
+            if ($hoverImageFile == $productImageData['file']) {
                 $hoverImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
                 $hoverImageUrl = $productImageData['url'];
             }
