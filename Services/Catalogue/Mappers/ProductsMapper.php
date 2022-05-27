@@ -2,6 +2,8 @@
 
 namespace Wizzy\Search\Services\Catalogue\Mappers;
 
+use Magento\Framework\DataObject;
+use Magento\Framework\Event\ManagerInterface;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\CatalogInventory\Model\StockRegistry;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
@@ -20,6 +22,7 @@ use Magento\Backend\Model\Url as BackendUrl;
 class ProductsMapper
 {
 
+    private $eventManager;
     private $configurable;
     private $configurableProductsData;
     private $storeId;
@@ -50,6 +53,7 @@ class ProductsMapper
     private $productURLManager;
 
     public function __construct(
+        ManagerInterface $eventManager,
         Configurable $configurable,
         ConfigurableProductsData $configurableProductsData,
         AttributesManager $attributesManager,
@@ -65,6 +69,7 @@ class ProductsMapper
         ProductsAttributesManager $productsAttributesManager,
         ProductURLManager $productURLManager
     ) {
+        $this->eventManager = $eventManager;
         $this->configurable = $configurable;
         $this->configurableProductsData = $configurableProductsData;
 
@@ -125,9 +130,16 @@ class ProductsMapper
                 $mappedProducts[] = $mappedProduct;
             }
         }
-
+         
+        $dataObject = new DataObject([
+            'products' => $mappedProducts,
+        ]);
+        $this->eventManager->dispatch(
+            'wizzy_after_mapped_products',
+            ['data' => $dataObject]
+        );
         $this->updateSkippedProducts($mappedProducts);
-        return $mappedProducts;
+        return $dataObject->getDataByKey('products');
     }
 
     private function updateSkippedProducts($mappedProducts)
