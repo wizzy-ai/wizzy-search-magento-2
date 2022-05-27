@@ -135,7 +135,7 @@ class ProductsMapper
             'products' => $mappedProducts,
         ]);
         $this->eventManager->dispatch(
-            'wizzy_after_mapped_products',
+            'wizzy_after_products_mapped',
             ['data' => $dataObject]
         );
         $this->updateSkippedProducts($mappedProducts);
