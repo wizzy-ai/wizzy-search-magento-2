@@ -21,4 +21,7 @@
     <event name="checkout_submit_all_after">
         <observer name="wizzy_track_order" instance="Wizzy\Search\Model\Observer\CheckoutObserver" />
     </event>
+    <event name="catalog_product_import_bunch_save_after">
+        <observer name="wizzy_after_products_imported" instance="Wizzy\Search\Model\Observer\ImportProductsObserver" />
+    </event>
 </config>
