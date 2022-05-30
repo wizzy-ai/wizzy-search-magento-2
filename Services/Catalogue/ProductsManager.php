@@ -144,6 +144,24 @@ class ProductsManager
         return $products;
     }
 
+    public function getProductsBySKUs($SKUs)
+    {
+        $filters = [
+         $this->filterBuilder
+            ->setField('sku')
+            ->setConditionType('in')
+            ->setValue($SKUs)
+            ->create(),
+        ];
+
+        $this->filterGroup->setFilters($filters);
+
+        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
+        $products = $this->productRepository->getList($this->searchCriteria);
+        $products = $products->getItems();
+        return $products;
+    }
+
     public function getById($productId)
     {
         return $this->productRepository->getById($productId);
