@@ -216,6 +216,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
             $('.wizzy-search-wrapper').addClass('mobileTapped');
             $('.wizzy-search-empty-results-wrapper').addClass('mobileTapped');
             $('body').addClass('wizzyMobileTapped');
+            $('html').addClass('wizzyMobileTapped');
         }
         updateAddToCartUenc();
         updateAddToWishlistUenc();
