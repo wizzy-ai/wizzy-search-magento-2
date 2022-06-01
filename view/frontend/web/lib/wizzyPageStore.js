@@ -47,6 +47,7 @@ define(['jquery'], function($) {
             hasMoreResults: 'hasMoreResults',
             isNumberPaginating: 'isNumberPaginating',
             lastResponseId: 'lastResponseId',
+            lastExecutedFilters: 'lastExecutedFilters',
         }
     };
 
