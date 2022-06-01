@@ -197,6 +197,17 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         }
     }
 
+    function isSameAsPreviousFilters(filters) {
+        var lastExecutedFilters = pageStore.get(pageStore.keys.lastExecutedFilters, null);
+        var currentFilters = JSON.stringify(filters);
+        if (lastExecutedFilters != currentFilters) {
+            pageStore.set(pageStore.keys.lastExecutedFilters, currentFilters)
+            return false;
+        }
+    
+        return true;
+    }
+
     function refreshFilters(isFromPageLoad, isByPagination, isCategorySearch) {
         var filters = filtersUtils.getFilters();
         if (typeof filters['sort'] === "undefined") {
@@ -204,6 +215,9 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         }
         if (isFromPageLoad) {
             setDefaultsFromFilters(filters);
+        }
+        if (isSameAsPreviousFilters(filters)) {
+            return;
         }
         execute({
             'filters': filters,
