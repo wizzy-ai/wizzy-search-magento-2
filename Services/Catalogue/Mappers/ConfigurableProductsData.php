@@ -16,7 +16,8 @@ use Magento\Framework\Event\ManagerInterface;
 
 class ConfigurableProductsData
 {
-
+    private $categoriesToIgnoreInAutoComplete;
+    private $hasToIgnoreCategories;
     private $brandConfigurable;
     private $genderConfigurable;
     private $colorConfigurable;
@@ -59,6 +60,8 @@ class ConfigurableProductsData
         $this->autocompleteAttributes = [];
         $this->rootCategory = false;
         $this->productsAttributesManager = $productsAttributesManager;
+        $this->hasToIgnoreCategories = $this->storeAutocompleteConfig->hasToIgnoreCategories();
+        $this->categoriesToIgnoreInAutoComplete = $this->storeAutocompleteConfig->getIgnoredCategories();
     }
 
     public function getBrand($categories, $attributes, $storeId)
@@ -249,8 +252,8 @@ class ConfigurableProductsData
             $pathIds = [$category->getUrlKey()];
         }
 
-        return [
-         'id' => $category->getId(),
+        $data =
+         ['id' => $category->getId(),
          'value' => $category->getName(),
          'name' => $category->getName(),
          'isParent' => false,
@@ -261,11 +264,22 @@ class ConfigurableProductsData
          'image' => ($category->getImageUrl()) ? $category->getImageUrl() : '',
          'url' => $category->getUrl(),
          'isActive'=> $category->getIsActive(),
-         'includeInMenu' => ($category->getIncludeInMenu()) ? true : false,
          'pathIds' => $pathIds,
-         'isSearchable' => (!$category->getIncludeInMenu() || !$category->getIsActive()) ? false : true,
          'parentId' => ($category->getParentCategory()) ? $category->getParentCategory()->getId() : '',
          'parentUrlKey' => ($category->getParentCategory()) ? $category->getParentCategory()->getUrlKey() : '',
         ];
+
+        $includeInMenu = ($category->getIncludeInMenu()) ? true : false;
+        $isSearchable = (!$category->getIncludeInMenu() || !$category->getIsActive()) ? false : true;
+        
+        if (in_array($category->getId(), $this->categoriesToIgnoreInAutoComplete) && $this->hasToIgnoreCategories) {
+            $includeInMenu = false;
+            $isSearchable = false;
+        }
+
+        $data['includeInMenu'] = $includeInMenu;
+        $data['isSearchable'] = $isSearchable;
+        
+        return $data;
     }
 }
