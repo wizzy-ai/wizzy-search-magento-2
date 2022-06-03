@@ -739,7 +739,32 @@
                 </field>
             </group>
 
-            <group id="autocomplete_pages" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
+            <group id="autocomplete_categories" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Categories</label>
+                <field id="has_to_ignore_categories" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Do you want to ignore any Category in suggestions and filters list?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select Yes if you want to ignore selected set of categories in suggestions and filters list.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="categories_to_ignore" translate="label" type="multiselect" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories to Ignore</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoriesList</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select list of Categories that you want to ignore in suggestions and filters list.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="has_to_ignore_categories">1</field>
+                    </depends>
+                </field>
+            </group>
+
+            <group id="autocomplete_pages" translate="label" type="text" sortOrder="40" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Pages</label>
                 <field id="sync_pages" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Sync Pages?</label>

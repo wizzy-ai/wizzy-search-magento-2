@@ -30,6 +30,13 @@ class StoreAutocompleteConfig
     const WIZZY_AUTTOCOMPLETE_TOP_PRODUCTS_TITLE = self::WIZZY_AUTTOCOMPLETE_TOP_PRODUCTS . "/top_products_title";
     const WIZZY_AUTTOCOMPLETE_TOP_PRODUCTS_COUNT = self::WIZZY_AUTTOCOMPLETE_TOP_PRODUCTS . "/top_products_count";
 
+    const WIZZY_AUTTOCOMPLETE_CATEGORIES = self::WIZZY_AUTOCOMPLETE_MENU_CONFIGURATION .
+     "/autocomplete_categories";
+    const WIZZY_AUTTOCOMPLETE_HAS_TO_IGNORE_CATEGORIES = self::WIZZY_AUTTOCOMPLETE_CATEGORIES.
+    "/has_to_ignore_categories";
+    const WIZZY_AUTTOCOMPLETE_CATEGORIES_TO_IGNORE = self::WIZZY_AUTTOCOMPLETE_CATEGORIES.
+    "/categories_to_ignore";
+
     const WIZZY_AUTTOCOMPLETE_PAGES = self::WIZZY_AUTOCOMPLETE_MENU_CONFIGURATION . "/autocomplete_pages";
     const WIZZY_AUTTOCOMPLETE_PAGES_TITLE = self::WIZZY_AUTTOCOMPLETE_PAGES . "/pages_title";
     const WIZZY_AUTTOCOMPLETE_EXCLUDE_PAGES = self::WIZZY_AUTTOCOMPLETE_PAGES . "/exclude_pages";
@@ -112,6 +119,24 @@ class StoreAutocompleteConfig
     public function getTopProductsTitle()
     {
         return $this->configManager->getStoreConfig(self::WIZZY_AUTTOCOMPLETE_TOP_PRODUCTS_TITLE, $this->storeId);
+    }
+
+    public function hasToIgnoreCategories()
+    {
+        return ($this->configManager->getStoreConfig(
+            self::WIZZY_AUTTOCOMPLETE_HAS_TO_IGNORE_CATEGORIES,
+            $this->storeId
+        ) == 1);
+    }
+
+    public function getIgnoredCategories()
+    {
+        $categoriesToIgnore = $this->configManager->getStoreConfig(
+            self::WIZZY_AUTTOCOMPLETE_CATEGORIES_TO_IGNORE,
+            $this->storeId
+        );
+        $categoriesToIgnore = explode(",", $categoriesToIgnore);
+        return $categoriesToIgnore;
     }
 
     public function getPagesTitle()
