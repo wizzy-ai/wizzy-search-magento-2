@@ -272,7 +272,7 @@ class ConfigurableProductsData
         $includeInMenu = ($category->getIncludeInMenu()) ? true : false;
         $isSearchable = (!$category->getIncludeInMenu() || !$category->getIsActive()) ? false : true;
         
-        if (in_array($category->getId(), $this->categoriesToIgnoreInAutoComplete) && $this->hasToIgnoreCategories) {
+        if ($this->hasToIgnoreCategories && in_array($category->getId(), $this->categoriesToIgnoreInAutoComplete)) {
             $includeInMenu = false;
             $isSearchable = false;
         }
