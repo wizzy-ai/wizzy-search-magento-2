@@ -13,7 +13,7 @@ class Uninstall implements UninstallInterface
     private $connectionManager;
 
     public function __construct(
-        ConnectionManager $connectionManager,
+        ConnectionManager $connectionManager
     ) {
         $this->connectionManager = $connectionManager;
     }
