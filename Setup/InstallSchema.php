@@ -182,9 +182,9 @@ class InstallSchema implements InstallSchemaInterface
         $conn->createTable($entitiesSyncTable);
 
         $conn->addIndex(
-            $setup->getTable($tableName),
+            $setup->getTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME),
             $setup->getIdxName(
-                $setup->getTable($tableName),
+                $setup->getTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME),
                 ['entity_id','entity_type', 'store_id'],
                 \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
             ),

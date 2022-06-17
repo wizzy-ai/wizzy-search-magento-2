@@ -95,9 +95,9 @@ class Version118
         $conn->createTable($entitiesSyncTable);
 
         $conn->addIndex(
-            $this->setup->getTable($entitiesSyncTable),
+            $this->setup->getTable(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME),
             $this->setup->getIdxName(
-                $this->setup->getTable($entitiesSyncTable),
+                $this->setup->getTable(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME),
                 ['entity_id','entity_type', 'store_id'],
                 \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
             ),
