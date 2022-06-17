@@ -5,11 +5,19 @@ namespace Wizzy\Search\Services\Setup;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Wizzy\Search\Helpers\DB\WizzyTables;
+use Wizzy\Search\Services\DB\ConnectionManager;
 
 class Version118
 {
 
     private $setup;
+    private $connectionManager;
+
+    public function __construct(
+        ConnectionManager $connectionManager
+    ) {
+        $this->connectionManager = $connectionManager;
+    }
 
     public function install(SchemaSetupInterface $setup)
     {
@@ -26,12 +34,13 @@ class Version118
     private function createSyncSkippedEntitiesTable()
     {
         $conn = $this->setup->getConnection();
+        $entitiesSyncTable = $this->connectionManager->getTableName(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME);
 
-        if ($conn->isTableExists(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME)) {
-            $conn->dropTable(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME);
+        if ($conn->isTableExists($entitiesSyncTable)) {
+            $conn->dropTable($entitiesSyncTable);
         }
 
-        $entitiesSyncTable = $conn->newTable(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME)
+        $entitiesSyncTable = $conn->newTable($entitiesSyncTable)
          ->addColumn(
              'id',
              Table::TYPE_INTEGER,
@@ -86,9 +95,9 @@ class Version118
         $conn->createTable($entitiesSyncTable);
 
         $conn->addIndex(
-            $this->setup->getTable(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME),
+            $this->setup->getTable($entitiesSyncTable),
             $this->setup->getIdxName(
-                $this->setup->getTable(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME),
+                $this->setup->getTable($entitiesSyncTable),
                 ['entity_id','entity_type', 'store_id'],
                 \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
             ),

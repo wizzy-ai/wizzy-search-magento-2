@@ -5,10 +5,18 @@ namespace Wizzy\Search\Services\Setup;
 use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Wizzy\Search\Helpers\DB\WizzyTables;
+use Wizzy\Search\Services\DB\ConnectionManager;
 
 class Version131
 {
     private $setup;
+    private $connectionManager;
+
+    public function __construct(
+        ConnectionManager $connectionManager
+    ) {
+        $this->connectionManager = $connectionManager;
+    }
 
     public function update(SchemaSetupInterface $setup)
     {
@@ -25,12 +33,13 @@ class Version131
     private function createProductPricesTable()
     {
         $conn = $this->setup->getConnection();
+        $pricesTable = $this->connectionManager->getTableName(WizzyTables::$PRODUCT_PRICES);
 
-        if ($conn->isTableExists(WizzyTables::$PRODUCT_PRICES)) {
-            $conn->dropTable(WizzyTables::$PRODUCT_PRICES);
+        if ($conn->isTableExists($pricesTable)) {
+            $conn->dropTable($pricesTable);
         }
 
-        $entitiesSyncTable = $conn->newTable(WizzyTables::$PRODUCT_PRICES)
+        $entitiesSyncTable = $conn->newTable($pricesTable)
             ->addColumn(
                 'id',
                 Table::TYPE_INTEGER,

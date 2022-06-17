@@ -35,7 +35,10 @@ class ProductPrices
 
     public function deleteAll()
     {
-        $this->connectionManager->getConnection()->delete(WizzyTables::$PRODUCT_PRICES, '1');
+        $this->connectionManager->getConnection()->delete(
+            $this->connectionManager->getTableName(WizzyTables::$PRODUCT_PRICES),
+            '1'
+        );
     }
 
     public function getAll()

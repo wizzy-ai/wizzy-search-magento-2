@@ -10,6 +10,7 @@ use Wizzy\Search\Helpers\DB\WizzyTables;
 
 use Wizzy\Search\Model\Admin\Source\InstantSearchBehaviours;
 use Wizzy\Search\Model\Admin\Source\PaginationType;
+use Wizzy\Search\Services\DB\ConnectionManager;
 use Wizzy\Search\Services\Setup\SetupUtils;
 use Wizzy\Search\Services\Setup\Version118;
 use Wizzy\Search\Services\Setup\Version125;
@@ -60,8 +61,10 @@ class InstallSchema implements InstallSchemaInterface
     private $version130;
     private $version131;
     private $version135;
+    private $connectionManager;
 
     public function __construct(
+        ConnectionManager $connectionManager,
         Version118 $version118,
         Version125 $version125,
         SetupUtils $setupUtils,
@@ -69,6 +72,7 @@ class InstallSchema implements InstallSchemaInterface
         Version131 $version131,
         Version135 $version135
     ) {
+        $this->connectionManager = $connectionManager;
         $this->version118 = $version118;
         $this->version125 = $version125;
         $this->setupUtils = $setupUtils;
@@ -102,15 +106,21 @@ class InstallSchema implements InstallSchemaInterface
         $this->setupUtils->setDefaultConfig($defaultConfigs);
     }
 
+    private function getTableName($tableName): string
+    {
+        return $this->connectionManager->getTableName($tableName);
+    }
+
     private function createEntitiesSyncTable(SchemaSetupInterface $setup)
     {
         $conn = $setup->getConnection();
+        $tableName = $this->getTableName(WizzyTables::$ENTITIES_SYNC_TABLE_NAME);
 
-        if ($conn->isTableExists(WizzyTables::$ENTITIES_SYNC_TABLE_NAME)) {
-            $conn->dropTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME);
+        if ($conn->isTableExists($tableName)) {
+            $conn->dropTable($tableName);
         }
 
-        $entitiesSyncTable = $conn->newTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME)
+        $entitiesSyncTable = $conn->newTable($tableName)
         ->addColumn(
             'id',
             Table::TYPE_INTEGER,
@@ -172,9 +182,9 @@ class InstallSchema implements InstallSchemaInterface
         $conn->createTable($entitiesSyncTable);
 
         $conn->addIndex(
-            $setup->getTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME),
+            $setup->getTable($tableName),
             $setup->getIdxName(
-                $setup->getTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME),
+                $setup->getTable($tableName),
                 ['entity_id','entity_type', 'store_id'],
                 \Magento\Framework\DB\Adapter\AdapterInterface::INDEX_TYPE_UNIQUE
             ),
@@ -186,12 +196,13 @@ class InstallSchema implements InstallSchemaInterface
     private function createSyncQueueTable(SchemaSetupInterface $setup)
     {
         $conn = $setup->getConnection();
+        $syncQueueTable = $this->getTableName(WizzyTables::$SYNC_QUEUE_TABLE_NAME);
 
-        if ($conn->isTableExists(WizzyTables::$SYNC_QUEUE_TABLE_NAME)) {
-            $conn->dropTable(WizzyTables::$SYNC_QUEUE_TABLE_NAME);
+        if ($conn->isTableExists($syncQueueTable)) {
+            $conn->dropTable($syncQueueTable);
         }
 
-        $wizzyTable = $conn->newTable(WizzyTables::$SYNC_QUEUE_TABLE_NAME)
+        $wizzyTable = $conn->newTable($syncQueueTable)
         ->addColumn(
             'id',
             Table::TYPE_INTEGER,
