@@ -58,8 +58,13 @@ class ProductsObserver
             if (is_array($parentProductIds) && count($parentProductIds)) {
                 array_push($productIdsToIndex, ...$parentProductIds);
             }
+            $childProductIds = $this->configurable->getChildrenIds($productId);
+            if (is_array($childProductIds) && count($childProductIds)) {
+                foreach ($childProductIds as $childProductId) {
+                    array_push($productIdsToIndex, ...$childProductId);
+                }
+            }
         }
-
         return array_values(array_unique($productIdsToIndex));
     }
 
