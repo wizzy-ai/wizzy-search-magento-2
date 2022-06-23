@@ -1,4 +1,8 @@
 <?php
+/** @var Wizzy\Search\Block\Adminhtml\System\Config\ResetConfigButton $block */
+/** @var \Magento\Framework\View\Helper\SecureHtmlRenderer $secureRenderer */
+?>
+<?php
 $storeViewId = $block->getStoreViewId();
 $ajaxUrl = $block->escapeJs($block->getAjaxUrl());
 $scriptString = <<<script

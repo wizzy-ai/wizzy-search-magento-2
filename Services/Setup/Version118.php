@@ -34,7 +34,7 @@ class Version118
     private function createSyncSkippedEntitiesTable()
     {
         $conn = $this->setup->getConnection();
-        $entitiesSyncTable = $this->connectionManager->getTableName(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME);
+        $entitiesSyncTable = $this->setup->getTable(WizzyTables::$SYNC_SKIPPED_ENTITIES_TABLE_NAME);
 
         if ($conn->isTableExists($entitiesSyncTable)) {
             $conn->dropTable($entitiesSyncTable);

@@ -106,15 +106,10 @@ class InstallSchema implements InstallSchemaInterface
         $this->setupUtils->setDefaultConfig($defaultConfigs);
     }
 
-    private function getTableName($tableName): string
-    {
-        return $this->connectionManager->getTableName($tableName);
-    }
-
     private function createEntitiesSyncTable(SchemaSetupInterface $setup)
     {
         $conn = $setup->getConnection();
-        $tableName = $this->getTableName(WizzyTables::$ENTITIES_SYNC_TABLE_NAME);
+        $tableName = $setup->getTable(WizzyTables::$ENTITIES_SYNC_TABLE_NAME);
 
         if ($conn->isTableExists($tableName)) {
             $conn->dropTable($tableName);
@@ -196,7 +191,7 @@ class InstallSchema implements InstallSchemaInterface
     private function createSyncQueueTable(SchemaSetupInterface $setup)
     {
         $conn = $setup->getConnection();
-        $syncQueueTable = $this->getTableName(WizzyTables::$SYNC_QUEUE_TABLE_NAME);
+        $syncQueueTable = $setup->getTable(WizzyTables::$SYNC_QUEUE_TABLE_NAME);
 
         if ($conn->isTableExists($syncQueueTable)) {
             $conn->dropTable($syncQueueTable);

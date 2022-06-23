@@ -13,13 +13,13 @@
     }
   ],
   "require": {
-    "php": "~7.2|~7.3|~7.4",
+    "php": "~7.2|~7.3|~7.4|~8.0",
     "magento/framework": "@stable",
     "magento/module-backend": "@stable",
     "magento/module-store": "@stable",
     "magento/module-catalog": "@stable"
   },
-  "version": "1.4.4",
+  "version": "1.4.5",
   "autoload": {
     "files": [
       "registration.php"

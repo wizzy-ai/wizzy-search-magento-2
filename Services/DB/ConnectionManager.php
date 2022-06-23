@@ -22,7 +22,7 @@ class ConnectionManager
 
     public function getTableName($tableName)
     {
-        return $this->connection->getTableName($tableName);
+        return $this->resource->getTableName($tableName);
     }
 
     public function insertMultiple($tableName, $data, $updateDuplicates = true)

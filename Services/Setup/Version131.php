@@ -33,7 +33,7 @@ class Version131
     private function createProductPricesTable()
     {
         $conn = $this->setup->getConnection();
-        $pricesTable = $this->connectionManager->getTableName(WizzyTables::$PRODUCT_PRICES);
+        $pricesTable = $this->setup->getTable(WizzyTables::$PRODUCT_PRICES);
 
         if ($conn->isTableExists($pricesTable)) {
             $conn->dropTable($pricesTable);

@@ -2,20 +2,29 @@
 
 namespace Wizzy\Search\Block\Adminhtml\System\Config;
 
+use Magento\Framework\App\ObjectManager;
 use \Magento\Framework\App\Request\Http;
 use \Magento\Backend\Block\Template\Context;
 use \Magento\Config\Block\System\Config\Form\Field;
 use \Magento\Framework\Data\Form\Element\AbstractElement;
+use \Magento\Framework\View\Helper\SecureHtmlRenderer;
 
 class ResetConfigButton extends Field
 {
     protected $request;
 
+    /**
+     * @var SecureHtmlRenderer
+     */
+    private $secureRenderer;
+
     public function __construct(
         Http $request,
-        Context $context
+        Context $context,
+        SecureHtmlRenderer $secureRenderer = null
     ) {
         $this->request = $request;
+        $this->secureRenderer = $secureRenderer ?? ObjectManager::getInstance()->get(SecureHtmlRenderer::class);
         return parent::__construct($context);
     }
 
@@ -49,7 +58,7 @@ class ResetConfigButton extends Field
                 'ajax_url' => $this->_urlBuilder->getUrl('wizzy_search/config/resetconfig'),
             ]
         );
-        
+
         return $this->_toHtml();
     }
 }
