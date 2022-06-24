@@ -28,7 +28,7 @@ class ProductURLManager
         $this->configManager = $configManager;
         $this->productUrlPathGenerator = $productUrlPathGenerator;
         $this->connection = $connectionManager->getConnection();
-        $this->urlRewriteTable = $this->connection->getTableName('url_rewrite');
+        $this->urlRewriteTable = $connectionManager->getTableName('url_rewrite');
     }
 
     public function setStore($storeId)
