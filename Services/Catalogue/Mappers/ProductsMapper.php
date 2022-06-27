@@ -130,7 +130,7 @@ class ProductsMapper
                 $mappedProducts[] = $mappedProduct;
             }
         }
-         
+
         $dataObject = new DataObject([
             'products' => $mappedProducts,
         ]);
@@ -139,7 +139,11 @@ class ProductsMapper
             ['data' => $dataObject]
         );
         $this->updateSkippedProducts($mappedProducts);
-        return $dataObject->getDataByKey('products');
+
+        return [
+            'toAdd' => $dataObject->getDataByKey('products'),
+            'toDelete' => array_keys($this->skippedProducts)
+        ];
     }
 
     private function updateSkippedProducts($mappedProducts)
@@ -595,6 +599,10 @@ class ProductsMapper
          "select",
         ];
 
+        if (!$frontendInputType) {
+            return false;
+        }
+
         return in_array(strtolower($frontendInputType), $validSearableFrontendTypes);
     }
 
@@ -604,6 +612,9 @@ class ProductsMapper
         $frontendInputType = $attribute->getFrontendInput();
 
         if ($frontendInputType == "multiselect") {
+            if (!$value) {
+                $value = "";
+            }
             $value = explode(", ", $value);
         } else {
             if (is_object($value)) {

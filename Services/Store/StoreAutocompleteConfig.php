@@ -135,6 +135,9 @@ class StoreAutocompleteConfig
             self::WIZZY_AUTTOCOMPLETE_CATEGORIES_TO_IGNORE,
             $this->storeId
         );
+        if (!$categoriesToIgnore) {
+            $categoriesToIgnore = "";
+        }
         $categoriesToIgnore = explode(",", $categoriesToIgnore);
         return $categoriesToIgnore;
     }

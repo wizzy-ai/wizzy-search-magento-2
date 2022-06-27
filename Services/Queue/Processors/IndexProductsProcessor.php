@@ -88,6 +88,9 @@ class IndexProductsProcessor extends QueueProcessorBase
 
         $products = $this->productsMapper->mapAll($products, $productReviews, $orderItems, $storeId);
 
+        $productIdsToDelete = array_merge($productIdsToDelete, $products['toDelete']);
+        $products = $products['toAdd'];
+
         if (count($products) == 0) {
             $this->output->writeln(__('No Products to sync in Store #' . $storeId));
             if (count($productIdsToDelete) > 0) {
