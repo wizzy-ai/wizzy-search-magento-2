@@ -7,7 +7,6 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 class Version135
 {
     private $setupUtils;
-    private $setup;
 
     public function __construct(SetupUtils $setupUtils)
     {
@@ -24,15 +23,8 @@ class Version135
             => 'OPENED',
     ];
 
-    public function update(SchemaSetupInterface $setup)
+    public function update()
     {
-        $this->setup = $setup;
-        $this->setDefaults();
-    }
-
-    public function install(SchemaSetupInterface $setup)
-    {
-        $this->setup = $setup;
         $this->setDefaults();
     }
 

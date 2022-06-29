@@ -7,7 +7,6 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 class Version1317
 {
     private $setupUtils;
-    private $setup;
 
     public function __construct(SetupUtils $setupUtils)
     {
@@ -26,15 +25,8 @@ class Version1317
         "wizzy_catalogue_configuration/catalogue_configuration_images/thumbnail_image_type" => 'thumbnail',
     ];
 
-    public function update(SchemaSetupInterface $setup)
+    public function update()
     {
-        $this->setup = $setup;
-        $this->setDefaults();
-    }
-
-    public function install(SchemaSetupInterface $setup)
-    {
-        $this->setup = $setup;
         $this->setDefaults();
     }
 

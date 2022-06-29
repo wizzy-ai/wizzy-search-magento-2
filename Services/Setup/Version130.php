@@ -7,8 +7,7 @@ use Magento\Framework\Setup\SchemaSetupInterface;
 class Version130
 {
     private $setupUtils;
-    private $setup;
-
+   
     public function __construct(SetupUtils $setupUtils)
     {
         $this->setupUtils = $setupUtils;
@@ -19,15 +18,8 @@ class Version130
       'wizzy_advanced_configuration/advanced_configuration/overriding_eventsjs' => '0',
     ];
 
-    public function update(SchemaSetupInterface $setup)
+    public function update()
     {
-        $this->setup = $setup;
-        $this->setDefaults();
-    }
-
-    public function install(SchemaSetupInterface $setup)
-    {
-        $this->setup = $setup;
         $this->setDefaults();
     }
 
