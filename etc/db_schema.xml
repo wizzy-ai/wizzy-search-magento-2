@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="wizzy_sync_queue" resource="default" engine="innodb" comment="wizzy_sync_queue">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Queue Identifier"/>
+    <column xsi:type="varchar" name="class" nullable="false" length="255" comment="Queue Class to Execute"/>
+    <column xsi:type="text" name="data" nullable="false" comment="Data to be supplied in Queue processor"/>
+    <column xsi:type="boolean" name="status" nullable="false" comment="Identify the item status in the queue."/>
+    <column xsi:type="int" name="tries" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Number of times queue has been tried to process"/>
+    <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Store ID"/>
+    <column xsi:type="text" name="errors" nullable="true" comment="Queue Errors log"/>
+    <column xsi:type="timestamp" name="queued_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Timestamp when queue entry is added."/>
+    <column xsi:type="timestamp" name="last_updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when queue entry is updated."/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+  <table name="wizzy_entities_sync" resource="default" engine="innodb" comment="wizzy_entities_sync">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Unique Identifier"/>
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Entity ID"/>
+    <column xsi:type="varchar" name="entity_type" nullable="false" length="255" default="product" comment="Entity Type"/>
+    <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Store ID"/>
+    <column xsi:type="int" name="status" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Entity Sync Status"/>
+    <column xsi:type="timestamp" name="last_synced_at" on_update="false" nullable="true" comment="Timestamp when item is synced."/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when entity is added in sync table."/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when entity is updated in sync table."/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="WIZZY_ENTITIES_SYNC_ENTITY_ID_ENTITY_TYPE_STORE_ID">
+      <column name="entity_id"/>
+      <column name="entity_type"/>
+      <column name="store_id"/>
+    </constraint>
+  </table>
+  <table name="wizzy_sync_skipped_entities" resource="default" engine="innodb" comment="wizzy_sync_skipped_entities">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Unique Identifier"/>
+    <column xsi:type="int" name="entity_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Entity ID"/>
+    <column xsi:type="varchar" name="entity_type" nullable="false" length="255" default="product" comment="Entity Type"/>
+    <column xsi:type="text" name="entity_data" nullable="false" comment="Entity Data"/>
+    <column xsi:type="int" name="store_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Store ID"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when entity is added in skipped table."/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when entity is updated in skipped table."/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="WIZZY_SYNC_SKIPPED_ENTITIES_ENTITY_ID_ENTITY_TYPE_STORE_ID">
+      <column name="entity_id"/>
+      <column name="entity_type"/>
+      <column name="store_id"/>
+    </constraint>
+  </table>
+  <table name="wizzy_product_prices" resource="default" engine="innodb" comment="wizzy_product_prices">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Rule Product Price ID"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Product ID"/>
+    <column xsi:type="text" name="data" nullable="false" comment="Product Price Data"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when rule price added in table."/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when rule price is updated in table."/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+  </table>
+</schema>

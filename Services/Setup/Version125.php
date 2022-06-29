@@ -7,7 +7,6 @@ use Wizzy\Search\Model\Admin\Source\CategoryClickBehaviours;
 
 class Version125
 {
-    private $setup;
     private $setupUtils;
 
     public function __construct(SetupUtils $setupUtils)
@@ -22,15 +21,8 @@ class Version125
          CategoryClickBehaviours::HIT_SEARCH_WITH_CATEGORY_KEYWORD,
     ];
 
-    public function update(SchemaSetupInterface $setup)
+    public function update()
     {
-        $this->setup = $setup;
-        $this->setDefaults();
-    }
-
-    public function install(SchemaSetupInterface $setup)
-    {
-        $this->setup = $setup;
         $this->setDefaults();
     }
 
