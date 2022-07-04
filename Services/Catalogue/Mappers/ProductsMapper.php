@@ -681,6 +681,9 @@ class ProductsMapper
 
     private function getProductDescription($product)
     {
+        if ($this->storeCatalogueConfig->hasToIgnoreDescription()) {
+            return "";
+        }
         if ($this->commonWordsToRemove === null) {
             $this->commonWordsToRemove = $this->storeCatalogueConfig->getCommonDescriptionWordsToRemove();
             $this->hasWordsToRemove = (count($this->commonWordsToRemove) > 0);
