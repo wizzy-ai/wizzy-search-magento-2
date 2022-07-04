@@ -44,7 +44,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/utils/pagination'],
         }
 
         var templates = window.wizzyConfig.search.view.templates;
-        var paginationTemplate = $wZ(templates.pagination).html();
+        var paginationTemplate = $(templates.pagination).html();
         paginationTemplate = Mustache.render(paginationTemplate, {
             items: pageItems,
             isPrevActive: (currentPage > 1),
