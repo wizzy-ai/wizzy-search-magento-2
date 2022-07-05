@@ -72,7 +72,7 @@ class StoreCatalogueConfig
     // DESCRIPTION CONFIGURATION
     const CATALOGUE_CONFIGURATION_DESCRIPTION = self::WIZZY_CATALOGUE_CONFIGURATION
         . "/catalogue_configuration_description";
-
+    const IGNORE_DESCRIPTION = self::CATALOGUE_CONFIGURATION_DESCRIPTION . "/ignore_description";
     const COMMON_WORDS_TO_REMOVE = self::CATALOGUE_CONFIGURATION_DESCRIPTION . "/common_words_to_remove";
 
     private $storeId;
@@ -224,7 +224,10 @@ class StoreCatalogueConfig
     {
         return ($this->configManager->getStoreConfig(self::REPLACE_CHILD_NAME, $this->storeId) == 1);
     }
-
+    public function hasToIgnoreDescription()
+    {
+        return ($this->configManager->getStoreConfig(self::IGNORE_DESCRIPTION, $this->storeId) == 1);
+    }
     public function getCommonDescriptionWordsToRemove()
     {
         $wordsToRemove = $this->configManager->getStoreConfig(self::COMMON_WORDS_TO_REMOVE, $this->storeId);
