@@ -374,7 +374,16 @@
 
             <group id="catalogue_configuration_description" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Description Configuration</label>
-                <field id="common_words_to_remove" translate="label" type="textarea" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                <field id="ignore_description" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Ignore Description ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select Yes if you want to ignore product description in search. Recommended to set is as yes if having search relevancy issues due to description.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="common_words_to_remove" translate="label" type="textarea" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Common Words to Remove</label>
                     <comment>
                         <![CDATA[
@@ -383,6 +392,9 @@
                             <br><br>Each word MUST be in different line.
                         ]]>
                     </comment>
+                    <depends>
+                        <field id="ignore_description">0</field>
+                    </depends>
                 </field>
             </group>
 
