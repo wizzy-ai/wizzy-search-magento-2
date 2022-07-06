@@ -68,6 +68,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
             products: products,
             hasCategories: hasProductCategories,
             category: getProductCategory,
+            topProductsTitle: window.wizzyConfig.autocomplete.topProducts.title,
         });
         return topProductsTemplate;
     }
