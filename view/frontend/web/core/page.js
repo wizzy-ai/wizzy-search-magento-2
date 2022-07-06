@@ -11,6 +11,7 @@ var wizzy = {
         BEFORE_AUTOCOMPLETE_EXECUTED: 'beforeAutocompleteExecuted',
         AFTER_FILTER_ITEM_CLICKED: 'afterFilterItemClicked',
         BEFORE_SORT_EXECUTED: 'beforeSortExecuted',
+        BEFORE_INIT: 'beforeInit',
     },
     registeredEvents: [],
     registerEvent: function (eventName, callback) {
@@ -51,5 +52,6 @@ var wizzy = {
 requirejs(['jquery', 'wizzy/common'], function($, wizzyCommon) {
     $(document).ready(function(e) {
         wizzyCommon.connect();
+        window.wizzyConfig = wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_INIT, window.wizzyConfig);
     });
 });
