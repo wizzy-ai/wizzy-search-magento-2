@@ -232,7 +232,7 @@ class StoreCatalogueConfig
     {
         $wordsToRemove = $this->configManager->getStoreConfig(self::COMMON_WORDS_TO_REMOVE, $this->storeId);
         if (!$wordsToRemove) {
-            $wordsToRemove = "";
+            return [];
         }
         return preg_split('/\r\n|\r|\n/', $wordsToRemove);
     }
