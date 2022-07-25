@@ -83,7 +83,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
    */
     public function executeRow($id)
     {
-        $this->addProductsInQueue([$id], $this->storeManager->getCurrentStoreId(), true);
+        return true;
     }
 
     private function addProductsInQueue(array $productIdsToProcess, $storeId = '', $combinePreviousEntries = false)
