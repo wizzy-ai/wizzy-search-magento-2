@@ -45,11 +45,15 @@ class UpdateCurrencyRates extends QueueProcessorBase
             }
 
             $currencyRates = $this->getCurrencyRates($storeId);
-            $this->output->writeln(__('Saving ' . count($currencyRates) . ' currency rates.'));
+            if ($currencyRates) {
+                $this->output->writeln(__('Saving ' . count($currencyRates) . ' currency rates.'));
 
-            $response = $this->currencyRateUpdater->save($currencyRates, $storeId);
-            if ($response) {
-                $this->output->writeln(__('Saved ' . count($currencyRates) . ' currency rates successfully.'));
+                $response = $this->currencyRateUpdater->save($currencyRates, $storeId);
+                if ($response) {
+                    $this->output->writeln(__('Saved ' . count($currencyRates) . ' currency rates successfully.'));
+                }
+            } else {
+                $this->output->writeln(__('No currency rates to be saved'));
             }
         }
 

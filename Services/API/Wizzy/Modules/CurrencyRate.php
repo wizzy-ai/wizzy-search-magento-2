@@ -24,7 +24,7 @@ class CurrencyRate
             return true;
         } else {
             $this->output->log([
-               'Message' => 'Current Rates Save API Failed.',
+               'Message' => 'Currency Rates Save API Failed.',
                'Response' => json_encode($response->getPayload()),
             ]);
             return $response;
