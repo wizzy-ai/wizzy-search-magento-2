@@ -131,10 +131,10 @@ class QueueManager
         return $jobs;
     }
 
-    private function getAllClearableJobs()
+    private function getAllClearableJobs($status = [self::JOB_TO_EXECUTE_STATUS, self::JOB_IN_PROGRESS_STATUS])
     {
         $jobs = $this->queueFactory->create()->getCollection()
-          ->addFieldToFilter('status', ["in" => [self::JOB_TO_EXECUTE_STATUS, self::JOB_IN_PROGRESS_STATUS]]);
+          ->addFieldToFilter('status', ["in" => $status]);
         $jobs = $jobs->setOrder('id', 'ASC');
 
         $jobsData = [];
@@ -145,10 +145,11 @@ class QueueManager
         return $jobsData;
     }
 
-    public function enqueueAllInProgress()
+    public function enqueueAllInProgress($status = [self::JOB_TO_EXECUTE_STATUS, self::JOB_IN_PROGRESS_STATUS])
     {
-        $jobs = $this->getAllClearableJobs();
+        $jobs = $this->getAllClearableJobs($status);
         $this->changeStatus($jobs, self::JOB_TO_EXECUTE_STATUS);
+        return $jobs;
     }
 
     private function getAllInProgressJobs($storeId, $jobClass = null)
