@@ -5,6 +5,7 @@ define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyB
     var isOpened = false;
     var wizzyUtils = wizzyBundle.WizzyUtils;
     var wizzyDataStorage = wizzyBundle.WizzyDataStorage;
+    var wizzySessionDataStorage = wizzyBundle.WizzySessionDataStorage;
     var wizzyEvents = wizzyBundle.WizzyEvents;
 
     function addSocketListeners() {
@@ -62,5 +63,6 @@ define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyB
         events: wizzyEvents,
         updateClientData: updateClientData,
         dataStorage: (wizzyDataStorage.singleton()),
+        sessionDataStorage: (wizzySessionDataStorage.singleton()),
     };
 });

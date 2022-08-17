@@ -1,4 +1,4 @@
-define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizzy/fetchers/search', 'wizzy/libs/pageStore', 'wizzy/utils/keyboard', 'wizzy/libs/searchUrlUtils', 'wizzy/utils/search'], function($, autocompleteFetcher, filtersFetcher, sF, pageStore, keyUtils, urlUtils, searchUtils) {
+define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizzy/fetchers/search', 'wizzy/libs/pageStore', 'wizzy/utils/keyboard', 'wizzy/libs/searchUrlUtils', 'wizzy/utils/search', 'wizzy/common', 'wizzy/renderers/manual'], function($, autocompleteFetcher, filtersFetcher, sF, pageStore, keyUtils, urlUtils, searchUtils, wC, manualRender) {
 
     var searchElement;
     var menu;
@@ -95,7 +95,9 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
         $('body').on('click', searchUtils.getInputDOM(), function(e) {
             var value = searchElement.val().trim();
             if (value != "" && isMenuHidden()) {
-                showMenu();
+                showMenu({});
+            }else if (value === "") {
+                renderDefaultMenu($(this));
             }
         });
 
@@ -141,21 +143,61 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
             executeAutoComplete(pageStore.get(pageStore.keys.searchInputValue));
         }
     }
-
-    function showMenu() {
-        if (pageStore.get(pageStore.keys.searchInputValue) == "") {
+    function renderDefaultMenu(element) {
+        if (typeof window.wizzyConfig.autocomplete.configs.defaultBehaviour === 'undefined') {
             return;
         }
-        menu = $(autocompleteOptions['menu']);
-        if (isMenuHidden()) {
-            menu.css('display', 'flex').hide().fadeIn(100);
+
+        var defaultBehaviour = window.wizzyConfig.autocomplete.configs.defaultBehaviour;
+        if (!defaultBehaviour.topProducts.enabled && !defaultBehaviour.suggestions.enabled) {
+            return;
         }
-        menu.position({
-            my: position + " top",
-            at: position + " bottom",
-            of: searchElement,
-            collision: "flipfit none"
+        manualRender.manualRender({
+            'for': 'defaultMenu',
+            'element': element,
         });
+    }   
+    function showMenu(data) {
+        if (pageStore.get(pageStore.keys.searchInputValue) == "" && typeof data['isForDefault'] === "undefined") {
+            return;
+        }
+        if (pageStore.get(pageStore.keys.searchInputValue) == searchElement.val().trim() || (typeof data['isForDefault'] !== "undefined" && data['isForDefault'])) {
+            menu = $(autocompleteOptions['menu']);
+            if (isMenuHidden()) {
+                menu.css('display', 'flex').hide().fadeIn(100);
+            }
+            menu.position({
+                my: position + " top",
+                at: position + " bottom",
+                of: searchElement,
+                collision: "flipfit none"
+            });
+        }
+    }
+
+    function fetchDefaultSetOfProducts() {
+        if (typeof window.wizzyConfig.autocomplete.configs.defaultBehaviour === 'undefined') {
+            return;
+        }
+        var defaultBehaviour = window.wizzyConfig.autocomplete.configs.defaultBehaviour;
+        var groupedFilteredProducts = wC.sessionDataStorage.getGroupedFilteredProducts();
+        var displayTopDefaultProducts = defaultBehaviour.topProducts.enabled;
+        var filteringFor = 'defaultMenu';
+        if (groupedFilteredProducts !== null) {
+            pageStore.set(pageStore.keys.groupedFilteredProducts, groupedFilteredProducts);
+        }
+    
+        if (displayTopDefaultProducts && (
+            groupedFilteredProducts === null || typeof groupedFilteredProducts[filteringFor] === "undefined"
+        )) {
+            var defaultPool = defaultBehaviour.topProducts.defaultPool;
+            if (defaultPool.method === "filters") {
+                filtersFetcher.execute({
+                    'for': filteringFor,
+                    'filters': defaultPool.data,
+                });
+            }
+        }
     }
 
     function resetSelectableItems() {
@@ -299,6 +341,7 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
 
     return {
         autocomplete: autocomplete,
+        fetchDefaultSetOfProducts: fetchDefaultSetOfProducts,
         showMenu: showMenu,
         hideMenu: hideMenu,
         isMenuHidden: isMenuHidden,
