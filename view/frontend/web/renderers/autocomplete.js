@@ -5,6 +5,8 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
     function render(data) {
         wizzyAutoCompleteConfig = window.wizzyConfig.autocomplete.menu.view;
         isByFilter = (typeof data["isByFilter"] !== "undefined" && data["isByFilter"])  ? true: false;
+        var isForDefault = (typeof data["isForDefault"] !== "undefined" && data["isForDefault"])  ? true: false;
+        var element = (typeof data["element"] !== "undefined" && data["element"])  ? data["element"]: null;
 
         if (typeof data["payload"] !== "undefined") {
             resetAutosuggestionStore();
@@ -43,7 +45,11 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
                 }
             }
 
-            require('wizzy/libs/autocomplete').showMenu();
+            require('wizzy/libs/autocomplete').showMenu({
+                'isByFilter': isByFilter,
+                'isForDefault': isForDefault,
+                'element': element,
+            });
         }
 
     }

@@ -17,6 +17,7 @@ var config = {
         'wizzy/renderers/variation': 'Wizzy_Search/renderers/variation',
         'wizzy/renderers/wrapper': 'Wizzy_Search/renderers/wrapper',
         'wizzy/renderers/search': 'Wizzy_Search/renderers/search',
+        'wizzy/renderers/manual': 'Wizzy_Search/renderers/manual',
         'wizzy/fetchers/autocomplete': 'Wizzy_Search/fetchers/autocomplete',
         'wizzy/fetchers/filters': 'Wizzy_Search/fetchers/filters',
         'wizzy/fetchers/variation': 'Wizzy_Search/fetchers/variation',

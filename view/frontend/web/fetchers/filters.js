@@ -64,9 +64,17 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
             searchRenderer.showIndicator(true, !isCategorySearch);
         }
 
+        payload['group'] = filteringFor;
         payload = wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_FILTERS_EXECUTED, payload);
         var response = wizzyCommon.getClient().filter(payload);
-        pageStore.set(pageStore.keys.lastRequestIdFilters, response.requestId);
+        var lastRequestIdFilters = pageStore.get(pageStore.keys.lastRequestIdFilters, {});
+        lastRequestIdFilters[filteringFor] = response.requestId;
+        pageStore.set(pageStore.keys.lastRequestIdFilters, lastRequestIdFilters);
+
+        var filterRequests = pageStore.get(pageStore.keys.filterRequests, {});
+        filterRequests[response.requestId] = filteringFor;
+
+        pageStore.set(pageStore.keys.filterRequests, filterRequests);
     }
 
     function setSortInFilters() {

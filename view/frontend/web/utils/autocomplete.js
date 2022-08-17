@@ -18,9 +18,13 @@ define([''], function() {
 
         return sections;
     }
+    function isDefaultBehaviourSet() {
+        return (typeof window.wizzyConfig.autocomplete.configs.defaultBehaviour !== "undefined");
+    }
 
     return {
         getSectionsToAdd: getSectionsToAdd,
+        isDefaultBehaviourSet: isDefaultBehaviourSet,
     };
 
 });

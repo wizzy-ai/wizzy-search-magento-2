@@ -39,6 +39,8 @@ define(['jquery'], function($) {
             searchedResponse: 'searchedResponse',
             lastRequestIdSearch: 'lastRequestIdSearch',
             lastRequestIdFilters: 'lastRequestIdFilters',
+            lastGroupRequestIdFilters: 'lastGroupRequestIdFilters',
+            filterRequests: 'filterRequests',
             lastRequestIdAutocomplete: 'lastRequestIdAutocomplete',
             selectedSortMethod: 'selectedSortMethod',
             selectedFilters: 'selectedFilters',
@@ -48,6 +50,7 @@ define(['jquery'], function($) {
             isNumberPaginating: 'isNumberPaginating',
             lastResponseId: 'lastResponseId',
             lastExecutedFilters: 'lastExecutedFilters',
+            groupedFilteredProducts: 'groupedFilteredProducts',
         }
     };
 
