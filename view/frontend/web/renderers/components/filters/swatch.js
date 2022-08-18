@@ -24,7 +24,7 @@ define([], function() {
         var isURLSwatch = false;
         var swatchValue = '';
 
-        if (typeof data['data'] !== "undefined" && typeof data["data"]["swatch"] !== "undefined") {
+        if (typeof data['data'] !== "undefined" && typeof data["data"]["swatch"] !== "undefined" && data["data"]["swatch"]) {
             isSwatch = true;
             swatchValue = data["data"]["swatch"]["value"];
 
