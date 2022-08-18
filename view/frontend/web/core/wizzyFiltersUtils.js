@@ -1,4 +1,24 @@
-define(['jquery', 'wizzy/bundle', 'wizzy/utils/facets'], function($, wizzyBundle, facetsUtils) {
+define(['jquery', 'wizzy/bundle', 'wizzy/utils/facets', 'wizzy/libs/pageStore'], function($, wizzyBundle, facetsUtils, pageStore) {
     var wizzyFiltersUtils = wizzyBundle.WizzyFilters;
-    return (new wizzyFiltersUtils(facetsUtils.instance()));
+    var instance = null;
+
+    function n() {
+        if (instance == null) {
+            instance = (new wizzyFiltersUtils(facetsUtils.instance()));
+        }
+        return instance;
+    }
+
+    function setDefaultSortMethod() {
+        var sortConfigs = window.wizzyConfig.search.configs.sorts.configs;
+        var keys = Object.keys(sortConfigs);
+        if (keys.length > 0) {
+            pageStore.set(pageStore.keys.selectedSortMethod, sortConfigs[keys[0]]);
+        }
+    }
+
+    return {
+        new: n,
+        setDefaultSortMethod: setDefaultSortMethod,
+    };
 });

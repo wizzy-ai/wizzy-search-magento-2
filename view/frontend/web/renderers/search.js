@@ -121,7 +121,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
 
             var allFacets = facetsComponent.getAllFacets();
             facetsUtils.instance().setFacets(allFacets);
-            filtersUtils.setFilters(getFilters());
+            filtersUtils.new().setFilters(getFilters());
 
             var leftFacets = facetsComponent.getLeftFacets();
             var topFacets = facetsComponent.getTopFacets();

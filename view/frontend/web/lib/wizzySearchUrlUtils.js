@@ -104,7 +104,7 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     }
 
     function setSearchInputValue(searchElement) {
-        var decodedFilters = filterUtils.decodeFilters();
+        var decodedFilters = filterUtils.new().decodeFilters();
 
         var searchTitle  = "";
         var searchedQuery = "";
@@ -153,7 +153,7 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     }
 
     function getQueryUrl(searchData) {
-        return getOrigin() + commonUrlUtils.getSearchEndPoint() + "?" + filterUtils.encodeFilters(searchData);
+        return getOrigin() + commonUrlUtils.getSearchEndPoint() + "?" + filterUtils.new().encodeFilters(searchData);
     }
 
     function getOrigin() {

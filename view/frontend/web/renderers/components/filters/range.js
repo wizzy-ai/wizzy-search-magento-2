@@ -101,7 +101,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'noUiSlider', 'wNumb', 'wi
     }
 
     function getSelectedMinMax(max, min, facetKey) {
-        var currentFilters = filtersUtils.getFilters();
+        var currentFilters = filtersUtils.new().getFilters();
         var selectedMax = max;
         var selectedMin = min;
 
