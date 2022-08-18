@@ -115,6 +115,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
         addSwatchClickListener();
         addClearAllListener();
         addMobileFilterListeners();
+        initDefaultEvents();
     }
 
     function addMobileFilterListeners() {
@@ -429,6 +430,17 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
         });
     }
 
+    function moveUserOnTopOnSearch() {
+        wizzy.registerEvent(wizzy.allowedEvents.BEFORE_SEARCH_EXECUTED, function (payload) {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+            return payload;
+        });
+    }
+
+    function initDefaultEvents() {
+        moveUserOnTopOnSearch();
+    }
     return {
         search: search,
         init: init,
