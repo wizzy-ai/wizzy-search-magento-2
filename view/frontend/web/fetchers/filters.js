@@ -29,10 +29,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
             filters.facets = searchUtils.getFacetsToAdd();
         }
         if (typeof filters.inStock === "undefined" && window.wizzyConfig.search.configs.general.includeOutOfStock) {
-            filters.inStock = [
-                true,
-                false
-            ];
+            filters.inStock = [];
         }
         if (typeof filters.swatch === "undefined") {
             filters.swatch = searchUtils.getSwatchesToAdd();
