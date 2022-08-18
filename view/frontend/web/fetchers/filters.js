@@ -80,7 +80,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
     function setSortInFilters() {
         var sortMethod = pageStore.get(pageStore.keys.selectedSortMethod, null);
         if (sortMethod !== null) {
-            filtersUtils.setSort(sortMethod['field'], sortMethod['order']);
+            filtersUtils.new().setSort(sortMethod['field'], sortMethod['order']);
         }
     }
 
@@ -92,16 +92,16 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
     }
 
     function categorySearch(categoryKey) {
-        filtersUtils.clearAll();
+        filtersUtils.new().clearAll();
         clear('q');
         pageStore.set(pageStore.keys.searchInputValue, null);
         resetPage();
-        filtersUtils.addCategoryFilter(categoryKey);
+        filtersUtils.new().addCategoryFilter(categoryKey);
         refreshFilters(true, false, true);
     }
 
     function resetPage() {
-        filtersUtils.setPage(1);
+        filtersUtils.new().setPage(1);
     }
 
     function setPaginating() {
@@ -124,7 +124,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
             var nextPage = parseInt(currentPage) + 1;
 
             if (typeof searchedResponse['pages'] !== "undefined" && nextPage <= searchedResponse['pages']) {
-                filtersUtils.setPage(nextPage);
+                filtersUtils.new().setPage(nextPage);
                 refreshFilters(false, true, false);
             }
         }
@@ -138,7 +138,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
             var prevPage = parseInt(currentPage) - 1;
 
             if (typeof searchedResponse['pages'] !== "undefined" && prevPage >= 1) {
-                filtersUtils.setPage(prevPage);
+                filtersUtils.new().setPage(prevPage);
                 refreshFilters(false, true, false);
             }
         }
@@ -148,7 +148,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         setPaginating();
         window.scrollTo(0, 0);
         page = parseInt(page);
-        filtersUtils.setPage(page);
+        filtersUtils.new().setPage(page);
         refreshFilters(false, true, false);
     }
 
@@ -156,14 +156,14 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         window.scrollTo(0, 0);
         resetPage();
         if (isCategoryHierarchyFilter(facetKey) && !isFromSelected) {
-            filtersUtils.clearFilters(facetKey);
+            filtersUtils.new().clearFilters(facetKey);
             filterKey = getUpdateCategoryFilterKey(facetKey, filterKey);
             if (filterKey !== null) {
-                filtersUtils.addOrRemoveFilter(facetKey, filterKey);
+                filtersUtils.new().addOrRemoveFilter(facetKey, filterKey);
             }
         }
         else {
-            filtersUtils.addOrRemoveFilter(facetKey, filterKey);
+            filtersUtils.new().addOrRemoveFilter(facetKey, filterKey);
         }
         refreshFilters(false, false, false);
     }
@@ -188,11 +188,11 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
     }
 
     function clear(key) {
-        filtersUtils.clearFilters(key);
+        filtersUtils.new().clearFilters(key);
     }
 
     function clearAll() {
-        filtersUtils.clearAll();
+        filtersUtils.new().clearAll();
         refreshFilters(false, false, false);
     }
 
@@ -217,7 +217,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
     }
 
     function refreshFilters(isFromPageLoad, isByPagination, isCategorySearch) {
-        var filters = filtersUtils.getFilters();
+        var filters = filtersUtils.new().getFilters();
         if (typeof filters['sort'] === "undefined") {
             setSortInFilters();
         }

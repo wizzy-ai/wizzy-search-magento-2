@@ -1,6 +1,7 @@
-define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/search', 'wizzy/utils/search'], function($, wizzyCommon, pageStore, searchRenderer, searchUtils) {
+define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/search', 'wizzy/utils/search','wizzy/utils/filters'], function($, wizzyCommon, pageStore, searchRenderer, searchUtils, filterUtils) {
     function execute(options) {
         var q = typeof options['q'] === "undefined" ? '' : options['q'];
+        filterUtils.setDefaultSortMethod();
         var sort = pageStore.get(pageStore.keys.selectedSortMethod, null);
         var fS = typeof options['fS'] === "undefined" ? false : options['fS'];
 
