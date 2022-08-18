@@ -38,7 +38,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         var emptyTemplate = $(templates.emptyResults).html();
         var searchedQuery =  pageStore.get(pageStore.keys.searchInputValue, null);
         var lastRequestId = pageStore.get(pageStore.keys.lastRequestIdFilters, null);
-        if (lastRequestId === null) {
+        if (lastRequestId === null || typeof lastRequestId['page'] === "undefined") {
             lastRequestId = pageStore.get(pageStore.keys.lastRequestIdSearch, null);
         }
 

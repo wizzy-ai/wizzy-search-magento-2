@@ -229,7 +229,8 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
                     var scrollOffset = paginationUtils.getScrollOffset();
 
                     if((((scrollHeight - scrollOffset) >= scrollPos) / scrollHeight) == 0){
-                        var isExecuting = (pageStore.get(pageStore.keys.isPaginating, false) || pageStore.get(pageStore.keys.lastRequestIdFilters, null) !== null || pageStore.get(pageStore.keys.lastRequestIdSearch, null) !== null);
+                        var lastRequestIdFilters = pageStore.get(pageStore.keys.lastRequestIdFilters, null);
+                        var isExecuting = (pageStore.get(pageStore.keys.isPaginating, false) ||  (lastRequestIdFilters !== null && typeof lastRequestIdFilters['page'] !== "undefined") || pageStore.get(pageStore.keys.lastRequestIdSearch, null) !== null);
                         var hasMoreResults = pageStore.get(pageStore.keys.hasMoreResults, false);
                         if (!isExecuting && hasMoreResults) {
                             fF.applyNextPage();
