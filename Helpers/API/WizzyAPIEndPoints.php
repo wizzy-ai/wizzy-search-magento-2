@@ -4,7 +4,7 @@ namespace Wizzy\Search\Helpers\API;
 
 class WizzyAPIEndPoints
 {
-    const BASE_END_POINT = "http://api.wizzy.ls/v1";
+    const BASE_END_POINT = "https://api.wizzy.ai/v1";
     const STORES_BASE_AUTH = self::BASE_END_POINT.'/stores';
     const PRODUCTS_BASE_AUTH = self::BASE_END_POINT.'/products';
     const CURRENCIES_BASE_AUTH = self::BASE_END_POINT.'/currencies';
