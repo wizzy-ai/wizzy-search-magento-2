@@ -26,7 +26,7 @@ class UserSessionManager
         Session $sessionManager,
         CookieManagerInterface $cookieManager,
         CookieMetadataFactory $cookieMetadataFactory
-    ){
+    ) {
         $this->sessionManager = $sessionManager;
         $this->cookieManager = $cookieManager;
         $this->cookieMetadataFactory = $cookieMetadataFactory;
@@ -88,7 +88,8 @@ class UserSessionManager
         $this->setSessionCookie($queue);
     }
 
-    private function setSessionCookie(array $list) {
+    private function setSessionCookie(array $list)
+    {
         $meta = $this->cookieMetadataFactory->createPublicCookieMetadata();
         $meta->setDurationOneYear();
         $meta->setPath('/');
@@ -96,8 +97,7 @@ class UserSessionManager
 
         if (count($list)) {
             $this->cookieManager->setPublicCookie(self::WIZZY_SESSION_QUEUE, "1", $meta);
-        }
-        else {
+        } else {
             $this->cookieManager->deleteCookie(self::WIZZY_SESSION_QUEUE, $meta);
         }
     }
