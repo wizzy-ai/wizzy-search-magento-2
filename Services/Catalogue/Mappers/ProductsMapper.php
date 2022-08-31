@@ -501,6 +501,7 @@ class ProductsMapper
 
                 if (count($value) === 0 || (count($value) == 1 && empty($value[0]))
                     || (count($value) == 1 && $value[0] === null)
+                    || (is_array($value[0]))
                     || (strlen($value[0]) > 9999)) {
                     continue;
                 }

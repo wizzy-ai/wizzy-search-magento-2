@@ -11,25 +11,20 @@ requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageS
         });
 
         recordProductViewAndClick();
-        recordCategoryView();
         recordSession();
     });
 
     function recordSession() {
-        aS.record({});
+        var hasSessionQueue = getCookie('WIZZY_SESSION_QUEUE');
+        if (hasSessionQueue) {
+            aS.record({});
+        }
     }
 
-    function recordCategoryView() {
-        if (typeof window.wizzyConfig.common.isOnCategoryListing !== "undefined" && window.wizzyConfig.common.isOnCategoryListing) {
-            aV.record({
-                items: [
-                    {
-                        itemId: window.wizzyConfig.common.categoryUrlKey,
-                    }
-                ],
-                name: wC.events.NAMES[wC.events.CATEGORY_VIEWED],
-            });
-        }
+    function getCookie(name) {
+        function escape(s) { return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1'); }
+        var match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
+        return match ? match[1] : null;
     }
 
     function addClickInStorage(parent) {
@@ -68,9 +63,9 @@ requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageS
                     name: wC.events.NAMES[wC.events.SEARCH_RESULTS_CLICKED],
                 });
                 viewPayload['responseId'] = clickDetails['responseId'];
+                aV.record(viewPayload);
             }
 
-            aV.record(viewPayload);
             wC.dataStorage.removeClickedProduct(currentProductId);
         }
     }

@@ -3,6 +3,8 @@
 namespace Wizzy\Search\Services\Session;
 
 use Magento\Customer\Model\Session;
+use Magento\Framework\Stdlib\CookieManagerInterface;
+use Magento\Framework\Stdlib\Cookie\CookieMetadataFactory;
 
 class UserSessionManager
 {
@@ -14,10 +16,20 @@ class UserSessionManager
     const PRODUCTS_PURCHASED = "PRODUCTS_PURCHASED";
     const SEARCH_RESULTS_CLICKED = "SEARCH_RESULTS_CLICKED";
 
+    const WIZZY_SESSION_QUEUE = "WIZZY_SESSION_QUEUE";
+
     private $sessionManager;
-    public function __construct(Session $sessionManager)
-    {
+    private $cookieManager;
+    private $cookieMetadataFactory;
+
+    public function __construct(
+        Session $sessionManager,
+        CookieManagerInterface $cookieManager,
+        CookieMetadataFactory $cookieMetadataFactory
+    ){
         $this->sessionManager = $sessionManager;
+        $this->cookieManager = $cookieManager;
+        $this->cookieMetadataFactory = $cookieMetadataFactory;
     }
 
     private function getSessionQueue()
@@ -73,6 +85,21 @@ class UserSessionManager
     {
         $func = "set" . self::SESSION_QUEUE;
         $this->sessionManager->$func($queue);
+        $this->setSessionCookie($queue);
+    }
+
+    private function setSessionCookie(array $list) {
+        $meta = $this->cookieMetadataFactory->createPublicCookieMetadata();
+        $meta->setDurationOneYear();
+        $meta->setPath('/');
+        $meta->setHttpOnly(false);
+
+        if (count($list)) {
+            $this->cookieManager->setPublicCookie(self::WIZZY_SESSION_QUEUE, "1", $meta);
+        }
+        else {
+            $this->cookieManager->deleteCookie(self::WIZZY_SESSION_QUEUE, $meta);
+        }
     }
 
     public function addClick($productId, $searchResponseId)
@@ -98,5 +125,6 @@ class UserSessionManager
     {
         $func = "set" . self::SESSION_PRODUCT_CLICKS;
         $this->sessionManager->$func($clicks);
+        $this->setSessionCookie($clicks);
     }
 }
