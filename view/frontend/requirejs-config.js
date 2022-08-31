@@ -25,6 +25,7 @@ var config = {
         'wizzy/libs/pageStore': 'Wizzy_Search/lib/wizzyPageStore',
         'wizzy/utils/keyboard': 'Wizzy_Search/utils/keyboard',
         'wizzy/utils/url': 'Wizzy_Search/utils/url',
+        'wizzy/utils/cookie': 'Wizzy_Search/utils/cookie',
         'wizzy/utils/search': 'Wizzy_Search/utils/search',
         'wizzy/utils/autocomplete': 'Wizzy_Search/utils/autocomplete',
         'wizzy/utils/pagination': 'Wizzy_Search/utils/pagination',

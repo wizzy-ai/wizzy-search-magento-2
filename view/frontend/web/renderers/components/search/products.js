@@ -1,4 +1,4 @@
-define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filters/swatch'], function(pageStore, _, swatchComponent) {
+define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filters/swatch', 'wizzy/utils/cookie'], function(pageStore, _, swatchComponent, cUtils) {
 
     Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
         var n = this,
@@ -80,17 +80,11 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
     }
 
     function resetFormKey() {
-        var cookieFormKey = getCookie('form_key');
+        var cookieFormKey = cUtils.getCookie('form_key');
 
         if(cookieFormKey != "" && window.wizzyConfig.search.addToCart.formKey != cookieFormKey) {
             window.wizzyConfig.search.addToCart.formKey = cookieFormKey;
         }
-    }
-
-    function getCookie(name) {
-        function escape(s) { return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1'); }
-        var match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
-        return match ? match[1] : null;
     }
 
     function setNullIfZero(fields, product) {

@@ -1,4 +1,4 @@
-requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageStore', 'wizzy/analytics/views', 'wizzy/analytics/sessions'], function($, wC, aC, pS, aV, aS) {
+requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageStore', 'wizzy/analytics/views', 'wizzy/analytics/sessions', 'wizzy/utils/cookie'], function($, wC, aC, pS, aV, aS, cUtils) {
     $(document).ready(function(e) {
         $('body').on('click', '.wizzy-result-product a', function(e) {
             var parent = $(this).parents('.wizzy-result-product');
@@ -15,16 +15,10 @@ requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageS
     });
 
     function recordSession() {
-        var hasSessionQueue = getCookie('WIZZY_SESSION_QUEUE');
+        var hasSessionQueue = cUtils.getCookie('WIZZY_SESSION_QUEUE');
         if (hasSessionQueue) {
             aS.record({});
         }
-    }
-
-    function getCookie(name) {
-        function escape(s) { return s.replace(/([.*+?\^$(){}|\[\]\/\\])/g, '\\$1'); }
-        var match = document.cookie.match(RegExp('(?:^|;\\s*)' + escape(name) + '=([^;]*)'));
-        return match ? match[1] : null;
     }
 
     function addClickInStorage(parent) {
