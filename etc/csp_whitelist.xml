@@ -5,6 +5,8 @@
             <values>
                 <value id="wizzy-api" type="host">*.wizzy.ai</value>
                 <value id="wizzy-sockets" type="host">wss://sockets.wizzy.ai</value>
+                <value id="wizsearch-api" type="host">*.wizsearch.in</value>
+                <value id="wizsearch-sockets" type="host">wss://sockets.wizsearch.in</value>
             </values>
         </policy>
     </policies>
