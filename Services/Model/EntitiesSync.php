@@ -47,6 +47,17 @@ class EntitiesSync
         return array_diff($entityIds, $entityIdsNotAllowedToSync);
     }
 
+    public function getEntitiesSyncStatus($entityIds, $storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
+    {
+        $entitesSync = $this->entitiesSyncFactory->create();
+        $entitiesPresent = $entitesSync->getCollection()
+        ->addFieldToFilter('entity_type', ['eq' => $entityType])
+        ->addFieldToFilter('entity_id', ['IN' => $entityIds])
+        ->addFieldToFilter('store_id', ['eq' => $storeId])
+        ->getItems();
+        return $entitiesPresent;
+    }
+
     public function hasAnyEntitiesAddedInSync($storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
     {
         $entitesSync = $this->entitiesSyncFactory->create();
@@ -76,13 +87,14 @@ class EntitiesSync
     public function markEntitiesAsSynced($entityIds, $storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
     {
         $recordsToInsert = [];
-
+        $lastSyncedDate = date('Y-m-d H:i:s');
         foreach ($entityIds as $entityId) {
             $recordsToInsert[] = [
             'entity_id'   => $entityId,
             'store_id'    => $storeId,
             'entity_type' => $entityType,
             'status'      => self::$ENTITY_SYNCED_STATUS,
+            'last_synced_at' => $lastSyncedDate
             ];
         }
 

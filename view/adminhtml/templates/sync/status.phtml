@@ -1,0 +1,25 @@
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+$syncResults = $block->getSyncStatus();
+foreach ($syncResults as $syncResult) {
+    foreach ($syncResult as $sync) { ?>
+        <div class="admin__fieldset-wrapper-title">
+                <p class="product-id"> <?= "<b>Store ID</b> : ",$sync['store_id'];?></p>
+                <span><?= $block->escapeHtmlAttr(('Sync Status :'));?></span>
+          <?php if ($sync['status'] == 1) {
+                ?> <b><?= $block->escapeHtmlAttr(('Synced'));?></b> <?php
+          } elseif ($sync['status'] == 0) {
+                ?> <b><?= $block->escapeHtmlAttr(('In sync'));?></b> <?php
+          } elseif ($sync['status'] == -1) {
+                ?> <b><?= $block->escapeHtmlAttr(('No entities to be synced !'));?></b> <?php
+          }
+            ?>
+        </div>
+        <div class="admin__fieldset-wrapper-title">
+            <span><?= $block->escapeHtmlAttr(('Last Updated At :'));?></span>
+            <b> <?= "", $sync['updated_at']; ?></b>
+        </div> </br>
+    <?php }
+}
+
+?>

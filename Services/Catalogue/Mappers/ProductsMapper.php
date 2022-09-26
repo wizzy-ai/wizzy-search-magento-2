@@ -848,7 +848,7 @@ class ProductsMapper
         return $ordersSummary;
     }
 
-    private function getImageByType(string $imageType, $product)
+    private function getImageByType(?string $imageType, $product)
     {
         if ($imageType == "thumbnail") {
             return $product->getThumbnail();
