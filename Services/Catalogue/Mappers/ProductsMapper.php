@@ -17,6 +17,7 @@ use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
+use Wizzy\Search\Services\Catalogue\ProductInventoryManager;
 use Magento\Backend\Model\Url as BackendUrl;
 
 class ProductsMapper
@@ -45,12 +46,15 @@ class ProductsMapper
     private $storeCatalogueConfig;
 
     private $isBrandMandatory;
+    private $isAdvancedInventory;
+    private $sourceCode;
     private $backendUrl;
     private $adminUrl;
     private $commonWordsToRemove;
     private $hasWordsToRemove;
     private $productsAttributesManager;
     private $productURLManager;
+    private $productsStockManager;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -67,7 +71,8 @@ class ProductsMapper
         StoreCatalogueConfig $storeCatalogueConfig,
         BackendUrl $backendUrl,
         ProductsAttributesManager $productsAttributesManager,
-        ProductURLManager $productURLManager
+        ProductURLManager $productURLManager,
+        ProductInventoryManager $productsStockManager
     ) {
         $this->eventManager = $eventManager;
         $this->configurable = $configurable;
@@ -91,6 +96,7 @@ class ProductsMapper
         $this->hasWordsToRemove = false;
         $this->productsAttributesManager = $productsAttributesManager;
         $this->productURLManager = $productURLManager;
+        $this->productsStockManager = $productsStockManager;
     }
 
     private function resetEntitiesToIgnore()
@@ -118,7 +124,9 @@ class ProductsMapper
         $this->setAdminUrl();
 
         $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();
-
+        
+        $this->isAdvancedInventory = $this->storeCatalogueConfig->isUsingInventoryManagement();
+        $this->sourceCode = $this->storeCatalogueConfig->getInventorySourceCode();
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
         $this->productsAttributesManager->setAttributeValues($products);
@@ -139,7 +147,7 @@ class ProductsMapper
             ['data' => $dataObject]
         );
         $this->updateSkippedProducts($mappedProducts);
-
+        
         return [
             'toAdd' => $dataObject->getDataByKey('products'),
             'toDelete' => array_keys($this->skippedProducts)
@@ -276,6 +284,7 @@ class ProductsMapper
             ];
 
             $isAllChildOutOfStock = true;
+            $highestChildQty = 0;
 
             foreach ($children as $child) {
                 $childFinalPrice = $this->productPrices->getFinalPrice($child);
@@ -312,11 +321,15 @@ class ProductsMapper
                     }
                 }
 
-                $stockItem = $this->stockRegistry->getStockItem($child->getId());
-                if ($stockItem && $stockItem->getIsInStock()) {
+                $stockData = $this->getProductStockData($child);
+
+                if ($stockData['inStock'] === true) {
                     $isAllChildOutOfStock = false;
                 }
-
+                if ($highestChildQty < $stockData['qty']) {
+                    $highestChildQty = $stockData['qty'];
+                }
+                
                 $childVisibility = $child->getVisibility();
 
                 if (!$mappedProduct['isSearchable']) {
@@ -349,7 +362,7 @@ class ProductsMapper
                 $childColors = $this->configurableProductsData->getColors($categories, $attributes, $this->storeId);
                 $childSizes = $this->configurableProductsData->getSizes($categories, $attributes, $this->storeId);
 
-                $variationInStock = ($stockItem && $stockItem->getIsInStock());
+                $variationInStock = ($stockData['inStock']);
                 $this->addProductVariationDetails($childColors, $child, $variationInStock);
                 $this->addProductVariationDetails($childSizes, $child, $variationInStock);
 
@@ -363,6 +376,7 @@ class ProductsMapper
                 $this->mapAttributes($child, $mappedProduct, $variationInStock, true);
             }
 
+            $mappedProduct['stockQty'] = $highestChildQty;
             if ($isAllChildOutOfStock) {
                 $mappedProduct['inStock'] = false;
             }
@@ -699,12 +713,12 @@ class ProductsMapper
 
     private function mapBasicDetails($product, &$mappedProduct)
     {
-        $stockItem = $this->stockRegistry->getStockItem($product->getId());
         $visibility = $product->getVisibility();
         $finalPrice = $this->productPrices->getFinalPrice($product);
 
         $sellingPrice = $this->getFloatVal($this->productPrices->getSellingPrice($product));
         $sellingPriceWithoutTax = $this->getFloatVal($finalPrice);
+        $stockData = $this->getProductStockData($product);
 
         $mappedProduct = [
          'id' => $product->getId(),
@@ -713,8 +727,8 @@ class ProductsMapper
          'finalPrice' => $sellingPriceWithoutTax,
          'description' => $this->getProductDescription($product),
          'url' => $this->productURLManager->getUrl($product),
-         'inStock' => ($stockItem && $stockItem->getIsInStock()),
-         'stockQty' => ($stockItem && $stockItem->getQty() > 0) ? $stockItem->getQty() : 0,
+         'inStock' => $stockData['inStock'],
+         'stockQty' => $stockData['qty'],
          'isSearchable' => (
             $visibility == Visibility::VISIBILITY_IN_SEARCH ||
             $visibility == Visibility::VISIBILITY_BOTH) ? true : false,
@@ -914,5 +928,23 @@ class ProductsMapper
          'mainImage' => $mainImage,
          'hoverImage' => $hoverImage,
         ];
+    }
+    private function getProductStockData($product)
+    {
+        $data = [];
+        if ($this->isAdvancedInventory == 1) {
+            $items = $this->productsStockManager->getData($product, $this->sourceCode);
+            $data = [
+                'inStock' => $items["inStock"],
+                'qty' => $items["qty"],
+            ];
+        } else {
+            $stockItem = $this->stockRegistry->getStockItem($product->getId());
+            $data = [
+                'inStock' => $stockItem->getIsInStock(),
+                'qty' => $stockItem->getQty(),
+            ];
+        }
+        return $data;
     }
 }

@@ -75,6 +75,11 @@ class StoreCatalogueConfig
     const IGNORE_DESCRIPTION = self::CATALOGUE_CONFIGURATION_DESCRIPTION . "/ignore_description";
     const COMMON_WORDS_TO_REMOVE = self::CATALOGUE_CONFIGURATION_DESCRIPTION . "/common_words_to_remove";
 
+    // INVENTORY CONFIGURATION
+    const INVENTORY_CONFIGURATION = self::WIZZY_CATALOGUE_CONFIGURATION. "/inventory_configuration";
+    const IS_USING_INVENTORY_MANAGEMENT = self::INVENTORY_CONFIGURATION. "/is_using_inventory";
+    const INVENTORY_SOURCE_LIST = self::INVENTORY_CONFIGURATION. "/source_list";
+
     private $storeId;
 
     private $cachedGnderIdentityConsiderParentCategories;
@@ -235,5 +240,14 @@ class StoreCatalogueConfig
             return [];
         }
         return preg_split('/\r\n|\r|\n/', $wordsToRemove);
+    }
+    public function isUsingInventoryManagement()
+    {
+        return ($this->configManager->getStoreConfig(self::IS_USING_INVENTORY_MANAGEMENT, $this->storeId) == 1);
+    }
+    public function getInventorySourceCode()
+    {
+        $source = $this->configManager->getStoreConfig(self::INVENTORY_SOURCE_LIST, $this->storeId);
+        return $source;
     }
 }
