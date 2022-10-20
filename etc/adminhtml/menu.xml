@@ -81,5 +81,14 @@
             action="wizzy_search/sync/skippedentities"
             resource="Wizzy_Search::main"
         />
+         <add
+            id="Wizzy_Search::copy_configurations"
+            title="Copy Configurations"
+            module="Wizzy_Search"
+            sortOrder="90"
+            parent="Wizzy_Search::main"
+            action="adminhtml/system_config/edit/section/wizzy_copy_configuration/store/1/"
+            resource="Wizzy_Search::main"
+        />
     </menu>
 </config>
