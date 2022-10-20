@@ -53,10 +53,6 @@ class PageLoadObserver implements ObserverInterface
             if ($isOverridingEventsjs) {
                 $layout->getUpdate()->addHandle('wizzy_search_events');
             }
-            
-            if ($hasToIncludeCustomCss) {
-                $layout->getUpdate()->addHandle('wizzy_search_custom');
-            }
 
             if ($isAnalyticsEnabled) {
                 $layout->getUpdate()->addHandle('wizzy_search_analytics');
@@ -71,6 +67,9 @@ class PageLoadObserver implements ObserverInterface
                 if ($hasToReplaceCategoryPage && $this->categoryRequestManager->isCategoryReplaceable()) {
                     $layout->getUpdate()->addHandle('wizzy_search_category');
                 }
+            }
+            if ($hasToIncludeCustomCss) {
+                $layout->getUpdate()->addHandle('wizzy_search_custom');
             }
 
         }
