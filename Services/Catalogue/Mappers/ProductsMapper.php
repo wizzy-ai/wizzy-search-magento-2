@@ -138,19 +138,19 @@ class ProductsMapper
                 $mappedProducts[] = $mappedProduct;
             }
         }
-
+        $this->updateSkippedProducts($mappedProducts);
         $dataObject = new DataObject([
             'products' => $mappedProducts,
+            'productsToDelete' => array_keys($this->skippedProducts)
         ]);
         $this->eventManager->dispatch(
             'wizzy_after_products_mapped',
             ['data' => $dataObject]
         );
-        $this->updateSkippedProducts($mappedProducts);
         
         return [
             'toAdd' => $dataObject->getDataByKey('products'),
-            'toDelete' => array_keys($this->skippedProducts)
+            'toDelete' => $dataObject->getDataByKey('productsToDelete')
         ];
     }
 
