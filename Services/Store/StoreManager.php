@@ -87,7 +87,25 @@ class StoreManager
 
         return $storeIds;
     }
+    public function getActivateWizzyStoreNames()
+    {
+        $storeNames = [];
 
+        foreach ($this->storeManager->getStores() as $store) {
+            $storeConfigs = $store->getConfig('wizzy_store_credentials/store_credentials');
+            if ($storeConfigs !== null && is_array($storeConfigs)) {
+                $storeId = trim($storeConfigs['store_id']);
+                $storeSecret = trim($storeConfigs['store_secret']);
+                $apiKey = trim($storeConfigs['api_key']);
+
+                if (!empty($storeId) && !empty($storeSecret) && !empty($apiKey)) {
+                    $storeNames[] = $store->getName();
+                }
+            }
+        }
+
+        return $storeNames;
+    }
     public function getActiveWizzyWebsites()
     {
         $websiteIds = [];

@@ -886,6 +886,23 @@
                 </field>
             </group>
         </section>
-        
+        <section id="wizzy_copy_configuration" translate="label" sortOrder="200" showInDefault="0" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Copy Configuration</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="copy_configuration" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Copy Configuration From</label>
+                <field id="from_store" translate="label" type="select" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Store</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\StoreNames</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select store from where you want to copy configurations.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
     </system>
 </config>
