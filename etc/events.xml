@@ -24,4 +24,7 @@
     <event name="catalog_product_import_bunch_save_after">
         <observer name="wizzy_after_products_imported" instance="Wizzy\Search\Model\Observer\ImportProductsObserver" />
     </event>
+    <event name="admin_system_config_changed_section_wizzy_copy_configuration">
+        <observer name="custom_admin_system_config_changed_section_wizzy_copy_configuration" instance="Wizzy\Search\Model\Observer\AdminConfigs\CopyConfigurationOptionUpdated"/>
+    </event>
 </config>
