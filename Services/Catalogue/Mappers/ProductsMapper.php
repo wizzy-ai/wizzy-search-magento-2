@@ -482,6 +482,22 @@ class ProductsMapper
             $mappedProduct['colors'][] = $colorArr;
         }
     }
+    private function getNonSearchableDefaultAttributes()
+    {
+        return[
+            'url_key'
+        ];
+    }
+    private function isAttributeSearchable($attribute)
+    {
+        $nonSearchableAttributes = $this->getNonSearchableDefaultAttributes();
+        $code = $attribute->getAttributeCode();
+        if (in_array($code, $nonSearchableAttributes)) {
+            return false;
+        }
+        $isSearchable = ($attribute->getIsSearchable()) ? true : false;
+        return $isSearchable;
+    }
 
     private function mapAttributes($product, &$mappedProduct, $variationInStock, $isForChild = false)
     {
@@ -500,7 +516,7 @@ class ProductsMapper
             $code = $attribute->getAttributeCode();
             $isUserDefined = $attribute->getIsUserDefined();
             $isFilterableInSearch = ($attribute->getIsFilterableInSearch()) ? true : false;
-            $isSearchable = ($attribute->getIsSearchable()) ? true : false;
+            $isSearchable = $this->isAttributeSearchable($attribute);
             $isFilterable = ($attribute->getIsFilterable()) ? true: false;
 
             $isSearchableOrFilterable = ($isFilterableInSearch || $isFilterable || $isSearchable);
