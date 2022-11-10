@@ -16,7 +16,7 @@ class CategoriesList
     public function toOptionArray()
     {
         $categories = $this->categoriesManager->fetchAllOfCurrentStore();
-
+        $options = [];
         foreach ($categories as $category) {
             $options[] = [
             'value' => $category->getId(),
