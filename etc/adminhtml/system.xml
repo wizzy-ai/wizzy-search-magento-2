@@ -473,7 +473,7 @@
                     </comment>
                 </field>
             </group>
-            <group id="inventory_configuration" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
+            <!-- <group id="inventory_configuration" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Inventory Configuration</label>
                 <field id="is_using_inventory" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Do you use Sources for Inventory Management?</label>
@@ -497,7 +497,7 @@
                         <field id="is_using_inventory">1</field>
                     </depends>
                 </field>
-            </group>
+            </group> -->
         </section>
 
         <section id="wizzy_search_form_configuration" translate="label" sortOrder="160" showInDefault="0" showInWebsite="0" showInStore="1">

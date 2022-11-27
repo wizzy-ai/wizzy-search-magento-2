@@ -17,7 +17,7 @@ use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
-use Wizzy\Search\Services\Catalogue\ProductInventoryManager;
+// use Wizzy\Search\Services\Catalogue\ProductInventoryManager;
 use Magento\Backend\Model\Url as BackendUrl;
 
 class ProductsMapper
@@ -54,7 +54,7 @@ class ProductsMapper
     private $hasWordsToRemove;
     private $productsAttributesManager;
     private $productURLManager;
-    private $productsStockManager;
+    // private $productsStockManager;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -71,8 +71,8 @@ class ProductsMapper
         StoreCatalogueConfig $storeCatalogueConfig,
         BackendUrl $backendUrl,
         ProductsAttributesManager $productsAttributesManager,
-        ProductURLManager $productURLManager,
-        ProductInventoryManager $productsStockManager
+        ProductURLManager $productURLManager
+        // ProductInventoryManager $productsStockManager
     ) {
         $this->eventManager = $eventManager;
         $this->configurable = $configurable;
@@ -96,7 +96,7 @@ class ProductsMapper
         $this->hasWordsToRemove = false;
         $this->productsAttributesManager = $productsAttributesManager;
         $this->productURLManager = $productURLManager;
-        $this->productsStockManager = $productsStockManager;
+        // $this->productsStockManager = $productsStockManager;
     }
 
     private function resetEntitiesToIgnore()
@@ -124,7 +124,7 @@ class ProductsMapper
         $this->setAdminUrl();
 
         $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();
-        
+
         $this->isAdvancedInventory = $this->storeCatalogueConfig->isUsingInventoryManagement();
         $this->sourceCode = $this->storeCatalogueConfig->getInventorySourceCode();
         $this->resetEntitiesToIgnore();
@@ -147,7 +147,7 @@ class ProductsMapper
             'wizzy_after_products_mapped',
             ['data' => $dataObject]
         );
-        
+
         return [
             'toAdd' => $dataObject->getDataByKey('products'),
             'toDelete' => $dataObject->getDataByKey('productsToDelete')
@@ -173,17 +173,18 @@ class ProductsMapper
 
         $isValidURL = $this->isValidUrl($mappedProduct['url']);
 
-        if ($mappedProduct['mainImage'] == "" ||
-           empty($mappedProduct['categories']) ||
-           empty($mappedProduct['sellingPrice']) ||
-           $mappedProduct['sellingPrice'] == 0 ||
-           ($this->isBrandMandatory && (!isset($mappedProduct) || empty($mappedProduct['brand']))) ||
-           $isValidURL === false
+        if (
+            $mappedProduct['mainImage'] == "" ||
+            empty($mappedProduct['categories']) ||
+            empty($mappedProduct['sellingPrice']) ||
+            $mappedProduct['sellingPrice'] == 0 ||
+            ($this->isBrandMandatory && (!isset($mappedProduct) || empty($mappedProduct['brand']))) ||
+            $isValidURL === false
         ) {
             $requiredData = [
-               'Main Image' => $mappedProduct['mainImage'],
-               'Categories Count' => count($mappedProduct['categories']),
-               'Selling Price' => $mappedProduct['sellingPrice'],
+                'Main Image' => $mappedProduct['mainImage'],
+                'Categories Count' => count($mappedProduct['categories']),
+                'Selling Price' => $mappedProduct['sellingPrice'],
             ];
             if ($this->isBrandMandatory) {
                 $requiredData['Brand'] = isset($mappedProduct['brand']) ? $mappedProduct['brand'] : '';
@@ -194,15 +195,15 @@ class ProductsMapper
             $requiredData = json_encode($requiredData);
 
             $this->output->log([
-               'Message' => 'Product Skipped',
-               'ID' => $product->getId(),
-               'Reason' => "Don't have enough required details",
-               'Data' => $requiredData
+                'Message' => 'Product Skipped',
+                'ID' => $product->getId(),
+                'Reason' => "Don't have enough required details",
+                'Data' => $requiredData
             ], IndexerOutput::LOG_INFO_TYPE);
 
             $this->skippedProducts[$mappedProduct['id']] = [
-               'id' => $mappedProduct['id'],
-               'data' => $requiredData,
+                'id' => $mappedProduct['id'],
+                'data' => $requiredData,
             ];
 
             return null;
@@ -274,13 +275,13 @@ class ProductsMapper
             $sizes = [];
 
             $mappedProduct['childData'] = [
-            'sellingPrices' => [],
-            'discounts' => [],
-            'discountPercentages' => [],
-            'variationsTotalReviews' => [],
-            'variationsAvgRatings' => [],
-            'prices' => [],
-            'finalPrices' => [],
+                'sellingPrices' => [],
+                'discounts' => [],
+                'discountPercentages' => [],
+                'variationsTotalReviews' => [],
+                'variationsAvgRatings' => [],
+                'prices' => [],
+                'finalPrices' => [],
             ];
 
             $isAllChildOutOfStock = true;
@@ -298,7 +299,7 @@ class ProductsMapper
                     if ($childSellingPrice < $childOriginalPrice) {
                         $discount = ($childOriginalPrice - $childSellingPrice);
                         $discountPercetnage =
-                           round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100);
+                            round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100);
                         $price = $childOriginalPrice;
                     }
                 }
@@ -313,11 +314,11 @@ class ProductsMapper
                 if ($childSellingPrice && $childSellingPrice > 0 && $childOriginalPrice > 0) {
                     if ($childSellingPrice < $childOriginalPrice) {
                         $mappedProduct['childData']['discounts'][] =
-                           $this->getFloatVal($childOriginalPrice - $childSellingPrice);
+                            $this->getFloatVal($childOriginalPrice - $childSellingPrice);
                         $mappedProduct['childData']['discountPercentages'][] =
-                           $this->getFloatVal(
-                               round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100)
-                           );
+                            $this->getFloatVal(
+                                round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100)
+                            );
                     }
                 }
 
@@ -329,19 +330,18 @@ class ProductsMapper
                 if ($highestChildQty < $stockData['qty']) {
                     $highestChildQty = $stockData['qty'];
                 }
-                
+
                 $childVisibility = $child->getVisibility();
 
                 if (!$mappedProduct['isSearchable']) {
                     $mappedProduct['isSearchable'] =
-                       ($childVisibility == Visibility::VISIBILITY_IN_SEARCH ||
-                          $childVisibility == Visibility::VISIBILITY_BOTH) ? true : $mappedProduct['isSearchable'];
+                        ($childVisibility == Visibility::VISIBILITY_IN_SEARCH ||
+                            $childVisibility == Visibility::VISIBILITY_BOTH) ? true : $mappedProduct['isSearchable'];
                 }
 
                 if (!$mappedProduct['isVisibleInCatalog']) {
-                    $mappedProduct['isVisibleInCatalog'] = (
-                       $childVisibility == Visibility::VISIBILITY_IN_CATALOG ||
-                       $childVisibility == Visibility::VISIBILITY_BOTH
+                    $mappedProduct['isVisibleInCatalog'] = ($childVisibility == Visibility::VISIBILITY_IN_CATALOG ||
+                        $childVisibility == Visibility::VISIBILITY_BOTH
                     ) ? true : $mappedProduct['isVisibleInCatalog'];
                 }
 
@@ -386,7 +386,7 @@ class ProductsMapper
             }
 
             if ($sellingPrice != 0 && ($sellingPrice < $mappedProduct['sellingPrice'] ||
-                    !$mappedProduct['sellingPrice'])) {
+                !$mappedProduct['sellingPrice'])) {
                 $mappedProduct['sellingPrice'] = $this->getFloatVal($sellingPrice);
             }
 
@@ -429,13 +429,13 @@ class ProductsMapper
         }
 
         $parentChildData = [
-         'sellingPrices' => 'sellingPrice',
-         'finalPrices' => 'finalPrice',
-         'prices' => 'price',
-         'discounts' => 'discount',
-         'discountPercentages' => 'discountPercentage',
-         'variationsTotalReviews' => 'totalReviews',
-         'variationsAvgRatings' => 'avgRatings',
+            'sellingPrices' => 'sellingPrice',
+            'finalPrices' => 'finalPrice',
+            'prices' => 'price',
+            'discounts' => 'discount',
+            'discountPercentages' => 'discountPercentage',
+            'variationsTotalReviews' => 'totalReviews',
+            'variationsAvgRatings' => 'avgRatings',
         ];
 
         foreach ($parentChildData as $childKey => $parentKey) {
@@ -454,9 +454,9 @@ class ProductsMapper
         }
         foreach ($sizes as $size) {
             $sizeArr = [
-            'value' => $size['value'],
-            'variationId' => $size['variationId'],
-            'inStock' => $size['inStock'],
+                'value' => $size['value'],
+                'variationId' => $size['variationId'],
+                'inStock' => $size['inStock'],
             ];
             if (isset($size['swatch'])) {
                 $sizeArr['swatch'] = $size['swatch'];
@@ -472,9 +472,9 @@ class ProductsMapper
         }
         foreach ($colors as $color) {
             $colorArr = [
-            'value' => $color['value'],
-            'variationId' => $color['variationId'],
-            'inStock' => $color['inStock'],
+                'value' => $color['value'],
+                'variationId' => $color['variationId'],
+                'inStock' => $color['inStock'],
             ];
             if (isset($color['swatch'])) {
                 $colorArr['swatch'] = $color['swatch'];
@@ -484,7 +484,7 @@ class ProductsMapper
     }
     private function getNonSearchableDefaultAttributes()
     {
-        return[
+        return [
             'url_key'
         ];
     }
@@ -517,7 +517,7 @@ class ProductsMapper
             $isUserDefined = $attribute->getIsUserDefined();
             $isFilterableInSearch = ($attribute->getIsFilterableInSearch()) ? true : false;
             $isSearchable = $this->isAttributeSearchable($attribute);
-            $isFilterable = ($attribute->getIsFilterable()) ? true: false;
+            $isFilterable = ($attribute->getIsFilterable()) ? true : false;
 
             $isSearchableOrFilterable = ($isFilterableInSearch || $isFilterable || $isSearchable);
 
@@ -529,19 +529,21 @@ class ProductsMapper
                 $value = $this->getAttributeValue($product, $attribute);
                 $label = $attribute->getFrontendLabel();
 
-                if (count($value) === 0 || (count($value) == 1 && empty($value[0]))
+                if (
+                    count($value) === 0 || (count($value) == 1 && empty($value[0]))
                     || (count($value) == 1 && $value[0] === null)
                     || (is_array($value[0]))
-                    || (strlen($value[0]) > 9999)) {
+                    || (strlen($value[0]) > 9999)
+                ) {
                     continue;
                 }
 
                 $autocompleteConfig =
-                   $this->getAutocompleteConfig($attribute, $autocompleteAttributes);
+                    $this->getAutocompleteConfig($attribute, $autocompleteAttributes);
                 $attributeValueToAdd = [
-                'value' => $value,
-                'inStock' => $variationInStock,
-                'variationId' => $product->getId(),
+                    'value' => $value,
+                    'inStock' => $variationInStock,
+                    'variationId' => $product->getId(),
                 ];
                 $swatch = $this->attributesManager->getSwatchDetails($product, $attribute);
                 if ($swatch) {
@@ -549,16 +551,16 @@ class ProductsMapper
                 }
 
                 $attributeToPush = [
-                'id' => (string) $code,
-                'name' => $label,
-                'values' => [
-                  $attributeValueToAdd
-                ],
-                'isSearchable' => $isSearchable,
-                'isFilterable' => ($isFilterableInSearch || $isFilterable),
-                'addInAutocomplete' => $autocompleteConfig['addInAutocomplete'],
-                'autocompletePosition' => $autocompleteConfig['position'],
-                'autocompleteGlue' => $autocompleteConfig['glue'],
+                    'id' => (string) $code,
+                    'name' => $label,
+                    'values' => [
+                        $attributeValueToAdd
+                    ],
+                    'isSearchable' => $isSearchable,
+                    'isFilterable' => ($isFilterableInSearch || $isFilterable),
+                    'addInAutocomplete' => $autocompleteConfig['addInAutocomplete'],
+                    'autocompletePosition' => $autocompleteConfig['position'],
+                    'autocompleteGlue' => $autocompleteConfig['glue'],
                 ];
 
                 if (isset($attributes[$id])) {
@@ -580,14 +582,14 @@ class ProductsMapper
     private function getReservedAttributeCodes(): array
     {
         return [
-          'visibility',
-          'name',
-          'price',
-          'description',
-          'created_at',
-          'updated_at',
-          'category_ids',
-          'status',
+            'visibility',
+            'name',
+            'price',
+            'description',
+            'created_at',
+            'updated_at',
+            'category_ids',
+            'status',
         ];
     }
 
@@ -607,10 +609,10 @@ class ProductsMapper
     private function getAutocompleteConfig($attribute, $autocompleteAttributes)
     {
         $autocompleteConfig = [
-         'addInAutocomplete' => false,
-         'position' => '',
-         'glue' => '',
-         'id' => '',
+            'addInAutocomplete' => false,
+            'position' => '',
+            'glue' => '',
+            'id' => '',
         ];
 
         if (isset($autocompleteAttributes[$attribute->getAttributeId()])) {
@@ -625,9 +627,9 @@ class ProductsMapper
     {
         $frontendInputType = $attribute->getFrontendInput();
         $validSearableFrontendTypes = [
-         "text",
-         "multiselect",
-         "select",
+            "text",
+            "multiselect",
+            "select",
         ];
 
         if (!$frontendInputType) {
@@ -662,8 +664,8 @@ class ProductsMapper
     {
         $url = str_replace(" ", "%20", $url);
         return (
-         ($url !== "" && is_string($url) && filter_var($url, FILTER_VALIDATE_URL) !== false) &&
-         strpos($url, $this->adminUrl) === false
+            ($url !== "" && is_string($url) && filter_var($url, FILTER_VALIDATE_URL) !== false) &&
+            strpos($url, $this->adminUrl) === false
         );
     }
 
@@ -679,18 +681,18 @@ class ProductsMapper
                 foreach ($parentProducts as $parentProduct) {
                     $mappedProduct['url'] = $this->productURLManager->getUrl($parentProduct);
                     $visibility = $parentProduct->getVisibility();
-                    $mappedProduct['isSearchable'] = (
-                       $visibility == Visibility::VISIBILITY_IN_SEARCH ||
-                       $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
-                    $mappedProduct['isVisibleInCatalog'] = (
-                       $visibility == Visibility::VISIBILITY_IN_CATALOG ||
-                       $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
+                    $mappedProduct['isSearchable'] = ($visibility == Visibility::VISIBILITY_IN_SEARCH ||
+                        $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
+                    $mappedProduct['isVisibleInCatalog'] = ($visibility == Visibility::VISIBILITY_IN_CATALOG ||
+                        $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
 
-                    if (!$mappedProduct['mainImage'] ||
+                    if (
+                        !$mappedProduct['mainImage'] ||
                         $mappedProduct['mainImage'] ==
-                            $this->productImageManager->getPlaceholderImage($this->storeId)
-                            || $this->storeCatalogueConfig->hasToReplaceChildImage()) {
-                                $this->mapImages($parentProduct, $mappedProduct);
+                        $this->productImageManager->getPlaceholderImage($this->storeId)
+                        || $this->storeCatalogueConfig->hasToReplaceChildImage()
+                    ) {
+                        $this->mapImages($parentProduct, $mappedProduct);
                     }
                     if ($this->storeCatalogueConfig->hasToReplaceChildName()) {
                         $mappedProduct['name'] = $parentProduct->getName();
@@ -737,20 +739,18 @@ class ProductsMapper
         $stockData = $this->getProductStockData($product);
 
         $mappedProduct = [
-         'id' => $product->getId(),
-         'name' => $product->getName(),
-         'sellingPrice' => $sellingPrice,
-         'finalPrice' => $sellingPriceWithoutTax,
-         'description' => $this->getProductDescription($product),
-         'url' => $this->productURLManager->getUrl($product),
-         'inStock' => $stockData['inStock'],
-         'stockQty' => $stockData['qty'],
-         'isSearchable' => (
-            $visibility == Visibility::VISIBILITY_IN_SEARCH ||
-            $visibility == Visibility::VISIBILITY_BOTH) ? true : false,
-         'isVisibleInCatalog' => (
-            $visibility == Visibility::VISIBILITY_IN_CATALOG ||
-            $visibility == Visibility::VISIBILITY_BOTH) ? true : false,
+            'id' => $product->getId(),
+            'name' => $product->getName(),
+            'sellingPrice' => $sellingPrice,
+            'finalPrice' => $sellingPriceWithoutTax,
+            'description' => $this->getProductDescription($product),
+            'url' => $this->productURLManager->getUrl($product),
+            'inStock' => $stockData['inStock'],
+            'stockQty' => $stockData['qty'],
+            'isSearchable' => ($visibility == Visibility::VISIBILITY_IN_SEARCH ||
+                $visibility == Visibility::VISIBILITY_BOTH) ? true : false,
+            'isVisibleInCatalog' => ($visibility == Visibility::VISIBILITY_IN_CATALOG ||
+                $visibility == Visibility::VISIBILITY_BOTH) ? true : false,
         ];
 
         $createdAt = $product->getCreatedAt();
@@ -806,14 +806,16 @@ class ProductsMapper
         $productFinalPrice = $this->productPrices->getSellingPrice($product);
         $productOriginalPrice = $this->productPrices->getOriginalPrice($product);
 
-        if ($productFinalPrice && $productFinalPrice > 0 &&
-             $productOriginalPrice > 0 && $productOriginalPrice > $productFinalPrice) {
-                $mappedProduct['discount'] = $this->getFloatVal($productOriginalPrice - $productFinalPrice);
-                $mappedProduct['discountPercentage'] =
-                   $this->getFloatVal(
-                       round((($productOriginalPrice - $productFinalPrice) / $productOriginalPrice) * 100)
-                   );
-                $mappedProduct['price'] = $this->getFloatVal($productOriginalPrice);
+        if (
+            $productFinalPrice && $productFinalPrice > 0 &&
+            $productOriginalPrice > 0 && $productOriginalPrice > $productFinalPrice
+        ) {
+            $mappedProduct['discount'] = $this->getFloatVal($productOriginalPrice - $productFinalPrice);
+            $mappedProduct['discountPercentage'] =
+                $this->getFloatVal(
+                    round((($productOriginalPrice - $productFinalPrice) / $productOriginalPrice) * 100)
+                );
+            $mappedProduct['price'] = $this->getFloatVal($productOriginalPrice);
         }
     }
 
@@ -841,18 +843,17 @@ class ProductsMapper
     private function getCategoryArrayToSend($category)
     {
         return [
-         'name' => $category['name'],
-         'id'  =>
-            (!empty($category['urlKey']) && $category['urlKey'] != null)
-               ? $category['urlKey'] : $category['id'],
-         'url' => $category['url'],
-         'position' => (int) $category['position'],
-         'level'  => (int) $category['level'],
-         'parentId' => $category['parentUrlKey'],
-         'image' => $category['image'],
-         'pathIds' => $category['pathIds'],
-         'includeInMenu' => $category['includeInMenu'],
-         'isSearchable' => ($category['isSearchable'] && !isset($this->categoriesToIgnore[$category['id']])),
+            'name' => $category['name'],
+            'id'  => (!empty($category['urlKey']) && $category['urlKey'] != null)
+                ? $category['urlKey'] : $category['id'],
+            'url' => $category['url'],
+            'position' => (int) $category['position'],
+            'level'  => (int) $category['level'],
+            'parentId' => $category['parentUrlKey'],
+            'image' => $category['image'],
+            'pathIds' => $category['pathIds'],
+            'includeInMenu' => $category['includeInMenu'],
+            'isSearchable' => ($category['isSearchable'] && !isset($this->categoriesToIgnore[$category['id']])),
         ];
     }
 
@@ -940,27 +941,27 @@ class ProductsMapper
         }
 
         return [
-         'images' => $images,
-         'mainImage' => $mainImage,
-         'hoverImage' => $hoverImage,
+            'images' => $images,
+            'mainImage' => $mainImage,
+            'hoverImage' => $hoverImage,
         ];
     }
     private function getProductStockData($product)
     {
         $data = [];
-        if ($this->isAdvancedInventory == 1) {
+        /*if ($this->isAdvancedInventory == 1) {
             $items = $this->productsStockManager->getData($product, $this->sourceCode);
             $data = [
                 'inStock' => $items["inStock"],
                 'qty' => $items["qty"],
             ];
-        } else {
-            $stockItem = $this->stockRegistry->getStockItem($product->getId());
-            $data = [
-                'inStock' => $stockItem->getIsInStock(),
-                'qty' => $stockItem->getQty(),
-            ];
-        }
+        } else {*/
+        $stockItem = $this->stockRegistry->getStockItem($product->getId());
+        $data = [
+            'inStock' => $stockItem->getIsInStock(),
+            'qty' => $stockItem->getQty(),
+        ];
+        //}
         return $data;
     }
 }
