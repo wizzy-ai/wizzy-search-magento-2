@@ -157,6 +157,20 @@ class ProductsMapper
         $this->syncSkippedEntities->addSkippedEntities(array_values($this->skippedProducts), $this->storeId);
     }
 
+    private function disptachBeforeSkipCheckEvent(&$mappedProduct, $product)
+    {
+        $dataObject = new DataObject([
+            'product' => $product,
+            'mapped'  => $mappedProduct,
+        ]);
+
+        $this->eventManager->dispatch(
+            'wizzy_before_product_skip_check',
+            ['data' => $dataObject]
+        );
+        $mappedProduct = $dataObject->getDataByKey('mapped');
+    }
+
     public function map($product)
     {
         $mappedProduct = [];
@@ -168,7 +182,7 @@ class ProductsMapper
         $this->mapParentProduct($product, $mappedProduct);
 
         $isValidURL = $this->isValidUrl($mappedProduct['url']);
-
+        $this->disptachBeforeSkipCheckEvent($mappedProduct, $product);
         if ($mappedProduct['mainImage'] == "" ||
            empty($mappedProduct['categories']) ||
            empty($mappedProduct['sellingPrice']) ||
