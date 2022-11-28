@@ -17,7 +17,6 @@ use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
-use Wizzy\Search\Services\Catalogue\ProductInventoryManager;
 use Magento\Backend\Model\Url as BackendUrl;
 
 class ProductsMapper
@@ -54,7 +53,6 @@ class ProductsMapper
     private $hasWordsToRemove;
     private $productsAttributesManager;
     private $productURLManager;
-    private $productsStockManager;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -71,8 +69,7 @@ class ProductsMapper
         StoreCatalogueConfig $storeCatalogueConfig,
         BackendUrl $backendUrl,
         ProductsAttributesManager $productsAttributesManager,
-        ProductURLManager $productURLManager,
-        ProductInventoryManager $productsStockManager
+        ProductURLManager $productURLManager
     ) {
         $this->eventManager = $eventManager;
         $this->configurable = $configurable;
@@ -96,7 +93,6 @@ class ProductsMapper
         $this->hasWordsToRemove = false;
         $this->productsAttributesManager = $productsAttributesManager;
         $this->productURLManager = $productURLManager;
-        $this->productsStockManager = $productsStockManager;
     }
 
     private function resetEntitiesToIgnore()
@@ -948,19 +944,11 @@ class ProductsMapper
     private function getProductStockData($product)
     {
         $data = [];
-        if ($this->isAdvancedInventory == 1) {
-            $items = $this->productsStockManager->getData($product, $this->sourceCode);
-            $data = [
-                'inStock' => $items["inStock"],
-                'qty' => $items["qty"],
-            ];
-        } else {
             $stockItem = $this->stockRegistry->getStockItem($product->getId());
             $data = [
                 'inStock' => $stockItem->getIsInStock(),
                 'qty' => $stockItem->getQty(),
             ];
-        }
-        return $data;
+            return $data;
     }
 }
