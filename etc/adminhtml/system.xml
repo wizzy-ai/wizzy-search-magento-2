@@ -871,6 +871,15 @@
                         ]]>
                     </comment>
                 </field>
+                 <field id="sync_dequeue_size" translate="label" type="text" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Dequeue Size</label>
+                    <validate>validate-digits validate-not-negative-number validate-digits-range digits-range-1-10</validate>
+                    <comment>
+                        <![CDATA[
+                            Select the number of batch you want to add for sync. It needs to be between 1 to 10.
+                        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
         <section id="wizzy_copy_configuration" translate="label" sortOrder="200" showInDefault="0" showInWebsite="0" showInStore="1">

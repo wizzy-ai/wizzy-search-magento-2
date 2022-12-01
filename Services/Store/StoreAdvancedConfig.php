@@ -15,6 +15,7 @@ class StoreAdvancedConfig
     const INCLUDE_CUSTOM_CSS = self::WIZZY_ADVANCED_SECTION_CONFIGURATION . "/include_custom_css";
     const WIZZY_ADVANCED_SYNC = self::WIZZY_ADVANCED_CONFIGURATION . "/sync";
     const PRODUCTS_SYNC_BATCH_SIZE = self::WIZZY_ADVANCED_SYNC . "/products_sync_batch_size";
+    const SYNC_DEQUEUE_SIZE = self::WIZZY_ADVANCED_SYNC . "/sync_dequeue_size";
 
     private $storeId;
 
@@ -47,5 +48,10 @@ class StoreAdvancedConfig
     public function getProductsSyncBatchSize()
     {
         return $this->configManager->getStoreConfig(self::PRODUCTS_SYNC_BATCH_SIZE, $this->storeId);
+    }
+
+    public function getSyncDequeueSize()
+    {
+        return $this->configManager->getStoreConfig(self::SYNC_DEQUEUE_SIZE, $this->storeId);
     }
 }

@@ -4,6 +4,7 @@ namespace Wizzy\Search\Model\Indexer;
 use Wizzy\Search\Model\API\Response;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Queue\QueueManager;
+use Wizzy\Search\Services\Store\StoreAdvancedConfig;
 use Magento;
 
 class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Magento\Framework\Mview\ActionInterface
@@ -13,10 +14,14 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
     private $maxQueueJobsToExecute;
     private $output;
 
-    public function __construct(QueueManager $queueManager, IndexerOutput $output)
-    {
+    public function __construct(
+        QueueManager $queueManager,
+        IndexerOutput $output,
+        StoreAdvancedConfig $storeAdvancedConfig
+    ) {
         $this->queueManager = $queueManager;
         $this->output = $output;
+        $this->storeAdvancedConfig = $storeAdvancedConfig;
 
       // This needs to be moved into module settings.
         $this->maxQueueJobsToExecute = 7;
@@ -35,6 +40,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
    */
     public function executeFull()
     {
+        $this->maxQueueJobsToExecute = $this->storeAdvancedConfig->getSyncDequeueSize();
         $jobs = $this->queueManager->dequeue($this->maxQueueJobsToExecute);
         $this->output->writeDiv();
         $this->output->writeln(__('Started Queue Processing'));
