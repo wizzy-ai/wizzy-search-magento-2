@@ -860,6 +860,18 @@
                     </comment>
                 </field>
             </group>
+            <group id="sync" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Sync</label>
+                <field id="products_sync_batch_size" translate="label" type="text" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Products Sync Batch Size</label>
+                    <validate>validate-digits validate-not-negative-number validate-digits-range digits-range-50-3500</validate>
+                    <comment>
+                        <![CDATA[
+                            Select the number of products you want to add for sync in one batch. It needs to be between 50 to 3500.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
         </section>
         <section id="wizzy_copy_configuration" translate="label" sortOrder="200" showInDefault="0" showInWebsite="0" showInStore="1">
             <class>separator-top</class>

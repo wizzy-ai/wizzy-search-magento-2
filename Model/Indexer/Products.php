@@ -9,6 +9,7 @@ use Wizzy\Search\Services\Queue\Processors\IndexProductsProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
 use Magento;
 use Wizzy\Search\Services\Store\StoreManager;
+use Wizzy\Search\Services\Store\StoreAdvancedConfig;
 
 class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Framework\Mview\ActionInterface
 {
@@ -20,6 +21,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
     private $storeManager;
     private $output;
     private $productPricesHelper;
+    private $storeAdvancedConfig;
 
     public function __construct(
         ProductsManager $productsManager,
@@ -27,10 +29,12 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         EntitiesSync $entitiesSync,
         StoreManager $storeManager,
         ProductPricesHelper $productPricesHelper,
-        IndexerOutput $output
+        IndexerOutput $output,
+        StoreAdvancedConfig $storeAdvancedConfig
     ) {
         $this->productsManager = $productsManager;
         $this->queueManager = $queueManager;
+        $this->storeAdvancedConfig = $storeAdvancedConfig;
 
       // This needs to be moved into module settings, Max it can be 2000.
         $this->maxProductsInSingleQueue = 2000;
@@ -88,6 +92,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
 
     private function addProductsInQueue(array $productIdsToProcess, $storeId = '', $combinePreviousEntries = false)
     {
+        $this->maxProductsInSingleQueue = $this->storeAdvancedConfig->getProductsSyncBatchSize();
         if (count($productIdsToProcess) == 0) {
           // Return as no products to process.
             return;

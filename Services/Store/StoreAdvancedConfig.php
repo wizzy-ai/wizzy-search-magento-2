@@ -8,11 +8,13 @@ class StoreAdvancedConfig
 
     const WIZZY_ADVANCED_CONFIGURATION = "wizzy_advanced_configuration";
 
-   // Advanced section configuration
+    // Advanced section configuration
     const WIZZY_ADVANCED_SECTION_CONFIGURATION = self::WIZZY_ADVANCED_CONFIGURATION . "/advanced_configuration";
     const IS_OVERRIDING_EVENTJS = self::WIZZY_ADVANCED_SECTION_CONFIGURATION . "/overriding_eventsjs";
     const TEMPLATE_ATTRIBUTES = self::WIZZY_ADVANCED_SECTION_CONFIGURATION . "/template_attributes";
     const INCLUDE_CUSTOM_CSS = self::WIZZY_ADVANCED_SECTION_CONFIGURATION . "/include_custom_css";
+    const WIZZY_ADVANCED_SYNC = self::WIZZY_ADVANCED_CONFIGURATION . "/sync";
+    const PRODUCTS_SYNC_BATCH_SIZE = self::WIZZY_ADVANCED_SYNC . "/products_sync_batch_size";
 
     private $storeId;
 
@@ -35,10 +37,15 @@ class StoreAdvancedConfig
     {
         return ($this->configManager->getStoreConfig(self::INCLUDE_CUSTOM_CSS, $this->storeId) == 1);
     }
-    
+
     public function getTemplateAttributes()
     {
         $templateAttributes = $this->configManager->getStoreConfig(self::TEMPLATE_ATTRIBUTES, $this->storeId);
         return (empty($templateAttributes) || $templateAttributes == null) ? [] : explode(",", $templateAttributes);
+    }
+
+    public function getProductsSyncBatchSize()
+    {
+        return $this->configManager->getStoreConfig(self::PRODUCTS_SYNC_BATCH_SIZE, $this->storeId);
     }
 }
