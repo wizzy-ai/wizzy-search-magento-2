@@ -95,7 +95,7 @@ class ProductPrices
         }
 
         $priceMethod = "getBaseAmount";
-        if ($this->incTax) {
+        if ($this->incTax || $this->storeTaxConfig->isCatalogPriceIncludeTax()) {
             $priceMethod = "getValue";
         }
         $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->$priceMethod();
