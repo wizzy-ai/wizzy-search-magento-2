@@ -410,6 +410,18 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="msrp_attribute" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>MSRP Attribute</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\AllAttributesList</source_model>
+                    <depends>
+                        <field id="use_msrp_as_original_price">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                            Select attribute which Wizzy should use as MSRP.
+                        ]]>
+                    </comment>
+                </field>
             </group>
 
             <group id="catalogue_configuration_images" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">

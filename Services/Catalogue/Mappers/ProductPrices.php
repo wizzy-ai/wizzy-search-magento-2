@@ -14,6 +14,7 @@ class ProductPrices
     const PRODUCT_PRICE_ORIGINAL_TYPE = "original";
     const PRODUCT_PRICE_FINAL_TYPE = "final";
     const PRODUCT_PRICE_SELLING_TYPE = "selling";
+    const PRODUCT_DEFAULT_MSRP_FIELD = "msrp";
 
     private $productPrices;
     private $currencyManager;
@@ -27,6 +28,7 @@ class ProductPrices
     private $incTax = null;
     private $storeCatalogueConfig;
     private $hasToUseMsrp = false;
+    private $msrpField;
 
     public function __construct(
         CurrencyManager $currencyManager,
@@ -35,9 +37,7 @@ class ProductPrices
         TexHelper $taxHelper,
         StoreCatalogueConfig $storeCatalogueConfig
     ) {
-        $this->productPrices = [
-
-        ];
+        $this->productPrices = [];
         $this->currencyManager = $currencyManager;
         $this->priceHelper = $priceHelper;
         $this->storeTaxConfig = $storeTaxConfig;
@@ -52,19 +52,21 @@ class ProductPrices
         $this->storeCatalogueConfig->setStore($storeId);
         $this->defaultCurrency = $this->currencyManager->getDefaultCurrency($this->storeId);
         $this->productPrices[$storeId] = [
-           self::PRODUCT_PRICE_FINAL_TYPE => [],
-           self::PRODUCT_PRICE_ORIGINAL_TYPE => [],
-           self::PRODUCT_PRICE_SELLING_TYPE => [],
+            self::PRODUCT_PRICE_FINAL_TYPE => [],
+            self::PRODUCT_PRICE_ORIGINAL_TYPE => [],
+            self::PRODUCT_PRICE_SELLING_TYPE => [],
         ];
 
         if ($this->storeTaxConfig->isCatalogPriceIncludeTax() === false) {
             if ($this->storeTaxConfig->getTaxCatalogPricesDisplayType() ==
-              \Magento\Tax\Model\Config::DISPLAY_TYPE_BOTH) {
+                \Magento\Tax\Model\Config::DISPLAY_TYPE_BOTH
+            ) {
                 $this->incTax = true;
             }
         }
 
         $this->hasToUseMsrp = $this->storeCatalogueConfig->hasToUseMsrpAsOriginalPrice();
+        $this->msrpField = $this->storeCatalogueConfig->getMsrpAttribute();
     }
 
     public function getOriginalPrice($product)
@@ -76,8 +78,12 @@ class ProductPrices
         $originalPrice = $product->getPriceInfo()->getPrice('regular_price')->getAmount()->getValue();
         $originalPrice = $this->getDefaultCurrncyValue($originalPrice);
 
-        if ($this->hasToUseMsrp) {
-            $originalMsrpPrice = $this->taxHelper->getTaxPrice($product, $product->getMsrp(), $this->incTax);
+        if ($this->hasToUseMsrp == 1) {
+            $msrp = $product->getMsrp();
+            if ($this->msrpField != self::PRODUCT_DEFAULT_MSRP_FIELD) {
+                $msrp = $product->getData($this->msrpField);
+            }
+            $originalMsrpPrice = $this->taxHelper->getTaxPrice($product, $msrp, $this->incTax);
             if ($originalMsrpPrice) {
                 $originalPrice = $originalMsrpPrice;
             }
@@ -95,7 +101,7 @@ class ProductPrices
         }
 
         $priceMethod = "getBaseAmount";
-        if ($this->incTax) {
+        if ($this->incTax || $this->storeTaxConfig->isCatalogPriceIncludeTax()) {
             $priceMethod = "getValue";
         }
         $specialPrice = $product->getPriceInfo()->getPrice('special_price')->getAmount()->$priceMethod();

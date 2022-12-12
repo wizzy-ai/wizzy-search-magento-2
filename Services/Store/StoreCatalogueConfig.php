@@ -58,6 +58,8 @@ class StoreCatalogueConfig
 
     const HAS_TO_USE_MSRP_AS_ORIGINAL_PRICE = self::CATALOGUE_CONFIGURATION_PRICES . "/use_msrp_as_original_price";
 
+    const MSRP_ATTRIBUTE = self::CATALOGUE_CONFIGURATION_PRICES . "/msrp_attribute";
+
     // IMAGES CONFIGURATION
     const CATALOGUE_CONFIGURATION_IMAGES = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_images";
     const CATALOGUE_CONFIGURATION_NAME = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_name";
@@ -198,6 +200,14 @@ class StoreCatalogueConfig
             $this->storeId
         )
         ) ? true : false;
+    }
+
+    public function getMsrpAttribute()
+    {
+        return $this->configManager->getStoreConfig(
+            self::MSRP_ATTRIBUTE,
+            $this->storeId
+        );
     }
 
     public function getThumbnailWidth()
