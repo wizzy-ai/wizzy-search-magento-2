@@ -13,7 +13,8 @@ class Version234
 
     private $defaultConfigs = [
         "wizzy_advanced_configuration/sync/products_sync_batch_size" => 2000,
-        "wizzy_advanced_configuration/sync/wizzy_dequeue_size" => 7
+        "wizzy_advanced_configuration/sync/wizzy_dequeue_size" => 7,
+        "wizzy_catalogue_configuration/catalogue_configuration_prices/msrp_attribute" => 'msrp'
     ];
 
     public function update()
