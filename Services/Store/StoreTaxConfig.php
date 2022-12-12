@@ -23,7 +23,7 @@ class StoreTaxConfig
 
     public function isCatalogPriceIncludeTax()
     {
-        return ($this->configManager->getStoreConfig(self::TAX_CALCULATION_CATALOG_PRICES, $this->storeId) === 1);
+        return ($this->configManager->getStoreConfig(self::TAX_CALCULATION_CATALOG_PRICES, $this->storeId) == 1);
     }
 
     public function getTaxCatalogPricesDisplayType()
