@@ -15,7 +15,7 @@ define(['wizzy/libs/pageStore', 'underscore', 'wizzy/renderers/components/filter
         resetFormKey();
         for (var i = 0; i < totalProducts; i++) {
             var categories = products[i]['categories'];
-            if (categories.length > 0) {
+            if (typeof categories !== "undefined" && categories.length > 0) {
                 categories = _.sortBy(categories, function(category) {
                     return category['level'];
                 }, 'desc');
