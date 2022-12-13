@@ -26,6 +26,14 @@ define([''], function() {
         return '.wizzy-search-input';
     }
 
+    function getProductClickDOM() {
+        if (typeof window.wizzyConfig.analytics.configs.general.clickDom !== 'undefined'){
+            return window.wizzyConfig.analytics.configs.general.clickDom
+        }
+    
+        return '.wizzy-result-product a'
+    }
+
     function getSwatchesToAdd() {
         var swatchesConfig = window.wizzyConfig.search.configs.swatches.configs;
         var swatches = [];
@@ -55,6 +63,7 @@ define([''], function() {
         getSwatchesToAdd: getSwatchesToAdd,
         getInputDOM: getInputDOM,
         getMinQueryLength: getMinQueryLength,
+        getProductClickDOM:getProductClickDOM,
     };
 
 });

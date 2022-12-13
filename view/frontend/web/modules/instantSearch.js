@@ -15,7 +15,7 @@ requirejs(['jquery', 'wizzy/libs/instantSearch', 'wizzy/utils/search', 'wizzy/li
             config ['formSubmissionBehaviour'] = window.wizzyConfig.search.configs.general.formSubmissionBehaviour;
             wI.search(config);
         });
-        $('body').on('click', '.wizzy-result-product a', function (e) {
+        $('body').on('click', searchUtils.getProductClickDOM(), function (e) {
             var parent = $(this).parents('.wizzy-result-product');
             let searchedResponse = pageStore.get("searchedResponse");
             var productId = parseInt(parent.data('id'));
