@@ -27,6 +27,7 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/renderers/searc
         if (q !== "") {
             searchRenderer.showIndicator(false, fS);
             executeSearch(payload);
+            wizzyCommon.dataStorage.addRecentSearchedKeyword(pageStore.get("searchSubmitValue"))
         }
         else {
             pageStore.set(pageStore.keys.searchedResponse, null);

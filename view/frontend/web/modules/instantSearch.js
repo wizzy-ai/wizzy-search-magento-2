@@ -1,4 +1,4 @@
-requirejs(['jquery', 'wizzy/libs/instantSearch', 'wizzy/utils/search'], function($, wI, searchUtils) {
+requirejs(['jquery', 'wizzy/libs/instantSearch', 'wizzy/utils/search', 'wizzy/libs/pageStore', 'wizzy/common'], function($, wI, searchUtils, pageStore, wizzyCommon) {
     $(document).ready(function(e) {
         wI.init();
         $(searchUtils.getInputDOM()).each(function(e) {
@@ -14,6 +14,13 @@ requirejs(['jquery', 'wizzy/libs/instantSearch', 'wizzy/utils/search'], function
 
             config ['formSubmissionBehaviour'] = window.wizzyConfig.search.configs.general.formSubmissionBehaviour;
             wI.search(config);
+        });
+        $('body').on('click', '.wizzy-result-product a', function (e) {
+            var parent = $(this).parents('.wizzy-result-product');
+            let searchedResponse = pageStore.get("searchedResponse");
+            var productId = parseInt(parent.data('id'));
+            let productItem = searchedResponse.result.filter((item) => (productId === item.id));
+            wizzyCommon.dataStorage.addRecentProductViewed(productItem[0]);
         });
     });
 });
