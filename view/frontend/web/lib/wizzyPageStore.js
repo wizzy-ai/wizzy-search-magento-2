@@ -32,7 +32,6 @@ define(['jquery'], function($) {
         get: get,
         keys: {
             suggestionFilters: 'suggestionFilters',
-            filteringFor: 'filteringFor',
             searchInputValue: 'searchInputValue',
             searchSubmitValue: 'searchSubmitValue',
             beforeSearchDOM: 'beforeSearchDOM',

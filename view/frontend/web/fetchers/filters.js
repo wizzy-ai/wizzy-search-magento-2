@@ -19,9 +19,8 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         var payload = {
             filters: filters,
         };
-        pageStore.set(pageStore.keys.filteringFor, filteringFor);
 
-        executeFilter(payload, isCategorySearch);
+        executeFilter(payload, isCategorySearch, filteringFor);
     }
 
     function setDefaultValuesInFilters(filters) {
@@ -55,8 +54,30 @@ define(['jquery', 'wizzy/common', 'wizzy/libs/pageStore', 'wizzy/utils/filters',
         return filters;
     }
 
-    function executeFilter(payload, isCategorySearch) {
-        var filteringFor = pageStore.get(pageStore.keys.filteringFor, '');
+    function executeFilter(payload, isCategorySearch, filteringFor) {
+        var hasWizzyClient = true;
+         if (typeof wizzyCommon.getClient() === "undefined") {
+            hasWizzyClient = false;
+            var clientCheckInterval = setInterval(clientCheckTimer, 100);
+            var clickCheckInstances = 0;
+    
+            function clientCheckTimer() {
+                if (typeof wizzyCommon.getClient() !== "undefined") {
+                    hasWizzyClient = true;
+                    executeFilterAct(payload, isCategorySearch, filteringFor);
+                }
+                clickCheckInstances++;
+                if (clickCheckInstances || hasWizzyClient) {
+                    clearInterval(clientCheckInterval);
+                }
+            }
+        }
+        else {
+            executeFilterAct(payload, isCategorySearch, filteringFor);
+        }
+    }
+    
+    function executeFilterAct(payload, isCategorySearch, filteringFor) {
         if (filteringFor === 'page') {
             searchRenderer.showIndicator(true, !isCategorySearch);
         }
