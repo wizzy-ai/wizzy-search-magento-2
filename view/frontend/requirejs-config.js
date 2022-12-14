@@ -46,5 +46,6 @@ var config = {
         'wizzy/analytics/clicks' : 'Wizzy_Search/analytics/clicks',
         'wizzy/analytics/views' : 'Wizzy_Search/analytics/views',
         'wizzy/analytics/sessions' : 'Wizzy_Search/analytics/sessions',
+        'wizzy/analytics/conversions' : 'Wizzy_Search/analytics/conversions',
     }
 };

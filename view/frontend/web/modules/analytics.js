@@ -1,4 +1,4 @@
-requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageStore', 'wizzy/analytics/views', 'wizzy/analytics/sessions', 'wizzy/utils/cookie'], function($, wC, aC, pS, aV, aS, cUtils) {
+requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageStore', 'wizzy/analytics/views', 'wizzy/analytics/sessions', 'wizzy/analytics/conversions', 'wizzy/utils/cookie'], function($, wC, aC, pS, aV, aS, aCon, cUtils) {
     $(document).ready(function(e) {
         $('body').on('click', '.wizzy-result-product a', function(e) {
             var parent = $(this).parents('.wizzy-result-product');
@@ -62,5 +62,8 @@ requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageS
 
             wC.dataStorage.removeClickedProduct(currentProductId);
         }
+    }
+    window.wizzyTrackConversion = function (options) {
+        aCon.record(options);
     }
 });
