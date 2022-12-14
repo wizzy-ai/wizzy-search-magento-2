@@ -340,6 +340,11 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
             return this;
         };
 
+        $.fn.executeSearch = function(payload) {
+            sF.execute(payload);
+            return this;
+        };
+
         $.fn.categorySearch = function(categoryKey) {
             pageStore.set(pageStore.keys.isCategoryPageRendered, false);
             pageStore.set(pageStore.keys.searchedResponse, null);
