@@ -140,11 +140,29 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
         return (typeof q !== "undefined" && (q.trim().length >= searchUtils.getMinQueryLength() || q.trim().length === 0));
     }
 
+    function hasToExecuteSearch() {
+        let originUrl = window.location.href;
+        let params = originUrl.split("?");
+        params = params[1];
+        params = params.split("&");
+        if(params.length > 1) {
+            return false;
+        }
+        return true;
+    }
+
     function executeSearchByElement(searchElement, q) {
         if (isValidQueryString(q)) {
             searchElement.val(q);
         }
-        $.fn.refreshFilters(true);
+        if(hasToExecuteSearch()) {
+            $.fn.executeSearch({
+                "q": q,
+                "sF": true
+            });
+        } else {
+            $.fn.refreshFilters(true);
+        }
     }
 
     function getParam(param) {
