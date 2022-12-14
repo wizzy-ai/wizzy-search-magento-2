@@ -17,7 +17,7 @@ define(['jquery', 'wizzy/fetchers/autocomplete', 'wizzy/fetchers/filters', 'wizz
     function assignTextWrapperClick() {
         $('body').on('click', textWrapper, function(e) {
             e.preventDefault();
-            e.stopPropagation();
+            e.stopImmediatePropagation();
 
             var searchValue = $(this).parent().data(searchterm);
             searchElement.val(searchValue);
