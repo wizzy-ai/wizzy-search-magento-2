@@ -400,7 +400,9 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
             }
             parent.toggleClass('active');
             if (parent.hasClass('active')) {
-                searchInput.focus();
+                if(typeof searchInput !== 'undefined' && searchInput){
+                    searchInput.focus();
+                }
             }
         });
     }

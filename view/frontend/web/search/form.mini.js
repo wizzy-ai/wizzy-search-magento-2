@@ -13,7 +13,9 @@ requirejs(['jquery', 'wizzy/libs/searchUrlUtils', 'wizzy/utils/search'], functio
                 $('body').addClass('wizzyMobileTapped');
                 $('html').addClass('wizzyMobileTapped');
             }
-            $(this).parents('.wizzy-search-form-wrapper').find(searchUtils.getInputDOM()).focus();
+            if(typeof $(this).parents('.wizzy-search-form-wrapper').find(searchUtils.getInputDOM()) !== 'undefined' && $(this).parents('.wizzy-search-form-wrapper').find(searchUtils.getInputDOM())){
+                $(this).parents('.wizzy-search-form-wrapper').find(searchUtils.getInputDOM()).focus();
+            }
             $('.wizzy-search-wrapper').addClass('mobileTapped');
         }
     });
@@ -44,7 +46,9 @@ requirejs(['jquery', 'wizzy/libs/searchUrlUtils', 'wizzy/utils/search'], functio
         var searchInput = $(this).parents('.wizzy-search-form-wrapper').find(searchUtils.getInputDOM());
         searchInput.val('');
         searchInput.trigger('keyup');
-        searchInput.focus();
+        if(typeof searchInput !== 'undefined' && searchInput){
+            searchInput.focus();
+        }
     });
 
     $('body').on('keyup', searchUtils.getInputDOM(),function (e) {
