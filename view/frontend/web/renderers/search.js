@@ -86,6 +86,7 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
     }
 
     function displayResults(response) {
+        response = wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_RENDER_RESULTS, response);
         if (typeof response.error !== "undefined" && response.error === true) {
             handleFailedSearch();
         }
