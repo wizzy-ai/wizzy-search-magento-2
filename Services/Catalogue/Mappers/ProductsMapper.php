@@ -181,8 +181,8 @@ class ProductsMapper
         $this->mapImages($product, $mappedProduct);
         $this->mapParentProduct($product, $mappedProduct);
 
-        $isValidURL = $this->isValidUrl($mappedProduct['url']);
         $this->disptachBeforeSkipCheckEvent($mappedProduct, $product);
+        $isValidURL = $this->isValidUrl($mappedProduct['url']);
         if ($mappedProduct['mainImage'] == "" ||
            empty($mappedProduct['categories']) ||
            empty($mappedProduct['sellingPrice']) ||
