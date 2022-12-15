@@ -23,7 +23,9 @@ define(['jquery', 'wizzy/bundle', 'wizzy/renderers/wrapper'], function($, wizzyB
                 isOpened = true;
             })
             .onMessage(function (data) {
-                wizzyRenderer(JSON.parse(data.data));
+                wizzyRenderer(JSON.parse(data.data), {
+                    sessionDataStorage: (wizzySessionDataStorage.singleton()),
+                });
             })
             .onError(function (event) {
 

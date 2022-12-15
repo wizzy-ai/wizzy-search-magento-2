@@ -1,6 +1,6 @@
 <script type="text/template" id="wizzy-search-empty-results">
 
-   <div class="wizzy-search-empty-results-wrapper">
+  <div class="wizzy-search-empty-results-wrapper wizzy-suggestions">
       <div class="wizzy-empty-results-summary">
           <p><?= $block->escapeHtmlAttr(__('You searched for')); ?> <span class="wizzy-empty-searched-query">{{ query }}</span></p>
       </div>
@@ -13,6 +13,20 @@
             <p class="wizzy-req-ref-id"><?= $block->escapeHtmlAttr(__('Ref ID:')); ?> {{ lastRequestId }}</p>
           {{/lastRequestId}}
       </div>
+      <div class="wizzy-search-wrapper">
+            <div class="wizzy-search-results-wrapper">
+                <div class="wizzy-search-results-container">
+                    <div class="wizzy-search-results">
+                        <ul class="wizzy-search-results-list">
+                            {{#suggestions}}
+                              {{& html}}
+                            {{/suggestions}}
+                        </ul><!-- ending of wizzy-search-results-list -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
    </div>
 
 </script>

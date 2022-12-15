@@ -12,6 +12,7 @@ var wizzy = {
         AFTER_FILTER_ITEM_CLICKED: 'afterFilterItemClicked',
         BEFORE_SORT_EXECUTED: 'beforeSortExecuted',
         BEFORE_INIT: 'beforeInit',
+        BEFORE_RENDER_RESULTS: "beforeRenderResults",
     },
     registeredEvents: [],
     registerEvent: function (eventName, callback) {

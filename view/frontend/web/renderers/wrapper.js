@@ -1,9 +1,10 @@
-define(['wizzy/renderers/autocomplete', 'wizzy/renderers/search', 'wizzy/renderers/variation', 'wizzy/libs/pageStore', 'wizzy/common'], function(autocompleteRenderer, searchRenderer, variationRenderer, pageStore, $wC) {
-    return function(data) {
+define(['wizzy/renderers/autocomplete', 'wizzy/renderers/search', 'wizzy/renderers/variation', 'wizzy/libs/pageStore', 'wizzy/renderers/noProductsFound'], function(autocompleteRenderer, searchRenderer, variationRenderer, pageStore, noProductsFoundRenderer) {
+
+    return function(data, wC) {
         if (typeof data.error !== "undefined" || data.error === null || data.error  === "") {
             return false;
         }
-
+        
         var requestId = data.requestId;
         var responseId = data.responseId;
         pageStore.set(pageStore.keys.lastResponseId, responseId);
@@ -40,6 +41,13 @@ define(['wizzy/renderers/autocomplete', 'wizzy/renderers/search', 'wizzy/rendere
                 groupedFilteredProducts[filteringFor] = data.response;
                 pageStore.set(pageStore.keys.groupedFilteredProducts, groupedFilteredProducts);
                 wC.sessionDataStorage.setGroupedFilteredProducts(groupedFilteredProducts);
+            }
+            if (filteringFor === "noProductsFound") {
+                var groupedFilteredProducts = pageStore.get(pageStore.keys.groupedFilteredProducts, {});
+                groupedFilteredProducts[filteringFor] = data.response;
+                pageStore.set(pageStore.keys.groupedFilteredProducts, groupedFilteredProducts);
+                wC.sessionDataStorage.setGroupedFilteredProducts(groupedFilteredProducts);
+                noProductsFoundRenderer.showProductsWithFailedSearch();
             }
             delete lastRequestIdFilters[filteringFor];
             pageStore.set(pageStore.keys.lastRequestIdFilters, lastRequestIdFilters);

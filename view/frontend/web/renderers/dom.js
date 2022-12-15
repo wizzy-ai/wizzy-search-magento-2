@@ -4,6 +4,10 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/utils/url'], functi
         return window.wizzyConfig.search.view.domSelector;
     }
 
+    function getNoProductsFoundDOM() {
+        return window.wizzyConfig.search.view.noProductsFoundDOM;
+    }
+
     function revertDOM() {
         var beforeSearchDOM = pageStore.get(pageStore.keys.beforeSearchDOM);
         if (beforeSearchDOM !== null && !commonUrlUtils.hasSearchEndPointInUrl(beforeSearchDOM.url)) {
@@ -47,5 +51,6 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/utils/url'], functi
         removeUnnecessaryBlocks: removeUnnecessaryBlocks,
         updateResultsDOM: updateResultsDOM,
         appendDOM: appendDOM,
+        getNoProductsFoundDOM:getNoProductsFoundDOM
     };
 });
