@@ -85,6 +85,11 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         return progressTemplate;
     }
 
+    function showLoaderForSpecificDOM(domHandler) {
+        var progressTemplate = $(getCommonConfig().templates.progress).html();
+        $(domHandler).html(progressTemplate);
+    }
+
     function displayResults(response) {
         response = wizzy.triggerEvent(wizzy.allowedEvents.BEFORE_RENDER_RESULTS, response);
         if (typeof response.error !== "undefined" && response.error === true) {
@@ -293,5 +298,6 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
         showIndicatorOnPageLoad: showIndicatorOnPageLoad,
         showIndicator: showIndicator,
         displayResults: displayResults,
+        showLoaderForSpecificDOM:showLoaderForSpecificDOM
     };
 });

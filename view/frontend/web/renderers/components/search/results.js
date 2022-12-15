@@ -34,19 +34,28 @@ define(['jquery', 'Mustache', 'wizzy/libs/pageStore', 'wizzy/renderers/component
     }
 
     function getEmptyHTML() {
+        var suggestions = false;
         var templates = window.wizzyConfig.search.view.templates;
         var emptyTemplate = $(templates.emptyResults).html();
         var searchedQuery =  pageStore.get(pageStore.keys.searchInputValue, null);
         var lastRequestId = pageStore.get(pageStore.keys.lastRequestIdFilters, null);
+        var groupedFilteredProducts = pageStore.get(pageStore.keys.groupedFilteredProducts, {});
         if (lastRequestId === null || typeof lastRequestId['page'] === "undefined") {
             lastRequestId = pageStore.get(pageStore.keys.lastRequestIdSearch, null);
         }
 
-        return Mustache.render(emptyTemplate, {
+        let params = {
             'query': searchedQuery,
             'lastRequestId': lastRequestId,
-        });
-    }
+        };
+
+        if(window?.wizzyConfig?.search?.configs?.noProductsFound?.showProducts && groupedFilteredProducts?.noProductsFound?.payload?.result) {
+            suggestions = getProductsHTML(groupedFilteredProducts['noProductsFound']['payload']['result']);
+            params['suggestions'] = suggestions;
+        }
+        
+        return Mustache.render(emptyTemplate, params);
+        }
 
     function hasProducts() {
         var response = pageStore.get(pageStore.keys.searchedResponse, null);
