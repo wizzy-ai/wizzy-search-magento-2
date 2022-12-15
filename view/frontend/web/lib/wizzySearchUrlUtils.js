@@ -1,5 +1,7 @@
 define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url', 'wizzy/utils/filters', 'wizzy/renderers/search', 'wizzy/utils/search'], function($, wizzyUtils, urlChangeListener, commonUrlUtils, filterUtils, searchRenderer, searchUtils) {
 
+    var filtersUtilsVar = filterUtils.new();
+
     function updateQuery(query) {
         var searchData = {
             q: query,
@@ -100,6 +102,7 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     }
 
     function searchCategory(categoryKey) {
+        filtersUtilsVar.decodeFilters();
         $.fn.categorySearch(categoryKey);
     }
 
@@ -171,6 +174,9 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     }
 
     function getQueryUrl(searchData) {
+        if(isOnCategoryPage()) {
+            return getOrigin() + commonUrlUtils.getCategoriesEndPoint() + "?" + filtersUtilsVar.encodeFilters(searchData);
+        }
         return getOrigin() + commonUrlUtils.getSearchEndPoint() + "?" + filterUtils.new().encodeFilters(searchData);
     }
 

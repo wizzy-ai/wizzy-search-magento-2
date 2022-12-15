@@ -4,6 +4,10 @@ define(['jquery'], function($) {
         return url.endsWith(searchEndpoint) || url.indexOf(searchEndpoint) >= 0;
     }
 
+    function getCategoriesEndPoint() {
+        return window.wizzyConfig.common.categoryEndpoint;
+    }
+
     function getSearchEndPoint() {
         return window.wizzyConfig.search.configs.general.searchEndpoint;
     }
@@ -11,6 +15,7 @@ define(['jquery'], function($) {
     return {
         getSearchEndPoint: getSearchEndPoint,
         hasSearchEndPointInUrl: hasSearchEndPointInUrl,
+        getCategoriesEndPoint: getCategoriesEndPoint
     };
 
 });
