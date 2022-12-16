@@ -1,0 +1,13 @@
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+?>
+
+<script type="text/javascript">
+    (function  () {
+        require(["jquery"], function($) {
+            $(document).ready(function($) {
+                window.location.href = '<?php echo $block->getPageRedirectUrl(); ?>';
+            });
+        });
+    })();
+</script>

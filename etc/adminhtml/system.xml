@@ -912,5 +912,29 @@
                 </field>
             </group>
         </section>
+        <section id="wizzy_queue_processors_status" translate="label" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Queue Processors Status</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="page_button" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Redirecting to the Queue Processors Status Page...</label>
+                <field id="redirect_page" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Wizzy\Search\Block\Adminhtml\System\Config\SyncQueueProcessorsRedirect</frontend_model>
+                </field>
+            </group>
+        </section>
+        <section id="wizzy_skipped_entities" translate="label" sortOrder="210" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Skipped Entities</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="page_button" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Redirecting to the Skipped Entities Page...</label>
+                <field id="redirect_page" translate="label" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <frontend_model>Wizzy\Search\Block\Adminhtml\System\Config\SkippedEntities</frontend_model>
+                </field>
+            </group>
+        </section>
     </system>
 </config>
