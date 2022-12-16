@@ -18,7 +18,8 @@ class BasePageRedirect extends Field
         $this->urlBuilder = $context->getUrlBuilder();
     }
 
-    protected function setPage($page) {
+    protected function setPage($page)
+    {
         $this->page = $this->urlBuilder->getUrl($page);
     }
 

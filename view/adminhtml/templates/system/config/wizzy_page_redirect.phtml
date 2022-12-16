@@ -6,7 +6,7 @@
     (function  () {
         require(["jquery"], function($) {
             $(document).ready(function($) {
-                window.location.href = '<?= $block->getPageRedirectUrl(); ?>';
+                window.location.href = '<?= $block->escapeHtmlAttr($block->getPageRedirectUrl()); ?>';
             });
         });
     })();
