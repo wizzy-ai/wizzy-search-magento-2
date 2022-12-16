@@ -22,7 +22,8 @@ class BasePageRedirect extends Field
         $this->page = $this->urlBuilder->getUrl($page);
     }
 
-    public function getPageRedirectUrl() {
+    public function getPageRedirectUrl()
+    {
         return $this->page;
     }
 
