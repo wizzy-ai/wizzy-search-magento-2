@@ -35,7 +35,8 @@ class BasePageRedirect extends Field
         return $this->page;
     }
 
-    public function getConfigSelectorToHide() {
+    public function getConfigSelectorToHide()
+    {
         return $this->config;
     }
 
