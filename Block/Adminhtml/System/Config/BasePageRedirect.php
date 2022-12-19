@@ -8,6 +8,8 @@ use \Magento\Framework\Data\Form\Element\AbstractElement;
 class BasePageRedirect extends Field
 {
     protected $page;
+    protected $config;
+
     private $urlBuilder;
 
     public function __construct(
@@ -23,9 +25,18 @@ class BasePageRedirect extends Field
         $this->page = $this->urlBuilder->getUrl($page);
     }
 
+    protected function setConfig($config)
+    {
+        $this->config = 'row_' . str_replace("/", "_", $config);
+    }
+
     public function getPageRedirectUrl()
     {
         return $this->page;
+    }
+
+    public function getConfigSelectorToHide() {
+        return $this->config;
     }
 
     protected function _prepareLayout()

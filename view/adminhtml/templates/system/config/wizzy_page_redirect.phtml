@@ -2,11 +2,17 @@
 /** @var $block \Magento\Framework\View\Element\Template */
 ?>
 
+<style>
+    #<?= /* @noEscape */ $block->getConfigSelectorToHide(); ?> {
+        display: none;
+    }
+</style>
+
 <script type="text/javascript">
     (function  () {
         require(["jquery"], function($) {
             $(document).ready(function($) {
-                window.location.href = '<?= $block->escapeHtmlAttr($block->getPageRedirectUrl()); ?>';
+                window.location.href = '<?= /* @noEscape */ $block->getPageRedirectUrl(); ?>';
             });
         });
     })();
