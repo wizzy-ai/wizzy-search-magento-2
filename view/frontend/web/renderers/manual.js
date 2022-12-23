@@ -1,20 +1,11 @@
-define(['jquery', 'wizzy/renderers/autocomplete', 'wizzy/libs/pageStore'], function($, autocompleteRenderer, pageStore) {
+define(['jquery', 'wizzy/renderers/autocomplete', 'wizzy/libs/pageStore', 'wizzy/utils/autocomplete'], function($, autocompleteRenderer, pageStore, autocompleteUtils) {
     function manualRender(data){
         var displayingFor = data.for;
         if (displayingFor === "defaultMenu") {
             var autocompleteResponse = {'payload': {},'isForDefault': true, 'element': data.element};
             var defaultBehaviour = window.wizzyConfig.autocomplete.configs.defaultBehaviour;
             if (defaultBehaviour.suggestions.enabled) {
-                var pool = defaultBehaviour.suggestions.defaultPool;
-                var totalSuggestions = pool.length;
-
-                for (var i = 0; i < totalSuggestions; i++) {
-                    var suggestion = pool[i];
-                    if (typeof autocompleteResponse['payload'][suggestion['section']] === "undefined") {
-                        autocompleteResponse['payload'][suggestion['section']] = [];
-                    }
-                    autocompleteResponse['payload'][suggestion['section']].push(suggestion);
-                }
+                autocompleteResponse['payload'] = autocompleteUtils.getDefaultSuggestions();
             }
 
             if (defaultBehaviour.topProducts.enabled) {
