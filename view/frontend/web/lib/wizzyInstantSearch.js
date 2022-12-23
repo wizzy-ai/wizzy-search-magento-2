@@ -18,7 +18,7 @@ define(['jquery', 'wizzy/libs/pageStore', 'wizzy/libs/searchUrlUtils', 'wizzy/li
                 performSearchRequest(false, isByTrigger);
             });
 
-            searchElement.bind('paste', function() {
+            searchElement.bind('paste input', function() {
                 setTimeout(function(e) {
                     performSearchRequest(false, false);
                 }, 0);

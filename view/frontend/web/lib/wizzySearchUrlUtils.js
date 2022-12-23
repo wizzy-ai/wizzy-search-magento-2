@@ -146,9 +146,12 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     function hasToExecuteSearch() {
         let originUrl = window.location.href;
         let params = originUrl.split("?");
+        if (params.length <= 1) {
+            return false;
+        }
         params = params[1];
         params = params.split("&");
-        if(params.length > 1) {
+        if (params.length > 1) {
             return false;
         }
         return true;
