@@ -4,6 +4,7 @@ var config = {
         'Mustache': 'Wizzy_Search/lib/mustache.min',
         'noUiSlider': 'Wizzy_Search/lib/nouislider.min',
         'wNumb': 'Wizzy_Search/lib/wNumb.min',
+        'wizzy/data' : 'Wizzy_Search/core/wizzyData',
         'wizzy/common' : 'Wizzy_Search/core/wizzyCommon',
         'wizzy/utils' : 'Wizzy_Search/core/wizzyUtils',
         'wizzy/utils/facets' : 'Wizzy_Search/core/wizzyFacetsUtils',

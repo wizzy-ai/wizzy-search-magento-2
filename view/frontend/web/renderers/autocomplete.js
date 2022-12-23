@@ -1,6 +1,10 @@
-define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/renderers/components/search/products'], function($, Mustache, _, pageStore, productsComponent) {
+define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/renderers/components/search/products', 'wizzy/utils/autocomplete'], function($, Mustache, _, pageStore, productsComponent, autocompleteUtils) {
     var wizzyAutoCompleteConfig;
     var isByFilter = false;
+
+    var maximumSuggestions = 10;
+    var maximumPinnedTerms = 5;
+    var maximumRecentSearches = 5;
 
     function render(data) {
         wizzyAutoCompleteConfig = window.wizzyConfig.autocomplete.menu.view;
@@ -11,7 +15,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
         if (typeof data["payload"] !== "undefined") {
             resetAutosuggestionStore();
             var isMenuHidden = require('wizzy/libs/autocomplete').isMenuHidden();
-            var suggestionsTemplate = getSuggestionsHTML(data["payload"]);
+            var suggestionsTemplate = getSuggestionsHTML(data["payload"],isForDefault);
             var topProductsTemplate = getProductsHTML(data["payload"]);
             var autocompleteWrapper = $(wizzyAutoCompleteConfig.templates.wrapper).html();
 
@@ -106,11 +110,11 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
         return productsComponent.getTransformedProducts(products);
     }
 
-    function getSuggestionsHTML(data) {
+    function getSuggestionsHTML(data, isForDefault) {
         if (isByFilter) {
             return '';
         }
-        var suggestions = getSuggestionList(data);
+        var suggestions = getSuggestionList(data,isForDefault);
         var suggestionsTemplate = $(wizzyAutoCompleteConfig.templates.suggestions).html();
         suggestionsTemplate = Mustache.render(suggestionsTemplate, {
             suggestions: suggestions,
@@ -122,7 +126,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
         };
     }
 
-    function getSuggestionList(data) {
+    function getSuggestionList(data, isForDefault) {
 
         var suggestionGroups = [
             "categories",
@@ -130,6 +134,15 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
             "others",
             "pages",
         ];
+
+        var [availableTotalPinnedTermsCount,availableRecentSearchTermsCount] = getAvailableSuggestionsCount();
+    
+        if(typeof window.wizzyConfig.autocomplete.configs.defaultBehaviour !== "undefined" && window.wizzyConfig.autocomplete.configs.defaultBehaviour.suggestions.displayRecent && isForDefault){
+            suggestionGroups.unshift('recentSearches');
+            data = autocompleteUtils.getDefaultSuggestions(availableTotalPinnedTermsCount)
+            data['recentSearches'] = autocompleteUtils.getRecentSearches(availableRecentSearchTermsCount);
+        }
+
         if (typeof wizzyConfig.autocomplete.menu.sections !== "undefined" && wizzyConfig.autocomplete.menu.sections.length > 0) {
             suggestionGroups = wizzyConfig.autocomplete.menu.sections;
         }
@@ -269,6 +282,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
           "others": window.wizzyConfig.autocomplete.menu.others.title,
           "brands": window.wizzyConfig.autocomplete.menu.brands.title,
           "pages": window.wizzyConfig.autocomplete.pages.title,
+          "recentSearches": window.wizzyConfig.autocomplete.recentSearches.title
         };
 
         return (typeof groupLabels[groupKey] !== "undefined" ? groupLabels[groupKey] : "");
@@ -282,7 +296,8 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
                 'isHead': true,
                 'hasLabelPath': false,
                 'searchTerm': '',
-                'index': index
+                'index': index,
+                'isRecentSearch': false
             };
         }
         var labelPath = getSubLabelPath(data, type);
@@ -294,6 +309,7 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
             'isHead': false,
             'index': index,
             'searchTerm': data.value.toLowerCase(),
+            'isRecentSearch': type == 'recentSearches' ? true : false
         };
     }
 
@@ -342,6 +358,51 @@ define(['jquery', 'Mustache', 'underscore', 'wizzy/libs/pageStore', 'wizzy/rende
         }
 
         return subLabelPath;
+    }
+
+    function getPinnedTermsCount(){
+        let pool = autocompleteUtils.getDefaultSuggestionsPool();
+        return pool.length;
+    }
+    
+    function getRecentSearchTermsCount(){
+        let recentSearches = autocompleteUtils.getRecentSearchesPool();
+        return recentSearches.length;
+    }
+    
+    function getAvailableSuggestionsCount(){
+        let newavailableTotalPinnedTermsCount;
+        let newavailableRecentSearchTermsCount;
+    
+        let totalRecentSearchTermsCount = getRecentSearchTermsCount();
+        let totalPinnedTermCount = getPinnedTermsCount();
+    
+        if(totalRecentSearchTermsCount > maximumRecentSearches){
+            if(totalPinnedTermCount > maximumPinnedTerms){
+                newavailableTotalPinnedTermsCount = maximumPinnedTerms
+                newavailableRecentSearchTermsCount = maximumRecentSearches
+            }
+            else{
+                newavailableTotalPinnedTermsCount = totalPinnedTermCount;
+                newavailableRecentSearchTermsCount = (totalRecentSearchTermsCount + totalPinnedTermCount > maximumSuggestions ? (maximumSuggestions-newavailableTotalPinnedTermsCount) : totalRecentSearchTermsCount);
+            }
+        }
+        else{
+        
+            if(totalPinnedTermCount > (maximumSuggestions - totalRecentSearchTermsCount)){
+                newavailableTotalPinnedTermsCount = maximumSuggestions-totalRecentSearchTermsCount;
+                newavailableRecentSearchTermsCount = totalRecentSearchTermsCount
+            }
+            else{
+                newavailableRecentSearchTermsCount = totalRecentSearchTermsCount;
+                newavailableTotalPinnedTermsCount = totalPinnedTermCount;
+            }
+    
+    
+        }
+    
+        return [newavailableTotalPinnedTermsCount,newavailableRecentSearchTermsCount];
+    
     }
 
     return {

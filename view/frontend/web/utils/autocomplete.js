@@ -1,4 +1,4 @@
-define([''], function() {
+define(['wizzy/data'], function(wizzyData) {
 
     function getSectionsToAdd() {
         var sectionsOrder = wizzyConfig.autocomplete.menu.sections;
@@ -22,9 +22,59 @@ define([''], function() {
         return (typeof window.wizzyConfig.autocomplete.configs.defaultBehaviour !== "undefined");
     }
 
+    function getDefaultSuggestionsPool(){
+        var defaultBehaviour = window.wizzyConfig.autocomplete.configs.defaultBehaviour;
+        var pool = defaultBehaviour.suggestions.defaultPool;
+        return pool;
+    }
+    
+    function getDefaultSuggestions(availableTotalPinnedTermsCount = null){
+        let pool = getDefaultSuggestionsPool();
+        var totalSuggestions = availableTotalPinnedTermsCount ? availableTotalPinnedTermsCount : pool.length;
+        let payload = {}
+            for (var i = 0; i < totalSuggestions; i++) {
+                var suggestion = pool[i];
+                if (typeof payload[suggestion['section']] === "undefined") {
+                    payload[suggestion['section']] = [];
+                }
+                payload[suggestion['section']].push(suggestion);
+            }
+            return payload;
+    }
+    
+    function getRecentSearchesPool(){
+       return  wizzyData.data.get("SEARCHED_KEYWORDS") ? wizzyData.data.get("SEARCHED_KEYWORDS") : [];
+    }
+    
+    function getRecentSearches(availableRecentSearchTermsCount){
+        let recentSearches = getRecentSearchesPool();
+    
+        let mappedRecentSearches = [];
+            if(recentSearches){
+                recentSearches.reverse()
+                for(let i=0; i<availableRecentSearchTermsCount; i++){
+                    mappedRecentSearches.push(
+                        {
+                            value:recentSearches[i],
+                            valueHighlighted:recentSearches[i],
+                            filters:[],
+                            payload:[],
+                            section:'recentSearches'
+                        }
+                    )
+                }
+    
+            return mappedRecentSearches;
+            }
+    }
+
     return {
         getSectionsToAdd: getSectionsToAdd,
         isDefaultBehaviourSet: isDefaultBehaviourSet,
+        getDefaultSuggestionsPool:getDefaultSuggestionsPool,
+        getRecentSearchesPool:getRecentSearchesPool,
+        getRecentSearches:getRecentSearches,
+        getDefaultSuggestions:getDefaultSuggestions
     };
 
 });
