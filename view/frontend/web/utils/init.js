@@ -5,9 +5,7 @@ requirejs(['wizzy/renderers/dom', 'wizzy/renderers/search', 'wizzy/renderers/noP
             var noProductsFoundDefaultBehaviour = window.wizzyConfig.search.configs.noProductsFound
         }
 
-        if (typeof window.wizzyConfig.pageStore.groupedFilteredProducts != 'undefined' && window.wizzyConfig.pageStore.groupedFilteredProducts.noProductsFound) {
-            var defaultData = window.wizzyConfig.pageStore.groupedFilteredProducts.noProductsFound;
-        }
+        var defaultData = typeof window.wizzyConfig.pageStore.groupedFilteredProducts !== 'undefined' ? window.wizzyConfig.pageStore.groupedFilteredProducts.noProductsFound : null;
             
         if (typeof noProductsFoundDefaultBehaviour !== 'undefined' && noProductsFoundDefaultBehaviour.showProducts) {
                 searchRenderer.showLoaderForSpecificDOM(domRenderer.getNoProductsFoundDOM());
