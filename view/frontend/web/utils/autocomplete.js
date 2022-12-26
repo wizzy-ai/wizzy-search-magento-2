@@ -23,8 +23,12 @@ define(['wizzy/data'], function(wizzyData) {
     }
 
     function getDefaultSuggestionsPool(){
-        var defaultBehaviour = window.wizzyConfig.autocomplete.configs.defaultBehaviour;
-        var pool = defaultBehaviour.suggestions.defaultPool;
+        var pool = [];
+        if (typeof window.wizzyConfig.autocomplete.configs !== "undefined" &&
+            typeof window.wizzyConfig.autocomplete.configs.defaultBehaviour !== "undefined") {
+            var defaultBehaviour = window.wizzyConfig.autocomplete.configs.defaultBehaviour;
+            pool = defaultBehaviour.suggestions.defaultPool;
+        }
         return pool;
     }
     
