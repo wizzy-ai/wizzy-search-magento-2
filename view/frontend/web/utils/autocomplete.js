@@ -68,13 +68,22 @@ define(['wizzy/data'], function(wizzyData) {
             }
     }
 
+    function getProductClickDOM() {
+        if (typeof window.wizzyConfig.autocomplete.configs !=='undefined' && typeof window.wizzyConfig.autocomplete.configs.general.clickDom !== 'undefined'){
+            return window.wizzyConfig.autocomplete.configs.general.clickDom
+        }
+        
+        return '.topproduct-item a'
+    }
+
     return {
         getSectionsToAdd: getSectionsToAdd,
         isDefaultBehaviourSet: isDefaultBehaviourSet,
         getDefaultSuggestionsPool:getDefaultSuggestionsPool,
         getRecentSearchesPool:getRecentSearchesPool,
         getRecentSearches:getRecentSearches,
-        getDefaultSuggestions:getDefaultSuggestions
+        getDefaultSuggestions:getDefaultSuggestions,
+        getProductClickDOM:getProductClickDOM
     };
 
 });
