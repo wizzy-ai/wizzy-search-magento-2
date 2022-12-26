@@ -272,6 +272,7 @@ class BaseBlock extends Template
                'symbol' => ($currencySymbol) ? $currencySymbol : ($currencyCode . " "),
             ],
          ],
+         'analytics' => [],
         ];
 
         return $configs;

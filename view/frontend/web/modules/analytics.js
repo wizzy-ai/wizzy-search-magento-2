@@ -1,11 +1,11 @@
-requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageStore', 'wizzy/analytics/views', 'wizzy/analytics/sessions', 'wizzy/utils/cookie'], function($, wC, aC, pS, aV, aS, cUtils) {
+requirejs(['jquery', 'wizzy/common', 'wizzy/analytics/clicks', 'wizzy/libs/pageStore', 'wizzy/analytics/views', 'wizzy/analytics/sessions', 'wizzy/utils/cookie', 'wizzy/utils/search', 'wizzy/utils/autocomplete'], function($, wC, aC, pS, aV, aS, cUtils, searchUtils, autocompleteUtils) {
     $(document).ready(function(e) {
-        $('body').on('click', '.wizzy-result-product a', function(e) {
+        $('body').on('click', searchUtils.getProductClickDOM() , function(e) {
             var parent = $(this).parents('.wizzy-result-product');
             addClickInStorage(parent);
         });
 
-        $('body').on('click', '.topproduct-item a', function(e) {
+        $('body').on('click', autocompleteUtils.getProductClickDOM() , function(e) {
             var parent = $(this).parents('.topproduct-item');
             addClickInStorage(parent);
         });
