@@ -24,7 +24,7 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
         if (typeof q !== "undefined") {
             title = getSearchTitle(q);
         }
-        pushWindowState(searchData, title, getQueryUrl(searchData));
+        pushWindowState(searchData, title, getQueryUrl(searchData, false));
     }
 
     function getSearchTitle(q) {
@@ -127,7 +127,7 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
     }
 
     function getQueryFromFilters(filters, onChange) {
-        if (onChange) {
+        if (onChange && !isOnCategoryPage()) {
             return filters.q;
         }
         if (typeof filters['fq'] !== "undefined" && isValidQueryString(filters['fq'])) {
@@ -176,9 +176,9 @@ define(['jquery', 'wizzy/utils', 'wizzy/listeners/urlChange', 'wizzy/utils/url',
         return (typeof urlResponse.query[param] !== "undefined") ? urlResponse.query[param] : '';
     }
 
-    function getQueryUrl(searchData) {
-        if(isOnCategoryPage()) {
-            return getOrigin() + commonUrlUtils.getCategoriesEndPoint() + "?" + filtersUtilsVar.encodeFilters(searchData);
+    function getQueryUrl(searchData, isBySearch = true) {
+        if(isOnCategoryPage() && isBySearch === false) {
+            return getOrigin() + "/" + commonUrlUtils.getCategoriesEndPoint() + "?" + filtersUtilsVar.encodeFilters(searchData);
         }
         return getOrigin() + commonUrlUtils.getSearchEndPoint() + "?" + filterUtils.new().encodeFilters(searchData);
     }

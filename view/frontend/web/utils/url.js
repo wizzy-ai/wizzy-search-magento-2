@@ -5,7 +5,7 @@ define(['jquery'], function($) {
     }
 
     function getCategoriesEndPoint() {
-        return window.wizzyConfig.common.categoryEndpoint;
+        return window.wizzyConfig.common.categoryUrlKey;
     }
 
     function getSearchEndPoint() {
