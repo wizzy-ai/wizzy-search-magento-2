@@ -262,6 +262,9 @@ class BaseBlock extends Template
             'pages' => [
                'title' => __($this->storeAutocompleteConfig->getPagesTitle()),
             ],
+            'recentSearches' => [
+               'title' => "Recent Searches",
+            ],
          ],
          'pageStore' => [
 
