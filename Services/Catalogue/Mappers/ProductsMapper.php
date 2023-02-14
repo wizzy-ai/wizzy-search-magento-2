@@ -125,6 +125,7 @@ class ProductsMapper
         $this->sourceCode = $this->storeCatalogueConfig->getInventorySourceCode();
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
+        $this->skippedProducts = [];
         $this->productsAttributesManager->setAttributeValues($products);
 
         foreach ($products as $product) {
