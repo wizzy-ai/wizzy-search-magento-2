@@ -62,6 +62,12 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         $storeIds = $this->storeManager->getToSyncStoreIds('');
 
         foreach ($storeIds as $storeId) {
+            if ($this->storeAdvancedConfig->hasToAddAllProductsInSync($storeId) == 0) {
+                $this->output->writeDiv();
+                $this->output->writeln(__('Adding Products in Sync Skipped for Store #'
+                .$storeId.' (Reason: Based on Reindex module configuration)'));
+                continue;
+            }
             $products = $this->getAllProductIds($storeId);
             $this->addProductsInQueue($products, $storeId);
             $this->productPricesHelper->markAllProductPricesSynced();
