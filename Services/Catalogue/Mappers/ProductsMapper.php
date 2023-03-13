@@ -645,7 +645,7 @@ class ProductsMapper
             return false;
         }
 
-        return in_array(strtolower($frontendInputType), $validSearableFrontendTypes);
+        return in_array(strtolower($frontendInputType ?? ''), $validSearableFrontendTypes);
     }
 
     private function getAttributeValue($product, $attribute)
@@ -732,7 +732,7 @@ class ProductsMapper
         }
         $description = $product->getDescription();
         if ($this->hasWordsToRemove) {
-            $description = str_replace($this->commonWordsToRemove, "", $description);
+            $description = str_replace($this->commonWordsToRemove, "", $description ?? '');
         }
 
         return $description;

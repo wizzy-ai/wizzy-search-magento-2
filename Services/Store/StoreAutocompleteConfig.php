@@ -138,7 +138,7 @@ class StoreAutocompleteConfig
         if (!$categoriesToIgnore) {
             $categoriesToIgnore = "";
         }
-        $categoriesToIgnore = explode(",", $categoriesToIgnore);
+        $categoriesToIgnore = explode(",", $categoriesToIgnore ?? '');
         return $categoriesToIgnore;
     }
 
