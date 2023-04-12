@@ -6,6 +6,12 @@
         </item>
         <item name="spinner" xsi:type="string">wizzy_search_queue_runnerer_columns</item>
         <item name="buttons" xsi:type="array">
+            <item name="addAllProductsForSync" xsi:type="array">
+                <item name="name" xsi:type="string">addAllProductsForSync</item>
+                <item name="label" xsi:type="string" translate="true">Add all Products For Sync</item>
+                <item name="class" xsi:type="string">primary</item>
+                <item name="url" xsi:type="string">*/*/addAllProductsForSync</item>
+            </item>
             <item name="EnqueueAllInProgress" xsi:type="array">
                 <item name="name" xsi:type="string">EnqueueAllInProgress</item>
                 <item name="label" xsi:type="string" translate="true">Enqueue All In Progress</item>
