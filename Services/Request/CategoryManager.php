@@ -43,7 +43,7 @@ class CategoryManager
     {
         $categoryUrl = $this->getCategory()->getUrl();
         $categoryPath = $this->getCategory()->getData('url_path');
-        if (strpos($categoryUrl, '.html') === true) {
+        if (strpos($categoryUrl, '.html') !== false) {
             return '/' . $categoryPath . '.html';
         } else {
             return '/' . $categoryPath;
