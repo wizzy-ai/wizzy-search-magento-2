@@ -38,4 +38,15 @@ class CategoryManager
          $this->request->getFullActionName() === 'catalog_category_view'
         );
     }
+
+    public function getCategoryEndpoint()
+    {
+        $categoryUrl = $this->getCategory()->getUrl();
+        $categoryPath = $this->getCategory()->getData('url_path');
+        if (strpos($categoryUrl, '.html') === true) {
+            return '/' . $categoryPath . '.html';
+        } else {
+            return '/' . $categoryPath;
+        }
+    }
 }

@@ -116,6 +116,7 @@ class BaseBlock extends Template
         $category = $this->categoryRequestManager->getCategory();
         $isCategoryPage = $this->categoryRequestManager->isCategoryReplaceable();
         $categoryKey = ($isCategoryPage) ? $category->getUrlKey() : '';
+        $categoryEndPoint = ($isCategoryPage) ? $this->categoryRequestManager->getCategoryEndpoint() : '';
 
         $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
 
@@ -200,6 +201,7 @@ class BaseBlock extends Template
             'isOnCategoryListing' => ($isCategoryPage),
             'isOnProductViewPage' => $this->productManager->isOnProductPage(),
             'categoryUrlKey' => $categoryKey,
+            'categoryEndpoint' => $categoryEndPoint,
             'currentProductId' => $this->productManager->getProductId(),
             'view' => [
                'templates' =>[
