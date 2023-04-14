@@ -47,9 +47,22 @@ class StoreAdvancedConfig
         return (empty($templateAttributes) || $templateAttributes == null) ? [] : explode(",", $templateAttributes);
     }
 
-    public function getProductsSyncBatchSize()
+    public function getProductsSyncbatchSize()
     {
-        return $this->configManager->getStoreConfig(self::PRODUCTS_SYNC_BATCH_SIZE, $this->storeId);
+        $batchSize = $this->configManager->getStoreConfig(self::PRODUCTS_SYNC_BATCH_SIZE, $this->storeId);
+        
+        if (!$batchSize) {
+            $batchSize = 2000;
+            return $batchSize;
+        }
+
+        if ($batchSize) {
+            $batchSize = (int)$batchSize;
+            if ($batchSize > 3500) {
+                $batchSize = 3500;
+            }
+        }
+        return $batchSize;
     }
 
     public function getSyncDequeueSize()
