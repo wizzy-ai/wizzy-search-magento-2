@@ -1,8 +1,5 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <script src="Wizzy_Search::search/form.mini.js"/>
-    </head>
     <body>
         <referenceContainer name="header-wrapper">
             <block class="Wizzy\Search\Block\BaseBlock" name="top.search" as="topSearch" template="Wizzy_Search::search/form.mini.phtml" />

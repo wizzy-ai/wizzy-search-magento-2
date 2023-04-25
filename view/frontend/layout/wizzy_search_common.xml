@@ -1,16 +1,13 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <script src="Wizzy_Search::core/page.js"/>
-        <script src="Wizzy_Search::utils/init.js"/>
-        <css src="Wizzy_Search::core/wizzyCommon.css" />
-        <css src="Wizzy_Search::store/wizzyStore.css" />
+        <css defer="defer" src="Wizzy_Search::core/wizzyFrontend.min.css"/>
     </head>
     <body>
-
         <referenceBlock name="head.additional">
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.config" template="Wizzy_Search::core/config.phtml" />
             <block class="Wizzy\Search\Block\UserConfigBlock" name="wizzySearch.userConfig" template="Wizzy_Search::core/userConfig.phtml" />
+            <block class="Magento\Framework\View\Element\Template" name="wizzy_assets" template="Wizzy_Search::common/assets.phtml"/>
         </referenceBlock>
 
         <referenceBlock name="before.body.end">
