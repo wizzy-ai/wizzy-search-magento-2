@@ -1,0 +1,2 @@
+// wizzy custom javascript code
+
