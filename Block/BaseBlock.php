@@ -277,7 +277,13 @@ class BaseBlock extends Template
                'symbol' => ($currencySymbol) ? $currencySymbol : ($currencyCode . " "),
             ],
          ],
-         'analytics' => [],
+         'analytics' => [
+            'enabled' => $this->storeGeneralConfig->isAnalyticsEnabled(),
+            'endpoints' => [
+               'clicks' => "/wtrack/analytics/collect",
+               'sessions' => '/wtrack/analytics/session',
+            ],
+         ],
         ];
 
         return $configs;
