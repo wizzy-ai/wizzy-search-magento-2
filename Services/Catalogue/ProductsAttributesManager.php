@@ -2,6 +2,8 @@
 
 namespace Wizzy\Search\Services\Catalogue;
 
+use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+
 class ProductsAttributesManager
 {
     private $values;
@@ -19,6 +21,18 @@ class ProductsAttributesManager
             foreach ($attributes as $attribute) {
                 $value = $attribute->getFrontend()->getValue($product);
                 $this->setValue($attribute->getId(), $product->getId(), $value);
+            }
+
+            if ($product->getTypeID() == Configurable::TYPE_CODE) {
+                $children = $product->getTypeInstance()->getUsedProducts($product);
+                foreach ($children as $child) {
+                    $childAttributes = $child->getAttributes();
+
+                    foreach ($childAttributes as $childAttribute) {
+                        $value = $childAttribute->getFrontend()->getValue($child);
+                        $this->setValue($childAttribute->getId(), $child->getId(), $value);
+                    }
+                }
             }
         }
     }
