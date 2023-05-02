@@ -18,6 +18,7 @@ use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
 use Magento\Backend\Model\Url as BackendUrl;
+use Wizzy\Search\Services\Catalogue\Mappers\SKUMapper;
 
 class ProductsMapper
 {
@@ -53,6 +54,7 @@ class ProductsMapper
     private $hasWordsToRemove;
     private $productsAttributesManager;
     private $productURLManager;
+    private $SKUMapper;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -69,7 +71,8 @@ class ProductsMapper
         StoreCatalogueConfig $storeCatalogueConfig,
         BackendUrl $backendUrl,
         ProductsAttributesManager $productsAttributesManager,
-        ProductURLManager $productURLManager
+        ProductURLManager $productURLManager,
+        SKUMapper $SKUMapper
     ) {
         $this->eventManager = $eventManager;
         $this->configurable = $configurable;
@@ -93,6 +96,7 @@ class ProductsMapper
         $this->hasWordsToRemove = false;
         $this->productsAttributesManager = $productsAttributesManager;
         $this->productURLManager = $productURLManager;
+        $this->SKUMapper = $SKUMapper;
     }
 
     private function resetEntitiesToIgnore()
@@ -224,7 +228,7 @@ class ProductsMapper
         $this->mapDiscounts($product, $mappedProduct);
         $this->mapAttributes($product, $mappedProduct, $mappedProduct['inStock']);
         $this->addParentDataInChild($mappedProduct);
-
+        $this->SKUMapper->map($product, $mappedProduct);
         return $mappedProduct;
     }
 
