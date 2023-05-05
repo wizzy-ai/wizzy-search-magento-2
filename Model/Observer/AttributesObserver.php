@@ -65,7 +65,10 @@ class AttributesObserver
     private function addProductsInSync(array $productIds)
     {
         if (!$this->indexer->isScheduled()) {
-            $this->indexer->reindexList($productIds);
+            $productIds = array_chunk($productIds, 4000);
+            foreach ($productIds as $productIdsChunk) {
+                $this->indexer->reindexList($productIdsChunk);
+            }
         } else {
             $this->wizzyProduct->addProductsInChangeLog($productIds);
         }
