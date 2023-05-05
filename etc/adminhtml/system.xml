@@ -892,6 +892,15 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="has_to_add_products_in_sync_on_attribute_save" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Add Associated Products In Sync on Attribue Save ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select No if you don't want to add associated products in Sync on attribue save.
+                        ]]>
+                    </comment>
+                </field>
             </group>
             <group id="reindex" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Reindex</label>
