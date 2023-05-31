@@ -16,6 +16,7 @@ use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
+use Wizzy\Search\Services\Store\StoreStockConfig;
 use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
 use Magento\Backend\Model\Url as BackendUrl;
 use Wizzy\Search\Services\Catalogue\Mappers\SKUMapper;
@@ -55,6 +56,7 @@ class ProductsMapper
     private $productsAttributesManager;
     private $productURLManager;
     private $SKUMapper;
+    private $storeStockConfig;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -72,7 +74,8 @@ class ProductsMapper
         BackendUrl $backendUrl,
         ProductsAttributesManager $productsAttributesManager,
         ProductURLManager $productURLManager,
-        SKUMapper $SKUMapper
+        SKUMapper $SKUMapper,
+        StoreStockConfig $storeStockConfig
     ) {
         $this->eventManager = $eventManager;
         $this->configurable = $configurable;
@@ -97,6 +100,7 @@ class ProductsMapper
         $this->productsAttributesManager = $productsAttributesManager;
         $this->productURLManager = $productURLManager;
         $this->SKUMapper = $SKUMapper;
+        $this->storeStockConfig = $storeStockConfig;
     }
 
     private function resetEntitiesToIgnore()
@@ -148,7 +152,7 @@ class ProductsMapper
             'wizzy_after_products_mapped',
             ['data' => $dataObject]
         );
-        
+
         return [
             'toAdd' => $dataObject->getDataByKey('products'),
             'toDelete' => $dataObject->getDataByKey('productsToDelete')
@@ -279,11 +283,17 @@ class ProductsMapper
             $children = $this->productsSessionStorage->getByIds($childIds);
 
             $finalPrice = 0;
+            $finalPriceInStock = 0;
             $sellingPrice = 0;
+            $sellingPriceInStock = 0;
 
             $discount = 0;
+            $discountInStock = 0;
             $discountPercetnage = 0;
+            $discountPercetnageInStock = 0;
+
             $price = 0;
+            $priceInStock = 0;
 
             $colors = [];
             $sizes = [];
@@ -306,15 +316,34 @@ class ProductsMapper
                 $childOriginalPrice = $this->productPrices->getOriginalPrice($child);
                 $childSellingPrice = $this->productPrices->getSellingPrice($child);
 
-                if ($finalPrice < $childFinalPrice) {
+                if ($childFinalPrice < $finalPrice || $finalPrice === 0) {
                     $finalPrice = $childFinalPrice;
                     $sellingPrice = $childSellingPrice;
-
+                    
                     if ($childSellingPrice < $childOriginalPrice) {
                         $discount = ($childOriginalPrice - $childSellingPrice);
                         $discountPercetnage =
-                           round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100);
+                        round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100);
                         $price = $childOriginalPrice;
+                    }
+                }
+
+                $childStockData = $this->getProductStockData($child);
+                if ($childStockData['inStock']) {
+                    if ($childFinalPrice < $finalPriceInStock || $finalPriceInStock === 0) {
+                        $finalPriceInStock = $childFinalPrice;
+                        $sellingPriceInStock = $childSellingPrice;
+                        
+                        if ($childSellingPrice < $childOriginalPrice) {
+                            $discountInStock = ($childOriginalPrice - $childSellingPrice);
+                            $discountPercetnageInStock =
+                            round((($childOriginalPrice - $childSellingPrice) / $childOriginalPrice) * 100);
+                            $priceInStock = $childOriginalPrice;
+                        } else {
+                            $priceInStock = 0;
+                            $discountInStock = 0;
+                            $discountPercetnageInStock = 0;
+                        }
                     }
                 }
 
@@ -399,9 +428,8 @@ class ProductsMapper
             if ($finalPrice != 0 && $finalPrice < $mappedProduct['finalPrice']) {
                 $mappedProduct['finalPrice'] = $this->getFloatVal($finalPrice);
             }
-
             if ($sellingPrice != 0 && ($sellingPrice < $mappedProduct['sellingPrice'] ||
-                    !$mappedProduct['sellingPrice'])) {
+            !$mappedProduct['sellingPrice'])) {
                 $mappedProduct['sellingPrice'] = $this->getFloatVal($sellingPrice);
             }
 
@@ -416,6 +444,14 @@ class ProductsMapper
             if ($price != 0) {
                 $mappedProduct['price'] = $this->getFloatVal($price);
             }
+
+            $this->replaceParentDataBasedOnStock($mappedProduct, [
+                'sellingPrice' => $sellingPriceInStock,
+                'price' => $priceInStock,
+                'finalPrice' => $finalPriceInStock,
+                'discount' => $discountInStock,
+                'discountPercentage' => $discountPercetnageInStock,
+            ]);
 
             if (count($colors)) {
                 $this->mapColors($mappedProduct, $colors);
@@ -969,5 +1005,13 @@ class ProductsMapper
                 'qty' => $stockItem->getQty(),
             ];
             return $data;
+    }
+    private function replaceParentDataBasedOnStock(&$mappedProduct, $data)
+    {
+        if ($this->storeStockConfig->hasToIncludeOutOfStockProducts() === false) {
+            foreach ($data as $key => $value) {
+                $mappedProduct[$key] = $value;
+            }
+        }
     }
 }
