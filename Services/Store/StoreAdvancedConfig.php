@@ -16,6 +16,7 @@ class StoreAdvancedConfig
     const WIZZY_ADVANCED_SYNC = self::WIZZY_ADVANCED_CONFIGURATION . "/sync";
     const PRODUCTS_SYNC_BATCH_SIZE = self::WIZZY_ADVANCED_SYNC . "/products_sync_batch_size";
     const SYNC_DEQUEUE_SIZE = self::WIZZY_ADVANCED_SYNC . "/sync_dequeue_size";
+    const SYNC_DEBUGGING = self::WIZZY_ADVANCED_SYNC . "/sync_debugging";
     const HAS_TO_ADD_PRODUCTS_IN_SYNC_ON_ATTRIBUTE_SAVE = self::WIZZY_ADVANCED_SYNC .
     "/has_to_add_products_in_sync_on_attribute_save";
     const REINDEX = self::WIZZY_ADVANCED_CONFIGURATION . "/reindex";
@@ -70,6 +71,11 @@ class StoreAdvancedConfig
     public function getSyncDequeueSize()
     {
         return $this->configManager->getStoreConfig(self::SYNC_DEQUEUE_SIZE, $this->storeId);
+    }
+
+    public function hasToEnableSyncDebugging()
+    {
+        return $this->configManager->getStoreConfig(self::SYNC_DEBUGGING, $this->storeId);
     }
 
     public function hasToAddProductsInSyncOnAttributeSave()
