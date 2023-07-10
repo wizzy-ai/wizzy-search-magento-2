@@ -5,7 +5,6 @@ namespace Wizzy\Search\Controller\Adminhtml\Queue;
 use Magento\Backend\App\Action\Context;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Backend\App\Action;
-use Wizzy\Search\Helpers\FlashMessagesManager;
 use Wizzy\Search\Services\Indexer\IndexerManager;
 use Wizzy\Search\Services\Store\StoreAdvancedConfig;
 use Wizzy\Search\Services\Store\StoreManager;
@@ -13,19 +12,33 @@ use Wizzy\Search\Services\Store\StoreManager;
 class AddAllProductsForSync extends Action
 {
     /**
+     * @var IndexerManager
+     */
+    private $indexerManager;
+
+    /**
+     * @var StoreAdvancedConfig
+     */
+    private $storeAdvancedConfig;
+
+    /**
+     * @var StoreManager
+     */
+    private $storeManager;
+
+    /**
      * @param Context $context
-     * @param QueueManager $queueManager
-     * @param FlashMessagesManager $flashMessagesManager
+     * @param IndexerManager $indexerManager
+     * @param StoreAdvancedConfig $storeAdvancedConfig
+     * @param StoreManager $storeManager
      */
     public function __construct(
         Context $context,
-        FlashMessagesManager $flashMessagesManager,
         IndexerManager $indexerManager,
         StoreAdvancedConfig $storeAdvancedConfig,
         StoreManager $storeManager
     ) {
         parent::__construct($context);
-        $this->flashMessagesManager = $flashMessagesManager;
         $this->indexerManager = $indexerManager;
         $this->storeAdvancedConfig = $storeAdvancedConfig;
         $this->storeManager = $storeManager;
@@ -40,11 +53,14 @@ class AddAllProductsForSync extends Action
         $storeIds = $this->storeManager->getToSyncStoreIds('');
         foreach ($storeIds as $storeId) {
             if ($this->storeAdvancedConfig->hasToAddAllProductsInSync($storeId) == 1) {
-                $this->flashMessagesManager->success("Added all the products for Sync for store Id #"
-                    . $storeId);
+                $this->messageManager->addSuccessMessage(
+                    "Added all the products for Sync for store Id #" . $storeId
+                );
             } else {
-                $this->flashMessagesManager->warning("Adding Products in Sync Skipped for Store Id #"
-                    . $storeId . " (Based on store's advanced sync configuration)");
+                $this->messageManager->addWarningMessage(
+                    "Adding Products in Sync Skipped for Store Id #" . $storeId .
+                    " (Based on store's advanced sync configuration)"
+                );
             }
         }
         return $resultRedirect;
