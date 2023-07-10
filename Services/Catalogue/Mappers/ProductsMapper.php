@@ -14,7 +14,6 @@ use Wizzy\Search\Services\Catalogue\ProductURLManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\SyncSkippedEntities;
 use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
-use Wizzy\Search\Services\Store\ConfigManager;
 use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Ui\Component\Listing\Column\SkippedEntityData;
 use Magento\Backend\Model\Url as BackendUrl;
@@ -37,7 +36,6 @@ class ProductsMapper
 
     private $productReviews;
     private $orderItems;
-    private $configManager;
     private $output;
     private $productPrices;
     private $productImageManager;
@@ -46,8 +44,6 @@ class ProductsMapper
     private $storeCatalogueConfig;
 
     private $isBrandMandatory;
-    private $isAdvancedInventory;
-    private $sourceCode;
     private $backendUrl;
     private $adminUrl;
     private $commonWordsToRemove;
@@ -55,6 +51,7 @@ class ProductsMapper
     private $productsAttributesManager;
     private $productURLManager;
     private $SKUMapper;
+    private $productsSessionStorage;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -62,7 +59,6 @@ class ProductsMapper
         ConfigurableProductsData $configurableProductsData,
         AttributesManager $attributesManager,
         StockRegistry $stockRegistry,
-        ConfigManager $configManager,
         ProductsSessionStorage $productsSessionStorage,
         IndexerOutput $output,
         ProductImageManager $productImageManager,
@@ -82,7 +78,6 @@ class ProductsMapper
         $this->stockRegistry = $stockRegistry;
         $this->productReviews = [];
         $this->orderItems = [];
-        $this->configManager = $configManager;
         $this->productsSessionStorage = $productsSessionStorage;
         $this->output = $output;
         $this->productPrices = $productPrices;
@@ -122,11 +117,7 @@ class ProductsMapper
         $this->productURLManager->setStore($storeId);
         $this->productURLManager->fetchUrls($products);
         $this->setAdminUrl();
-
         $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();
-        
-        $this->isAdvancedInventory = $this->storeCatalogueConfig->isUsingInventoryManagement();
-        $this->sourceCode = $this->storeCatalogueConfig->getInventorySourceCode();
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
         $this->skippedProducts = [];
