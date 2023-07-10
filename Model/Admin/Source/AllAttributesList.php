@@ -6,23 +6,23 @@ use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory;
 
 class AllAttributesList
 {
-    protected $_attributeFactory;
+    protected $collectionFactory;
 
-    public function __construct(CollectionFactory $attributesCollection)
+    public function __construct(CollectionFactory $collectionFactory)
     {
-        $this->attributesCollection = $attributesCollection;
+        $this->collectionFactory = $collectionFactory;
     }
 
     public function toOptionArray()
     {
-        $attributes = $this->attributesCollection->create();
-
+        $attributes = $this->collectionFactory->create();
+        $options = [];
         foreach ($attributes as $attribute) {
             if ($attribute->getEntityType() && $attribute->getEntityType()->getEntityTypeCode() == "catalog_product") {
                 $options[] = [
                     'value' => $attribute->getData('attribute_code'),
-                    'label' => $attribute->getData('frontend_label')
-                    . " (" . $attribute->getData('attribute_code') . ")",
+                    'label' => $attribute->getData('frontend_label') . " (" .
+                    $attribute->getData('attribute_code') . ")",
                 ];
             }
         }
