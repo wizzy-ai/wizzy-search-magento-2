@@ -37,7 +37,6 @@ class PageLoadObserver implements ObserverInterface
         $isInstantSearchEnabled = $this->storeGeneralConfig->isInstantSearchEnabled();
         $hasToReplaceCategoryPage = $this->storeGeneralConfig->hasToReplaceCategoryPage();
         $isAnalyticsEnabled = $this->storeGeneralConfig->isAnalyticsEnabled();
-        $isOverridingEventsjs = $this->storeAdvancedConfig->isOverridingEventsjs();
         $hasToIncludeCustomCss = $this->storeAdvancedConfig->hasToIncludeCustomCss();
 
         if ($this->request->getModuleName() === "checkout"
@@ -49,10 +48,6 @@ class PageLoadObserver implements ObserverInterface
         if ($isAutocompleteEnabled || $isInstantSearchEnabled) {
             $layout->getUpdate()->addHandle('wizzy_search_common');
             $layout->getUpdate()->addHandle('wizzy_search_formmini');
-
-            if ($isOverridingEventsjs) {
-                $layout->getUpdate()->addHandle('wizzy_search_events');
-            }
 
             if ($isAnalyticsEnabled) {
                 $layout->getUpdate()->addHandle('wizzy_search_analytics');

@@ -7,6 +7,7 @@
         <referenceBlock name="head.additional">
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.config" template="Wizzy_Search::core/config.phtml" />
             <block class="Wizzy\Search\Block\UserConfigBlock" name="wizzySearch.userConfig" template="Wizzy_Search::core/userConfig.phtml" />
+            <block class="Magento\Framework\View\Element\Template" name="wizzy_events" template="Wizzy_Search::common/events.phtml"/>
             <block class="Magento\Framework\View\Element\Template" name="wizzy_assets" template="Wizzy_Search::common/assets.phtml"/>
         </referenceBlock>
 

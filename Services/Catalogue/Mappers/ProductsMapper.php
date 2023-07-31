@@ -21,19 +21,14 @@ use Wizzy\Search\Services\Catalogue\Mappers\SKUMapper;
 
 class ProductsMapper
 {
-
     private $eventManager;
     private $configurable;
     private $configurableProductsData;
     private $storeId;
-
     private $attributesToIgnore;
     private $categoriesToIgnore;
-
     private $attributesManager;
-
     private $stockRegistry;
-
     private $productReviews;
     private $orderItems;
     private $output;
@@ -42,7 +37,6 @@ class ProductsMapper
     private $syncSkippedEntities;
     private $skippedProducts;
     private $storeCatalogueConfig;
-
     private $isBrandMandatory;
     private $backendUrl;
     private $adminUrl;
