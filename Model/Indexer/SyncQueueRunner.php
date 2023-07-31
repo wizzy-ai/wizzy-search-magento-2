@@ -11,9 +11,9 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
 {
 
     private $queueManager;
+    private $storeAdvancedConfig;
     private $maxQueueJobsToExecute;
     private $output;
-    private $storeAdvancedConfig;
 
     public function __construct(
         QueueManager $queueManager,

@@ -841,16 +841,6 @@
             <resource>Wizzy_Search::wizzy_config</resource>
             <group id="advanced_configuration" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
                 <label>Advanced Configuration</label>
-                <field id="overriding_eventsjs" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
-                    <label>Overriding events.js?</label>
-                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>
-                        <![CDATA[
-                            If selected as yes, Module will load events.js file which you can override to add listeners.<br>
-                            This helps to just override the JS and not the layout files.
-                        ]]>
-                    </comment>
-                </field>
                  <field id="include_custom_css" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Include Custom CSS?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
