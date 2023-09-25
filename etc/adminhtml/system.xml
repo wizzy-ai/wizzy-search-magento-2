@@ -832,6 +832,69 @@
                 </field>
             </group>
 
+            <group id="autocomplete_advanced_configuration" translate="label" type="text" sortOrder="60" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Advanced Configuration</label>
+
+                <field id="show_default_suggestions" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Show default suggestions ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display default suggestions in autocomplete menu.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="display_recently_searched_terms" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display recently searched terms ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display recently searched terms in autocomplete menu.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_suggestions">1</field>
+                    </depends>
+                </field>
+
+                <field id="autocomplete_pinned_term" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display pinned terms ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display pinned terms in autocomplete menu.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_suggestions">1</field>
+                    </depends>
+                </field>
+
+                <field id="show_default_products" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Show default products ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display default products in autocomplete menu.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="autocomplete_pinned_products" translate="label" type="select" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display pinned products ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display pinned products in autocomplete menu.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_products">1</field>
+                    </depends>
+                </field>
+
+            </group>
         </section>
 
         <section id="wizzy_advanced_configuration" translate="label" sortOrder="190" showInDefault="0" showInWebsite="0" showInStore="1">
