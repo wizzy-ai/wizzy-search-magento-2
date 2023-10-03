@@ -19,14 +19,18 @@ class CategoryManager
 
     public function getCategory()
     {
-        return $this->resolver->get()->getCurrentCategory();
+        try {
+            return $this->resolver->get()->getCurrentCategory();
+        } catch (\Exception $exception) {
+            return null;
+        }
     }
 
     public function isCategoryReplaceable()
     {
         $category = $this->getCategory();
         return (
-            $this->isOnCategoryPage() &&
+            $category && $this->isOnCategoryPage() &&
             $category->getDisplayMode() !== "PAGE"
         );
     }
@@ -41,6 +45,10 @@ class CategoryManager
 
     public function getCategoryEndpoint()
     {
+        $category = $this->getCategory();
+        if (!$category) {
+            return '/';
+        }
         $categoryUrl = $this->getCategory()->getUrl();
         $categoryPath = $this->getCategory()->getData('url_path');
         if (strpos($categoryUrl, '.html') !== false) {
