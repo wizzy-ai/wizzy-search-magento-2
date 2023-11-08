@@ -950,7 +950,7 @@ class ProductsMapper
         $data = [];
             $stockItem = $this->stockRegistry->getStockItem($product->getId());
             $data = [
-                'inStock' => $stockItem->getIsInStock() == true && $stockItem->getQty() > 0 ? true : false,
+                'inStock' => $stockItem->getIsInStock(),
                 'qty' => $stockItem->getQty() > 0 ? $stockItem->getQty() : 0,
             ];
             return $data;
