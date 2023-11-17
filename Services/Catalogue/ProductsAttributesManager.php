@@ -20,6 +20,9 @@ class ProductsAttributesManager
             $attributes = $product->getAttributes();
             foreach ($attributes as $attribute) {
                 $value = $attribute->getFrontend()->getValue($product);
+                if (empty($value)) {
+                    $value = $product->getData($attribute->getAttributeCode());
+                }
                 $this->setValue($attribute->getId(), $product->getId(), $value);
             }
 
