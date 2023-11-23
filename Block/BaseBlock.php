@@ -223,7 +223,21 @@ class BaseBlock extends Template
                         $this->storeGeneralConfig->getCategoryClickBehaviour() ===
                         CategoryClickBehaviours::OPEN_CATEGORY_PAGE
                      )
-               ]
+                     ],
+                  'defaultBehaviour' => [
+                     'suggestions' => [
+                        'defaultPool' => [],
+                        'displayRecent' => $this->storeAutocompleteConfig->hasToDisplayRecentlySearchedTerms(),
+                        // 'displayTrending' => $this->storeAutocompleteConfig->hasToDisplayTrendingSearchedTerms(),
+                        'enabled' => $this->storeAutocompleteConfig->hasToShowDefaultSuggestions(),
+                     ],
+                     'topProducts' => [
+                        'defaultPool' => [],
+                        // 'displayRecent' => $this->storeAutocompleteConfig->hasToDisplayRecentlySearchedTerms(),
+                        // 'displayTrending' => $this->storeAutocompleteConfig->hasToDisplayTrendingSearchedTerms(),
+                        'enabled' => $this->storeAutocompleteConfig->hasToShowDefaultProducts(),
+                     ],
+                  ],
             ],
             'menu' => [
                'suggestionsCount' => $this->storeAutocompleteConfig->getSuggestionsCount(),
