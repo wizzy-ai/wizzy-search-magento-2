@@ -42,6 +42,23 @@ class StoreAutocompleteConfig
     const WIZZY_AUTTOCOMPLETE_EXCLUDE_PAGES = self::WIZZY_AUTTOCOMPLETE_PAGES . "/exclude_pages";
     const WIZZY_AUTTOCOMPLETE_SYNC_PAGES = self::WIZZY_AUTTOCOMPLETE_PAGES . "/sync_pages";
 
+    const WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION = self::WIZZY_AUTOCOMPLETE_MENU_CONFIGURATION .
+        "/autocomplete_advanced_configuration";
+    const WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_SUGGESTIONS = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/show_default_suggestions";
+    const WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_PRODUCTS = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/show_default_products";
+    const WIZZY_AUTOCOMPLETE_DISPLAY_RECENTLY_SEARCHED_TERMS = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/display_recently_searched_terms";
+    const WIZZY_AUTOCOMPLETE_PINNED_TERM_SELECTION = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/pinned_term_selection";
+    const WIZZY_AUTOCOMPLETE_RECENTLY_VIEWED_PRODUCTS = self:: WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+    "/autocomplete_recently_viewed_products";
+    const WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_SELECTION = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/pinned_products_selection";
+    const WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_COUNT = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/pinned_products_count";
+
     private $storeId;
 
     public function __construct(ConfigManager $configManager)
@@ -171,5 +188,90 @@ class StoreAutocompleteConfig
     public function getAttributes()
     {
         return $this->configManager->getStoreConfig(self::AUTOCOMPLETE_ENABLED_ATTRIBUTES, $this->storeId);
+    }
+
+    public function hasToDisplayRecentlySearchedTerms()
+    {
+        return ($this->configManager->getStoreConfig(
+            self::WIZZY_AUTOCOMPLETE_DISPLAY_RECENTLY_SEARCHED_TERMS,
+            $this->storeId == 1
+        ) ? true : false);
+    }
+
+    public function hasToDisplayRecentlyViewedProducts()
+    {
+        return ($this->configManager->getStoreConfig(
+            self::WIZZY_AUTOCOMPLETE_RECENTLY_VIEWED_PRODUCTS,
+            $this->storeId == 1
+        ) ? true : false);
+    }
+
+    public function hasToShowDefaultSuggestions()
+    {
+        return ($this->configManager->getStoreConfig(
+            self::WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_SUGGESTIONS,
+            $this->storeId == 1
+        ) ? true : false);
+    }
+
+    public function hasToShowDefaultProducts()
+    {
+        return ($this->configManager->getStoreConfig(
+            self::WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_PRODUCTS,
+            $this->storeId == 1
+        ) ? true : false);
+    }
+
+    public function getPinnedTermSelections()
+    {
+        $pinnedTerms = $this->configManager->getStoreConfig(
+            self::WIZZY_AUTOCOMPLETE_PINNED_TERM_SELECTION,
+            $this->storeId
+        );
+
+        if (!$pinnedTerms) {
+            return [];
+        }
+
+        $pinnedTerms = json_decode($pinnedTerms, true);
+        $pinnedTerms = array_column($pinnedTerms, 'key');
+
+        $defaultPool = [];
+
+        foreach ($pinnedTerms as $pinnedTerm) {
+            $defaultPool[] = [
+                "value" => $pinnedTerm,
+                "valueHighlighted" => $pinnedTerm,
+                "filters" => [],
+                "payload" => [],
+                "section" => 'others'
+            ];
+        }
+
+        return $defaultPool;
+    }
+
+    public function getPinnedProductsSelections()
+    {
+        $pinnedProducts = $this->configManager->getStoreConfig(
+            self::WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_SELECTION,
+            $this->storeId
+        );
+        if (!$pinnedProducts) {
+            return [];
+        }
+        
+        $pinnedProducts = explode(",", $pinnedProducts);
+        $categories = [];
+        foreach ($pinnedProducts as $pinnedProduct) {
+            $categories[] = $pinnedProduct;
+        }
+
+        return $categories;
+    }
+
+    public function getPinnedProductsCount()
+    {
+        return $this->configManager->getStoreConfig(self::WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_COUNT, $this->storeId);
     }
 }
