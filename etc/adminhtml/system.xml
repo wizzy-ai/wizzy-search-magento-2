@@ -832,6 +832,136 @@
                 </field>
             </group>
 
+            <group id="autocomplete_advanced_configuration" translate="label" type="text" sortOrder="60" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Advanced Configuration</label>
+
+                <field id="show_default_suggestions" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Show Default Suggestions ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display default suggestions in autocomplete menu.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="display_recently_searched_terms" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Recently Searched Terms ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display top 10 recently search termed when user clicks on Search input box.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_suggestions">1</field>
+                    </depends>
+                </field>
+                
+                <!-- <field id="display_trending_terms" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Trending Terms ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display trending terms in autocomplete menu.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_suggestions">1</field>
+                    </depends>
+                </field> -->
+
+                <field id="autocomplete_pinned_term" translate="label" type="select" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Pinned Terms ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display pinned searched termed when user clicks on Search input box.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_suggestions">1</field>
+                    </depends>
+                </field>
+
+                <field id="pinned_term_selection" translate="label" type="select" sortOrder="5" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Add Terms</label>
+                    <comment>
+                        Add the terms you want to display in autocomplete menu (Maximum 10 can be added)
+                    </comment>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\SectionsSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <depends>
+                        <field id="show_default_suggestions">1</field>
+                        <field id="autocomplete_pinned_term">1</field>
+                    </depends>
+                </field>
+
+                <field id="show_default_products" translate="label" type="select" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Show Default Products ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display default products in autocomplete menu.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="autocomplete_pinned_products" translate="label" type="select" sortOrder="7" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Pinned Products ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display pinned products when user clicks on Search input box.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_products">1</field>
+                    </depends>
+                </field>
+
+                <field id="pinned_products_selection" translate="label" type="multiselect" sortOrder="8" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoriesListWithHandle</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Category which Wizzy should use to display pinned products.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_products">1</field>
+                        <field id="autocomplete_pinned_products">1</field>
+                    </depends>
+                </field>
+
+                <field id="pinned_products_count" translate="label" type="text" sortOrder="9" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Pinned Products Count</label>
+                    <validate>validate-digits validate-not-negative-number validate-digits-range digits-range-0-10</validate>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Enter number of pinned products to display in autocomplete menu, This can not be more then 10.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_products">1</field>
+                        <field id="autocomplete_pinned_products">1</field>
+                    </depends>
+                </field>
+
+                <!-- <field id="autocomplete_recently_viewed_products" translate="label" type="select" sortOrder="11" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Recently Viewed Products</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to display recently viewed products in autocomplete menu.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_default_products">1</field>
+                    </depends>
+                </field> -->
+            </group>
         </section>
 
         <section id="wizzy_advanced_configuration" translate="label" sortOrder="190" showInDefault="0" showInWebsite="0" showInStore="1">
