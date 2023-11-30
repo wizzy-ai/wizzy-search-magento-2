@@ -25,6 +25,7 @@ class Uninstall implements UninstallInterface
 
         $syncQueueTable = $this->connectionManager->getTableName(WizzyTables::$SYNC_QUEUE_TABLE_NAME);
         $entitiesTable = $this->connectionManager->getTableName(WizzyTables::$ENTITIES_SYNC_TABLE_NAME);
+        $productsDeleteTable = $this->connectionManager->getTableName(WizzyTables::$PRODUCT_DELETE_TABLE_NAME);
 
         if ($conn->isTableExists($syncQueueTable)) {
             $conn->dropTable($syncQueueTable);
@@ -32,6 +33,10 @@ class Uninstall implements UninstallInterface
 
         if ($conn->isTableExists($entitiesTable)) {
             $conn->dropTable($entitiesTable);
+        }
+
+        if ($conn->isTableExists($productsDeleteTable)) {
+            $conn->dropTable($productsDeleteTable);
         }
 
         $setup->endSetup();

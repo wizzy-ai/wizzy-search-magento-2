@@ -59,4 +59,17 @@
       <column name="id"/>
     </constraint>
   </table>
+  <table name="wizzy_deleted_products" resource="default" engine="innodb" comment="wizzy_deleted_products">
+    <column xsi:type="int" name="id" padding="10" unsigned="true" nullable="false" identity="true" comment="Unique Identifier"/>
+    <column xsi:type="int" name="product_id" padding="10" unsigned="true" nullable="false" identity="false" comment="Product ID"/>
+    <column xsi:type="int" name="status" padding="11" unsigned="false" nullable="false" identity="false" default="0" comment="Status where Deleted Product Synced or Not"/>
+    <column xsi:type="timestamp" name="created_at" on_update="false" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when product is added to the table."/>
+    <column xsi:type="timestamp" name="updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when entry is updated in the table."/>
+    <constraint xsi:type="primary" referenceId="PRIMARY">
+      <column name="id"/>
+    </constraint>
+    <constraint xsi:type="unique" referenceId="WIZZY_DELETED_PRODUCTS_ID_PRODUCT_ID_STATUS">
+      <column name="product_id"/>
+    </constraint>
+  </table>
 </schema>
