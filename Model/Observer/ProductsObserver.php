@@ -47,7 +47,6 @@ class ProductsObserver
         $productResourceModel->addCommitCallback(function () use ($product) {
             if (!$this->indexer->isScheduled()) {
                 $productIds = $this->getProductIdsToIndex([$product->getId()]);
-                $this->deletedProducts->addDeletedProducts($productIds);
                 $this->indexer->reindexList($productIds);
             }
         });
@@ -87,6 +86,7 @@ class ProductsObserver
         $productResource->addCommitCallback(function () use ($product) {
             if (!$this->indexer->isScheduled()) {
                   $productIds = $this->getProductIdsToIndex([$product->getId()]);
+                  $this->deletedProducts->addDeletedProducts($productIds);
                   $this->indexer->reindexList($productIds);
             }
         });
