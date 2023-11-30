@@ -8,6 +8,7 @@ use Magento\Catalog\Model\ResourceModel\Product as ProductResourceModel;
 use Wizzy\Search\Services\Catalogue\ProductsManager;
 use Wizzy\Search\Services\Indexer\IndexerManager;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
+use Wizzy\Search\Services\Model\DeletedProducts;
 
 class ProductsObserver
 {
@@ -15,6 +16,7 @@ class ProductsObserver
     private $indexer;
     private $productsManager;
     private $configurable;
+    private $deletedProducts;
 
    /**
     * @param IndexerManager $indexerRegistry
@@ -22,11 +24,13 @@ class ProductsObserver
     public function __construct(
         IndexerManager $indexerManager,
         Configurable $configurable,
-        ProductsManager $productsManager
+        ProductsManager $productsManager,
+        DeletedProducts $deletedProducts
     ) {
         $this->indexer = $indexerManager->getProductsIndexer();
         $this->configurable = $configurable;
         $this->productsManager = $productsManager;
+        $this->deletedProducts = $deletedProducts;
     }
 
    /**
@@ -43,6 +47,7 @@ class ProductsObserver
         $productResourceModel->addCommitCallback(function () use ($product) {
             if (!$this->indexer->isScheduled()) {
                 $productIds = $this->getProductIdsToIndex([$product->getId()]);
+                $this->deletedProducts->addDeletedProducts($productIds);
                 $this->indexer->reindexList($productIds);
             }
         });
