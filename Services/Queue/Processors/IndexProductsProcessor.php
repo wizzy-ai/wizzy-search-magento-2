@@ -18,6 +18,7 @@ use Wizzy\Search\Services\Queue\SessionStorage\ProductsSessionStorage;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
 use Magento\Store\Model\App\Emulation;
 use Magento\Framework\App\Config\ScopeCodeResolver;
+use Wizzy\Search\Services\Model\DeletedProducts;
 
 class IndexProductsProcessor extends QueueProcessorBase
 {
@@ -35,6 +36,7 @@ class IndexProductsProcessor extends QueueProcessorBase
     private $output;
     private $emulation;
     private $scopeCodeResolver;
+    private $deletedProducts;
 
     public function __construct(
         ProductsManager $productsManager,
@@ -49,7 +51,8 @@ class IndexProductsProcessor extends QueueProcessorBase
         ProductsSessionStorage $productsSessionStorage,
         IndexerOutput $output,
         Emulation $emulation,
-        ScopeCodeResolver $scopeCodeResolver
+        ScopeCodeResolver $scopeCodeResolver,
+        DeletedProducts $deletedProducts
     ) {
         $this->productsManager = $productsManager;
         $this->productsMapper = $productsMapper;
@@ -64,6 +67,7 @@ class IndexProductsProcessor extends QueueProcessorBase
         $this->output = $output;
         $this->emulation = $emulation;
         $this->scopeCodeResolver = $scopeCodeResolver;
+        $this->deletedProducts = $deletedProducts;
     }
 
     public function execute(array $data, $storeId)
@@ -103,6 +107,7 @@ class IndexProductsProcessor extends QueueProcessorBase
 
         $this->output->writeln(__('Saving ' . count($products) . ' Products.'));
         $saveResponse = $this->submitSaveProductsRequest($products, $storeId);
+        $this->deletedProducts->removeDeletedProducts($productIds);
 
         if ($saveResponse === true) {
             $this->output->writeln(__('Saved ' . count($products) . ' Products successfully.'));
