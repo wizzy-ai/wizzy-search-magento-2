@@ -41,13 +41,15 @@ class DeletedProducts
     {
         $collection = $this->deletedProductsFactory->create()->getCollection()
             ->addFieldToSelect('*');
+            
+        $deletedProductIds = [];
 
-        $deletedProducts = [];
         foreach ($collection as $deletedProduct) {
             $data = $deletedProduct->getData();
-            $deletedProducts[$data['product_id']] = $deletedProduct;
+            $deletedProductIds[] = $data['product_id'];
         }
-        return $deletedProducts;
+
+        return $deletedProductIds;
     }
 
     public function removeDeletedProducts($productIds)
