@@ -101,18 +101,19 @@ class IndexProductsProcessor extends QueueProcessorBase
                 $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
             }
             $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
+            $this->deletedProducts->removeDeletedProducts($productIds);
             $this->stopEmulation();
             return true;
         }
 
         $this->output->writeln(__('Saving ' . count($products) . ' Products.'));
         $saveResponse = $this->submitSaveProductsRequest($products, $storeId);
-        $this->deletedProducts->removeDeletedProducts($productIds);
 
         if ($saveResponse === true) {
             $this->output->writeln(__('Saved ' . count($products) . ' Products successfully.'));
             $this->submitDeleteProductsRequest($productIdsToDelete, $storeId);
             $this->entitiesSync->markEntitiesAsSynced($productIds, $storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
+            $this->deletedProducts->removeDeletedProducts($productIds);
             $this->stopEmulation();
             return true;
         }
