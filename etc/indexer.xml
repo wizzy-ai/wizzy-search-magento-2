@@ -45,4 +45,11 @@
         </description>
     </indexer>
 
+    <indexer id="wizzy_recover_deleted_products_sync_indexer" view_id="wizzy_recover_deleted_products_sync_indexer" class="Wizzy\Search\Model\Indexer\RecoverDeletedProducts">
+        <title translate="true">Wizzy Recover Deleted Products Sync</title>
+        <description translate="true">
+            Recover deleted product IDs on Clear Queue / Truncate Queue.
+        </description>
+    </indexer>
+
 </config>
