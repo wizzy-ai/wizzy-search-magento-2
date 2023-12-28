@@ -21,6 +21,7 @@ use Wizzy\Search\Services\Store\StoreSearchConfig;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Wizzy\Search\Services\Store\StoreSearchFormConfig;
 use Wizzy\Search\Services\Store\StoreStockConfig;
+use Wizzy\Search\Block\Adminhtml\Version;
 
 class BaseBlock extends Template
 {
@@ -42,6 +43,7 @@ class BaseBlock extends Template
     private $storeStockConfig;
     private $productManager;
     private $storeAdvancedConfig;
+    private $version;
 
     public function __construct(
         Template\Context $context,
@@ -60,6 +62,7 @@ class BaseBlock extends Template
         AddToWishlistHelper $addToWishlistHelper,
         StoreAdvancedConfig $storeAdvancedConfig,
         ProductManager $productManager,
+        Version $version,
         array $data = []
     ) {
         parent::__construct($context, $data);
@@ -89,6 +92,7 @@ class BaseBlock extends Template
 
         $this->addToWishlistHelper = $addToWishlistHelper;
         $this->productManager = $productManager;
+        $this->version = $version;
     }
 
     private function getAddToCartParams()
@@ -124,6 +128,7 @@ class BaseBlock extends Template
         $currencySymbol = $this->priceCurrency->getCurrencySymbol();
 
         $configs = [
+         'version' => $this->version->getExtensionVersion(),
          'credentials' => [
             'apiKey' => $this->storeCredentialsConfig->getApiKey(),
             'storeId' => $this->storeCredentialsConfig->getStoreId(),
