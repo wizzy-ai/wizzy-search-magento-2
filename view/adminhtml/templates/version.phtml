@@ -1,0 +1,18 @@
+<?php
+$moduleVersion = $block->getExtensionVersion();
+?>
+<style>
+    .wizzy-search-version {
+        font-size: 15px;
+        float: right;
+    }
+
+    .wizzy-search-version .number {
+        font-weight: 600;
+    }
+</style>
+<span class="wizzy-search-version">Wizzy Search Version:
+    <span class="number">
+        <?= $block->escapeHtml($moduleVersion) ?>
+    </span>
+</span>

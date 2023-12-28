@@ -4,6 +4,7 @@
     <body>
         <referenceContainer name="content">
             <uiComponent name="wizzy_search_queue_listing"/>
+            <block class="Wizzy\Search\Block\Adminhtml\Version" name="wizzy.version" template="version.phtml" />
         </referenceContainer>
     </body>
 </page>
