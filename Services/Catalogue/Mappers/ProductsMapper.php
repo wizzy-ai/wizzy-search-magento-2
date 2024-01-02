@@ -173,12 +173,16 @@ class ProductsMapper
 
         $this->disptachBeforeSkipCheckEvent($mappedProduct, $product);
         $isValidURL = $this->isValidUrl($mappedProduct['url']);
+
+        if ($isValidURL === false) {
+            $this->cleanProductUrl($product, $mappedProduct['url']);
+        }
+
         if ($mappedProduct['mainImage'] == "" ||
            empty($mappedProduct['categories']) ||
            empty($mappedProduct['sellingPrice']) ||
            $mappedProduct['sellingPrice'] == 0 ||
-           ($this->isBrandMandatory && (!isset($mappedProduct) || empty($mappedProduct['brand']))) ||
-           $isValidURL === false
+           ($this->isBrandMandatory && (!isset($mappedProduct) || empty($mappedProduct['brand'])))
         ) {
             $requiredData = [
                'Main Image' => $mappedProduct['mainImage'],
@@ -188,9 +192,7 @@ class ProductsMapper
             if ($this->isBrandMandatory) {
                 $requiredData['Brand'] = isset($mappedProduct['brand']) ? $mappedProduct['brand'] : '';
             }
-            if ($isValidURL === false) {
-                $requiredData[SkippedEntityData::URL_KEY] = $mappedProduct['url'];
-            }
+            
             $requiredData = json_encode($requiredData);
 
             $this->output->log([
@@ -945,6 +947,20 @@ class ProductsMapper
          'hoverImage' => $hoverImage,
         ];
     }
+
+    private function cleanProductUrl($product, &$url)
+    {
+        $schemeEndPos = strpos($url, '://');
+        $scheme = ($schemeEndPos !== false) ? substr($url, 0, $schemeEndPos) : '';
+
+        $hostStartPos = ($schemeEndPos !== false) ? $schemeEndPos + 3 : 0;
+        $hostEndPos = strpos($url, '/', $hostStartPos);
+        $host = ($hostEndPos !== false) ? substr($url, $hostStartPos, $hostEndPos - $hostStartPos) : '';
+
+        $urlKey = $product->getData("url_key");
+        $url = "{$scheme}://{$host}/{$urlKey}/";
+    }
+
     private function getProductStockData($product)
     {
         $data = [];
