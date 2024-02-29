@@ -2,18 +2,14 @@
 
 namespace Wizzy\Search\Model\Admin\Source;
 
-use Magento\Store\Model\StoreManagerInterface;
 use Wizzy\Search\Services\Store\StoreManager;
 
 class StoreNames
 {
-    private $storeManager;
+    private $_storeManager;
 
-    public function __construct(
-        StoreManagerInterface $storeManager,
-        StoreManager $_storeManager
-    ) {
-        $this->storeManager = $storeManager;
+    public function __construct(StoreManager $_storeManager)
+    {
         $this->_storeManager = $_storeManager;
     }
 

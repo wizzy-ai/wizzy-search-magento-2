@@ -46,6 +46,7 @@ class ProductsMapper
     private $productURLManager;
     private $SKUMapper;
     private $productsSessionStorage;
+    public $processedProducts;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -86,6 +87,7 @@ class ProductsMapper
         $this->productsAttributesManager = $productsAttributesManager;
         $this->productURLManager = $productURLManager;
         $this->SKUMapper = $SKUMapper;
+        $this->processedProducts = [];
     }
 
     private function resetEntitiesToIgnore()
@@ -134,7 +136,7 @@ class ProductsMapper
             ['data' => $dataObject]
         );
         
-        return [
+        return $this->processedProducts =  [
             'toAdd' => $dataObject->getDataByKey('products'),
             'toDelete' => $dataObject->getDataByKey('productsToDelete')
         ];
@@ -970,5 +972,10 @@ class ProductsMapper
                 'qty' => $stockItem->getQty() > 0 ? $stockItem->getQty() : 0,
             ];
             return $data;
+    }
+    
+    public function getLastProcessedProducts()
+    {
+        return $this->processedProducts;
     }
 }
