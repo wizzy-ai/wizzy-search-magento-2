@@ -1086,5 +1086,32 @@
                 </field>
             </group>
         </section>
+        <section id="wizzy_debug_sync" translate="label" sortOrder="210" showInDefault="1" showInWebsite="0" showInStore="1">
+            <class>separator-top</class>
+            <label>Debug Sync</label>
+            <tab>wizzy_config</tab>
+            <resource>Wizzy_Search::wizzy_config</resource>
+            <group id="debug_sync" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Debug Sync</label>
+                <field id="product_ids" translate="label" type="textarea" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Product Ids</label>
+                    <comment>Write Product IDs JSON array to be synced</comment>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="wizzy_stores" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Store</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\StoreNames</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select store for which you want to debug sync.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                </field>
+                <field id="debug_sync_button" translate="label" type="button" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <frontend_model>Wizzy\Search\Block\Adminhtml\System\Config\DebugSyncButton</frontend_model>
+                </field>
+            </group>
+        </section>
     </system>
 </config>

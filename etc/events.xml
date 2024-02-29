@@ -27,4 +27,7 @@
     <event name="admin_system_config_changed_section_wizzy_copy_configuration">
         <observer name="custom_admin_system_config_changed_section_wizzy_copy_configuration" instance="Wizzy\Search\Model\Observer\AdminConfigs\CopyConfigurationOptionUpdated"/>
     </event>
+    <event name="admin_system_config_changed_section_wizzy_debug_sync">
+        <observer name="custom_admin_system_config_changed_section_wizzy_debug_sync" instance="Wizzy\Search\Model\Observer\AdminConfigs\DebugSyncFormSubmitted"/>
+    </event>
 </config>
