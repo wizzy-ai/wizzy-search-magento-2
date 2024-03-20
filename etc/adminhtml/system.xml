@@ -485,6 +485,19 @@
                     </comment>
                 </field>
             </group>
+            <group id="catalogue_configuration_attributes" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label> Attributes Configuration </label>
+                <field id="extra_attributes_to_be_synced" translate="label" type="multiselect" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Extra Attributes to be Synced</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\ExtraAttributesList</source_model>
+                    <comment>
+                        <![CDATA[
+                        By default, Wizzy syncs all attributes which are set as true for filterable / searchable.
+                        Select extra attributes you want in Wizzy product's object except these.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
         </section>
 
         <section id="wizzy_search_form_configuration" translate="label" sortOrder="160" showInDefault="0" showInWebsite="0" showInStore="1">

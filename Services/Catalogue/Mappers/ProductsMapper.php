@@ -525,11 +525,22 @@ class ProductsMapper
 
             $isSearchableOrFilterable = ($isFilterableInSearch || $isFilterable || $isSearchable);
 
+            $extraAttributes = $this->storeCatalogueConfig->getExtraAttributesToBeSynced();
+            $isExtraAttributeToBeAdded = false;
+
+            if ($extraAttributes) {
+                if (in_array($id, explode(",", $extraAttributes))) {
+                    $isExtraAttributeToBeAdded = true;
+                }
+            }
+
             if (!$this->isSerachableFrontendInputType($attribute)) {
                 $isSearchable = false;
             }
 
-            if (($isUserDefined || $this->isSystemDefinedAttribute($attribute)) && $isSearchableOrFilterable) {
+            if (($isUserDefined || $this->isSystemDefinedAttribute($attribute)) &&
+                ($isSearchableOrFilterable || $isExtraAttributeToBeAdded)
+            ) {
                 $value = $this->getAttributeValue($product, $attribute);
                 $label = $attribute->getFrontendLabel();
 
