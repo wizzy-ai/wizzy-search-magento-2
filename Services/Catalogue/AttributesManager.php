@@ -31,9 +31,13 @@ class AttributesManager
         $attributes = $this->attributesCollection->create();
         $attributes = $attributes->setOrder('frontend_label', 'ASC');
         $attributes = $attributes->addFilter('is_user_defined', '1');
-        $attributes = $attributes->addFieldToFilter(
+        $attributes->addFieldToFilter(
             ['is_filterable', 'is_filterable', 'is_filterable_in_search'],
-            [1, [1, 2], 1]
+            [
+                ['neq' => 1],
+                ['nin' => [1, 2]],
+                ['neq' => 1]
+            ]
         );
 
         $attributesToReturn = [];
@@ -93,5 +97,16 @@ class AttributesManager
         }
 
         return null;
+    }
+    
+    public function getExtraAttributes()
+    {
+        $attributes = $this->attributesCollection->create();
+        $attributes = $attributes->setOrder('frontend_label', 'ASC');
+        $attributes->addFieldToFilter('is_user_defined', ['eq' => '1']);
+        $attributes->addFieldToFilter('is_filterable', ['neq' => '1']);
+        $attributes->addFieldToFilter('is_filterable_in_search', ['neq' => '1']);
+        $attributes->load();
+        return $attributes;
     }
 }
