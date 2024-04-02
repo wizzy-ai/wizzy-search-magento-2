@@ -32,7 +32,7 @@ class AttributesManager
         $attributes = $attributes->setOrder('frontend_label', 'ASC');
         $attributes = $attributes->addFilter('is_user_defined', '1');
         $attributes = $attributes->addFieldToFilter(
-            ['is_filterable', 'is_filterable', 'is_filterable_in_search'],
+            ['is_searchable', 'is_filterable', 'is_filterable_in_search'],
             [1, [1, 2], 1]
         );
 
@@ -93,5 +93,17 @@ class AttributesManager
         }
 
         return null;
+    }
+
+    public function getExtraAttributes()
+    {
+        $attributes = $this->attributesCollection->create();
+        $attributes = $attributes->setOrder('frontend_label', 'ASC');
+        $attributes = $attributes->addFilter('is_user_defined', '1');
+        $attributes = $attributes->addFilter('is_searchable', '0');
+        $attributes = $attributes->addFilter('is_filterable', '0');
+        $attributes = $attributes->addFilter('is_filterable_in_search', '0');
+        $attributes->load();
+        return $attributes;
     }
 }

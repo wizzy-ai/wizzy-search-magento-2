@@ -511,6 +511,10 @@ class ProductsMapper
         }
         $autocompleteAttributes = $this->configurableProductsData->getAutocompleteAttributes($this->storeId);
         $productAttributes = $product->getAttributes();
+        $extraAttributes = $this->storeCatalogueConfig->getExtraAttributesToBeSynced();
+        if ($extraAttributes) {
+            $extraAttributes = array_flip($extraAttributes);
+        }
         foreach ($productAttributes as $attribute) {
             $id = $attribute->getAttributeId();
             if (isset($this->attributesToIgnore[$id])) {
@@ -525,14 +529,23 @@ class ProductsMapper
 
             $isSearchableOrFilterable = ($isFilterableInSearch || $isFilterable || $isSearchable);
 
+            $isExtraAttributeToBeAdded = false;
+
+            if ($extraAttributes) {
+                if (isset($extraAttributes[$id])) {
+                    $isExtraAttributeToBeAdded = true;
+                }
+            }
+
             if (!$this->isSerachableFrontendInputType($attribute)) {
                 $isSearchable = false;
             }
 
-            if (($isUserDefined || $this->isSystemDefinedAttribute($attribute)) && $isSearchableOrFilterable) {
+            if (($isUserDefined || $this->isSystemDefinedAttribute($attribute)) &&
+                ($isSearchableOrFilterable || $isExtraAttributeToBeAdded)
+            ) {
                 $value = $this->getAttributeValue($product, $attribute);
                 $label = $attribute->getFrontendLabel();
-
                 if (count($value) === 0 || (count($value) == 1 && empty($value[0]))
                     || (count($value) == 1 && $value[0] === null)
                     || (is_array($value[0]))
