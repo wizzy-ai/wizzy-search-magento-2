@@ -82,6 +82,11 @@ class StoreCatalogueConfig
     const IS_USING_INVENTORY_MANAGEMENT = self::INVENTORY_CONFIGURATION. "/is_using_inventory";
     const INVENTORY_SOURCE_LIST = self::INVENTORY_CONFIGURATION. "/source_list";
 
+    // ATTRIBUTES CONFIGURATION
+    const CATALOGUE_CONFIGURATION_ATTRIBUTES = self::WIZZY_CATALOGUE_CONFIGURATION
+        ."/catalogue_configuration_attributes";
+    const EXTRA_ATTRIBUTES_TO_BE_SYNCED = self::CATALOGUE_CONFIGURATION_ATTRIBUTES. "/extra_attributes_to_be_synced";
+
     private $storeId;
 
     private $cachedGnderIdentityConsiderParentCategories;
@@ -259,5 +264,13 @@ class StoreCatalogueConfig
     {
         $source = $this->configManager->getStoreConfig(self::INVENTORY_SOURCE_LIST, $this->storeId);
         return $source;
+    }
+    public function getExtraAttributesToBeSynced()
+    {
+        $extraAttributes = $this->configManager->getStoreConfig(self::EXTRA_ATTRIBUTES_TO_BE_SYNCED, $this->storeId);
+        if (!$extraAttributes) {
+            return [];
+        }
+        return explode(",", $extraAttributes);
     }
 }

@@ -12,6 +12,7 @@ use Wizzy\Search\Services\Setup\Version130;
 use Wizzy\Search\Services\Setup\Version135;
 use Wizzy\Search\Services\Setup\Version1316;
 use Wizzy\Search\Services\Setup\Version1317;
+use Wizzy\Search\Services\Setup\Version320;
 
 class DefaultConfigs implements DataPatchInterface
 {
@@ -55,6 +56,7 @@ class DefaultConfigs implements DataPatchInterface
       private $version135;
       private $version1316;
       private $version1317;
+      private $version320;
 
     /**
      * @var ModuleDataSetupInterface
@@ -71,7 +73,8 @@ class DefaultConfigs implements DataPatchInterface
         Version130 $version130,
         Version135 $version135,
         Version1316 $version1316,
-        Version1317 $version1317
+        Version1317 $version1317,
+        Version320 $version320
     ) {
         $this->moduleDataSetup = $moduleDataSetup;
         $this->setupUtils = $setupUtils;
@@ -80,6 +83,7 @@ class DefaultConfigs implements DataPatchInterface
         $this->version135 = $version135;
         $this->version1316 = $version1316;
         $this->version1317 = $version1317;
+        $this->version320 = $version320;
     }
 
     public function apply()
@@ -91,6 +95,7 @@ class DefaultConfigs implements DataPatchInterface
         $this->version135->update();
         $this->version1316->update();
         $this->version1317->update();
+        $this->version320->update();
         $this->moduleDataSetup->getConnection()->endSetup();
     }
 
