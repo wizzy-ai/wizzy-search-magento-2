@@ -18,6 +18,11 @@ use Magento\Framework\App\Config\Storage\WriterInterface;
 
 class CopyConfigurationOptionUpdated implements ObserverInterface
 {
+    private $request;
+    private $configManager;
+    private $_configWriter;
+    private $cacheTypeList;
+    private $storeCopyConfig;
 
     public function __construct(
         Http $request,
@@ -100,7 +105,6 @@ class CopyConfigurationOptionUpdated implements ObserverInterface
             StoreAutocompleteConfig::WIZZY_AUTTOCOMPLETE_EXCLUDE_PAGES,
             StoreAutocompleteConfig::WIZZY_AUTTOCOMPLETE_SYNC_PAGES,
             StoreAutocompleteConfig::AUTOCOMPLETE_ENABLED_ATTRIBUTES,
-            StoreAdvancedConfig::IS_OVERRIDING_EVENTJS,
             StoreAdvancedConfig::INCLUDE_CUSTOM_CSS,
             StoreAdvancedConfig::TEMPLATE_ATTRIBUTES
         ];
