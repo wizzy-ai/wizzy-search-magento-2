@@ -11,6 +11,9 @@ use Wizzy\Search\Services\Indexer\IndexerManager;
 class ImportProductsObserver implements ObserverInterface
 {
     private $indexer;
+    private $productsManager;
+    private $configurable;
+
     public function __construct(
         IndexerManager $indexerManager,
         ProductsManager $productsManager,
