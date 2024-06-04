@@ -140,6 +140,9 @@ class BaseBlock extends Template
             'input' => [
                'placeholder' => __($this->storeSearchFormConfig->getSearchInputPlaceholder()),
             ],
+            'tileView' => [
+               'display' => $this->storeSearchConfig->hasToDisplayTileView(),
+            ],
             'configs' => [
                'general' => [
                   'dom' => $this->storeSearchConfig->getDOMSelector(),

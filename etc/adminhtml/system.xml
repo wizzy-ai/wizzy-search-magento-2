@@ -556,6 +556,15 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="display_tile_view" translate="label" type="select" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display tile view?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select yes, if you would like to show Select Tile View option on the search result page.
+                        ]]>
+                    </comment>
+                </field>
             </group>
 
             <group id="search_results_facets_configuration" translate="label" type="text" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">

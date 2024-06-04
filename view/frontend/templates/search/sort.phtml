@@ -14,6 +14,15 @@ $configs = $block->getConfigs();
            </option>
          {{/options}}
       </select>
+      {{#displayTileView}}
+         <div class="wizzy-tile-view-icon">
+               <button class="wizzy-tile-view-button" aria-label="Zoom in and out" data-value="4">
+               {{#tileViewConfig}}
+               <div class="wizzy-tile-view-icon-grid {{#isActive}} wizzy-filled-grid {{/isActive}}"></div>
+               {{/tileViewConfig}} 
+               </button>
+         </div>
+     {{/displayTileView}}
    </div>
 
 </script>
