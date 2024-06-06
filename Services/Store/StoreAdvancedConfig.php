@@ -64,7 +64,11 @@ class StoreAdvancedConfig
 
     public function getSyncDequeueSize()
     {
-        return $this->configManager->getStoreConfig(self::SYNC_DEQUEUE_SIZE, $this->storeId);
+        $syncDequeueSize = $this->configManager->getStoreConfig(self::SYNC_DEQUEUE_SIZE, $this->storeId);
+        if (!$syncDequeueSize) {
+            $syncDequeueSize = 7;
+        }
+        return $syncDequeueSize;
     }
 
     public function hasToEnableSyncDebugging()
