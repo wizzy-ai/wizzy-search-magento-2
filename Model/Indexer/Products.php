@@ -98,7 +98,6 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
 
     private function addProductsInQueue(array $productIdsToProcess, $storeId = '', $combinePreviousEntries = false)
     {
-        $this->maxProductsInSingleQueue = $this->storeAdvancedConfig->getProductsSyncBatchSize();
         if (count($productIdsToProcess) == 0) {
           // Return as no products to process.
             return;
@@ -107,6 +106,8 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         $storeIds = $this->storeManager->getToSyncStoreIds($storeId);
 
         foreach ($storeIds as $storeId) {
+            $this->storeAdvancedConfig->setStore($storeId);
+            $this->maxProductsInSingleQueue = $this->storeAdvancedConfig->getProductsSyncBatchSize();
             $productIds = $this->getProductIdsToSync($productIdsToProcess, $storeId);
             $productBatchIds = [];
             $addedProducts = 0;
