@@ -24,7 +24,7 @@ class ProductsManager
     private $configurable;
     private $productCollectionFactory;
 
-    const MAX_PRODUCTS_TO_FETCH = 20000;
+    const MAX_PRODUCTS_TO_FETCH = 10000;
 
     public function __construct(
         ProductRepository $productRepository,
@@ -51,6 +51,17 @@ class ProductsManager
         $products = $this->productCollectionFactory->create();
         $products->addAttributeToSelect('id');
         $products->addAttributeToFilter('status', ['in' => $this->status->getVisibleStatusIds()]);
+        $products->addStoreFilter($storeId);
+        $products->setPage($page, self::MAX_PRODUCTS_TO_FETCH);
+        return $products;
+    }
+
+    public function fetchAllByCategoryIds($page, $storeId, $categoryIDs)
+    {
+        $products = $this->productCollectionFactory->create();
+        $products->addAttributeToSelect('id');
+        $products->addAttributeToFilter('status', ['in' => $this->status->getVisibleStatusIds()]);
+        $products->addCategoriesFilter(['in' => $categoryIDs]);
         $products->addStoreFilter($storeId);
         $products->setPage($page, self::MAX_PRODUCTS_TO_FETCH);
         return $products;
@@ -87,26 +98,20 @@ class ProductsManager
 
     public function getProductsByCategoryIds($categoryIDs, $storeId)
     {
-        $filters = [
-         $this->filterBuilder
-            ->setField('category_id')
-            ->setConditionType('in')
-            ->setValue($categoryIDs)
-            ->create(),
-         $this->filterBuilder
-            ->setField('store_id')
-            ->setConditionType('eq')
-            ->setValue($storeId)
-            ->create()
-        ];
+        $page = 1;
+        $productIds = [];
 
-        $this->filterGroup->setFilters($filters);
+        while (true) {
+            $products = $this->fetchAllByCategoryIds($page, $storeId, $categoryIDs);
+            $products = $this->getProductIds($products);
+            $productIds = array_merge($productIds, $products);
+            $page++;
+            if (count($products) < self::MAX_PRODUCTS_TO_FETCH) {
+                break;
+            }
+        }
 
-        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-        $products = $this->productRepository->getList($this->searchCriteria);
-        $products = $products->getItems();
-
-        return $products;
+        return $productIds;
     }
 
     /**

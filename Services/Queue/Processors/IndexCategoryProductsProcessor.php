@@ -74,9 +74,12 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
 
     private function addProductsToSync($storeId)
     {
-        $products = $this->productsManager->getProductsByCategoryIds(array_keys($this->categoriesToProcess), $storeId);
-        $this->output->writeln(__('Added '.count($products).' Products for processing.'));
-        $this->productsToSync = $this->productsManager->getProductIds($products);
+        $productIds = $this->productsManager->getProductsByCategoryIds(
+            array_keys($this->categoriesToProcess),
+            $storeId
+        );
+        $this->output->writeln(__('Added '.count($productIds).' Products for processing.'));
+        $this->productsToSync = $productIds;
     }
 
     private function processAllDescendants($category)
