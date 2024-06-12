@@ -252,6 +252,20 @@ class ConfigurableProductsData
             $pathIds = [$category->getUrlKey()];
         }
 
+        $parentId = '';
+        try {
+            $parentId = ($category->getParentCategory()) ? $category->getParentCategory()->getId() : '';
+        } catch (\Exception $e) {
+            $parentId = '';
+        }
+
+        $parentUrlKey = '';
+        try {
+            $parentUrlKey = ($category->getParentCategory()) ? $category->getParentCategory()->parentUrlKey() : '';
+        } catch (\Exception $e) {
+            $parentUrlKey = '';
+        }
+
         $data =
          ['id' => $category->getId(),
          'value' => $category->getName(),
@@ -265,8 +279,8 @@ class ConfigurableProductsData
          'url' => $category->getUrl(),
          'isActive'=> $category->getIsActive(),
          'pathIds' => $pathIds,
-         'parentId' => ($category->getParentCategory()) ? $category->getParentCategory()->getId() : '',
-         'parentUrlKey' => ($category->getParentCategory()) ? $category->getParentCategory()->getUrlKey() : '',
+         'parentId' => $parentId,
+         'parentUrlKey' => $parentUrlKey,
         ];
 
         $includeInMenu = ($category->getIncludeInMenu()) ? true : false;
