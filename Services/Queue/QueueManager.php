@@ -18,6 +18,7 @@ class QueueManager
     const JOB_IN_PROGRESS_STATUS = 1;
     const JOB_PROCESSED_STATUS = 2;
     const JOB_CANCELLED_STATUS = -1;
+    const JOB_EXECUTION_BACK_IN_QUEUE = -2;
 
     public function __construct(
         QueueFactory $queueFactory,

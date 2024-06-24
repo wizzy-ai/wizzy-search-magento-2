@@ -19,6 +19,7 @@ use Wizzy\Search\Services\Store\StoreGeneralConfig;
 use Magento\Store\Model\App\Emulation;
 use Magento\Framework\App\Config\ScopeCodeResolver;
 use Wizzy\Search\Services\Model\DeletedProducts;
+use Wizzy\Search\Services\Queue\QueueManager;
 
 class IndexProductsProcessor extends QueueProcessorBase
 {
@@ -75,7 +76,7 @@ class IndexProductsProcessor extends QueueProcessorBase
         $this->storeGeneralConfig->setStore($storeId);
         if (!$this->storeGeneralConfig->isSyncEnabled() || !isset($data['products'])) {
             $this->output->writeln(__('Index Products Processor Skipped as Sync is disabled.'));
-            return true;
+            return QueueManager::JOB_EXECUTION_BACK_IN_QUEUE;
         }
         $this->startEmulation($storeId);
 
