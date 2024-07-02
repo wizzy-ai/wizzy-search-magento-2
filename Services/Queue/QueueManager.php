@@ -77,6 +77,8 @@ class QueueManager
             foreach ($jobs as $index => $job) {
                 $jobs[$index]['status'] = $status;
                 $jobs[$index]['errors'] = $errors;
+                $currentDateTime = date('Y-m-d H:i:s');
+                $jobs[$index]['last_updated_at'] = $currentDateTime;
 
                 // tries only gets updated when status is changed to in progress.
                 if ($status != self::JOB_CANCELLED_STATUS) {
