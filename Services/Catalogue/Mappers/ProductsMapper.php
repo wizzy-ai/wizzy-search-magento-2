@@ -118,7 +118,7 @@ class ProductsMapper
         $mappedProducts = [];
         $this->skippedProducts = [];
         $this->productsAttributesManager->setAttributeValues($products);
-
+        
         foreach ($products as $product) {
             $mappedProduct = $this->map($product);
             if ($mappedProduct) {
@@ -129,7 +129,8 @@ class ProductsMapper
         $this->updateSkippedProducts($mappedProducts);
         $dataObject = new DataObject([
             'products' => $mappedProducts,
-            'productsToDelete' => array_keys($this->skippedProducts)
+            'productsToDelete' => array_keys($this->skippedProducts),
+            'magentoProducts' => $products
         ]);
         $this->eventManager->dispatch(
             'wizzy_after_products_mapped',
