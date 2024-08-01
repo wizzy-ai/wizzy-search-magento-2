@@ -261,7 +261,7 @@ class ConfigurableProductsData
 
         $parentUrlKey = '';
         try {
-            $parentUrlKey = ($category->getParentCategory()) ? $category->getParentCategory()->parentUrlKey() : '';
+            $parentUrlKey = ($category->getParentCategory()) ? $category->getParentCategory()->getUrlKey() : '';
         } catch (\Exception $e) {
             $parentUrlKey = '';
         }
