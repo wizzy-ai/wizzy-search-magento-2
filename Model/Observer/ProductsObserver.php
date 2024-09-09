@@ -54,7 +54,7 @@ class ProductsObserver
         return $resourceModelResult;
     }
 
-    private function getProductIdsToIndex($productIds)
+    public function getProductIdsToIndex($productIds)
     {
         $productIdsToIndex = $productIds;
         foreach ($productIds as $productId) {
