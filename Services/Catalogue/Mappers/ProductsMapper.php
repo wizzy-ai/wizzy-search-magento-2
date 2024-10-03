@@ -863,6 +863,7 @@ class ProductsMapper
          'id'  =>
             (!empty($category['urlKey']) && $category['urlKey'] != null)
                ? $category['urlKey'] : $category['id'],
+         'machineId' => $category['id'],
          'url' => $category['url'],
          'position' => (int) $category['position'],
          'level'  => (int) $category['level'],
