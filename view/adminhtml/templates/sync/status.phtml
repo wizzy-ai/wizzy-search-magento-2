@@ -4,22 +4,30 @@ $syncResults = $block->getSyncStatus();
 foreach ($syncResults as $syncResult) {
     foreach ($syncResult as $sync) { ?>
         <div class="admin__fieldset-wrapper-title">
-                <p class="product-id"> <?= "<b>Store ID</b> : ",$sync['store_id'];?></p>
-                <span><?= $block->escapeHtmlAttr(('Sync Status :'));?></span>
-          <?php if ($sync['status'] == 1) {
-                ?> <b><?= $block->escapeHtmlAttr(('Synced'));?></b> <?php
-          } elseif ($sync['status'] == 0) {
-                ?> <b><?= $block->escapeHtmlAttr(('In sync'));?></b> <?php
-          } elseif ($sync['status'] == -1) {
-                ?> <b><?= $block->escapeHtmlAttr(('No entities to be synced !'));?></b> <?php
-          }
-            ?>
+            <p class="product-id"><?= "<b>Store ID</b> : ", $block->escapeHtml($sync['store_id']); ?></p>
+            <span><?= $block->escapeHtml('Sync Status :'); ?></span>
+            <?php
+            if ($sync['status'] == 1 && !$sync['skipped_data']) { ?>
+                <b><?= $block->escapeHtml('Synced'); ?></b>
+                <?php
+            } elseif ($sync['status'] == 0) { ?>
+                <b><?= $block->escapeHtml('In sync'); ?></b>
+                <?php
+            } elseif ($sync['status'] == -1) { ?>
+                <b><?= $block->escapeHtml('No entities to be synced!'); ?></b>
+                <?php
+            } elseif ($sync['skipped_data']) { ?>
+                <b><?= $block->escapeHtml('Product Skipped!'); ?></b>
+                <div class="admin__fieldset-note admin__scope-old"></div>
+                <span><?= $block->escapeHtml('Reason: '); ?></span>
+                <b><?= $block->escapeHtml($sync['skipped_data']); ?></b>
+            <?php } ?>
         </div>
         <div class="admin__fieldset-wrapper-title">
-            <span><?= $block->escapeHtmlAttr(('Last Updated At :'));?></span>
-            <b> <?= "", $sync['updated_at']; ?></b>
-        </div> </br>
+            <span><?= $block->escapeHtml('Last Updated At :'); ?></span>
+            <b><?= $block->escapeHtml($sync['updated_at']); ?></b>
+        </div>
+        <br>
     <?php }
 }
-
 ?>
