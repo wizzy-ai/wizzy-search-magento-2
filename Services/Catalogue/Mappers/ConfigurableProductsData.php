@@ -13,6 +13,7 @@ use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
 use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Magento\Framework\Event\ManagerInterface;
+use Wizzy\Search\Services\Store\StoreManager;
 
 class ConfigurableProductsData
 {
@@ -22,7 +23,7 @@ class ConfigurableProductsData
     private $genderConfigurable;
     private $colorConfigurable;
     private $sizeConfigurable;
-
+    private $storeManager;
     private $storeAutocompleteConfig;
 
     private $categoriesManager;
@@ -46,7 +47,8 @@ class ConfigurableProductsData
         StoreAutocompleteConfig $storeAutocompleteConfig,
         AttributesManager $attributesManager,
         CategoriesSessionStorage $categoriesSessionStorage,
-        ProductsAttributesManager $productsAttributesManager
+        ProductsAttributesManager $productsAttributesManager,
+        StoreManager $storeManager
     ) {
         $this->eventManager = $eventManager;
         $this->brandConfigurable = $brandConfigurable;
@@ -62,6 +64,7 @@ class ConfigurableProductsData
         $this->productsAttributesManager = $productsAttributesManager;
         $this->hasToIgnoreCategories = $this->storeAutocompleteConfig->hasToIgnoreCategories();
         $this->categoriesToIgnoreInAutoComplete = $this->storeAutocompleteConfig->getIgnoredCategories();
+        $this->storeManager = $storeManager;
     }
 
     public function getBrand($categories, $attributes, $storeId)
@@ -233,7 +236,6 @@ class ConfigurableProductsData
         );
         return $dataObject->getDataByKey('categories');
     }
-
     private function getCategoryArray($category)
     {
         $pathIds = $category->getPathIds();
@@ -266,6 +268,23 @@ class ConfigurableProductsData
             $parentUrlKey = '';
         }
 
+        $storeUrls = null;
+
+        if ($storeUrls === null) {
+            $storeUrls = $this->storeManager->getAllStoreBaseUrls();
+        }
+
+        $currentStoreBaseUrl = $this->storeManager->getCurrentStoreBaseUrl();
+        $categoryUrl = $category->getUrl();
+        foreach ($storeUrls as $store) {
+            if (strpos($categoryUrl, $store['base_url']) === 0) {
+                $categoryUrl = str_replace($store['base_url'], '', $categoryUrl);
+                break;
+            }
+        }
+
+        $categoryUrl = $currentStoreBaseUrl."".$categoryUrl;
+
         $data =
          ['id' => $category->getId(),
          'value' => $category->getName(),
@@ -276,7 +295,7 @@ class ConfigurableProductsData
          'level'  => (int) $category->getLevel(),
          'description' => ($category->getDescription()) ? $category->getDescription() : '',
          'image' => ($category->getImageUrl()) ? $category->getImageUrl() : '',
-         'url' => $category->getUrl(),
+         'url' => $categoryUrl,
          'isActive'=> $category->getIsActive(),
          'pathIds' => $pathIds,
          'parentId' => $parentId,
@@ -293,7 +312,7 @@ class ConfigurableProductsData
 
         $data['includeInMenu'] = $includeInMenu;
         $data['isSearchable'] = $isSearchable;
-        
+
         return $data;
     }
 }
