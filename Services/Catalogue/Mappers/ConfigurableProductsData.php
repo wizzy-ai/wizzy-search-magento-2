@@ -13,6 +13,7 @@ use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
 use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Magento\Framework\Event\ManagerInterface;
+use Wizzy\Search\Services\Store\StoreManager;
 
 class ConfigurableProductsData
 {
@@ -22,7 +23,7 @@ class ConfigurableProductsData
     private $genderConfigurable;
     private $colorConfigurable;
     private $sizeConfigurable;
-
+    private $storeManager;
     private $storeAutocompleteConfig;
 
     private $categoriesManager;
@@ -36,6 +37,10 @@ class ConfigurableProductsData
 
     private $eventManager;
 
+    private $storeId;
+    private $allStoreBaseUrls = null;
+    private $currentStoreBaseUrl = [];
+
     public function __construct(
         ManagerInterface $eventManager,
         BrandConfigurable $brandConfigurable,
@@ -46,7 +51,8 @@ class ConfigurableProductsData
         StoreAutocompleteConfig $storeAutocompleteConfig,
         AttributesManager $attributesManager,
         CategoriesSessionStorage $categoriesSessionStorage,
-        ProductsAttributesManager $productsAttributesManager
+        ProductsAttributesManager $productsAttributesManager,
+        StoreManager $storeManager
     ) {
         $this->eventManager = $eventManager;
         $this->brandConfigurable = $brandConfigurable;
@@ -62,8 +68,14 @@ class ConfigurableProductsData
         $this->productsAttributesManager = $productsAttributesManager;
         $this->hasToIgnoreCategories = $this->storeAutocompleteConfig->hasToIgnoreCategories();
         $this->categoriesToIgnoreInAutoComplete = $this->storeAutocompleteConfig->getIgnoredCategories();
+        $this->storeManager = $storeManager;
     }
 
+    public function setStore($storeId)
+    {
+        $this->storeId = $storeId;
+    }
+    
     public function getBrand($categories, $attributes, $storeId)
     {
         return $this->brandConfigurable->getValue($categories, $attributes, $storeId);
@@ -233,7 +245,6 @@ class ConfigurableProductsData
         );
         return $dataObject->getDataByKey('categories');
     }
-
     private function getCategoryArray($category)
     {
         $pathIds = $category->getPathIds();
@@ -266,6 +277,34 @@ class ConfigurableProductsData
             $parentUrlKey = '';
         }
 
+        if ($this->allStoreBaseUrls === null) {
+            $this->allStoreBaseUrls = $this->storeManager->getAllStoreBaseUrls();
+        }
+
+        if (!isset($this->currentStoreBaseUrl[$this->storeId])) {
+            $this->currentStoreBaseUrl[$this->storeId] = $this->storeManager->getCurrentStoreBaseUrl();
+            ;
+        }
+
+        $currentStoreBaseUrl = null;
+
+        if ($this->currentStoreBaseUrl[$this->storeId] &&
+            isset($this->currentStoreBaseUrl[$this->storeId]['base_url'])
+        ) {
+            $currentStoreBaseUrl = $this->currentStoreBaseUrl[$this->storeId];
+            $currentStoreBaseUrl = $currentStoreBaseUrl['base_url'];
+        }
+
+        $categoryUrl = $category->getUrl();
+        foreach ($this->allStoreBaseUrls as $store) {
+            if (strpos($categoryUrl, $store['base_url']) === 0 &&
+            isset($currentStoreBaseUrl) && $currentStoreBaseUrl !== null) {
+                $categoryUrl = str_replace($store['base_url'], '', $categoryUrl);
+                $categoryUrl = $currentStoreBaseUrl."".$categoryUrl;
+                break;
+            }
+        }
+
         $data =
          ['id' => $category->getId(),
          'value' => $category->getName(),
@@ -276,7 +315,7 @@ class ConfigurableProductsData
          'level'  => (int) $category->getLevel(),
          'description' => ($category->getDescription()) ? $category->getDescription() : '',
          'image' => ($category->getImageUrl()) ? $category->getImageUrl() : '',
-         'url' => $category->getUrl(),
+         'url' => $categoryUrl,
          'isActive'=> $category->getIsActive(),
          'pathIds' => $pathIds,
          'parentId' => $parentId,
@@ -293,7 +332,7 @@ class ConfigurableProductsData
 
         $data['includeInMenu'] = $includeInMenu;
         $data['isSearchable'] = $isSearchable;
-        
+
         return $data;
     }
 }
