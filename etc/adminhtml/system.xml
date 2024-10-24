@@ -580,6 +580,17 @@
                     </comment>
                 </field>
 
+                <field id="left_facets_has_to_display_in_drawer" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Inside Drawer?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Choose Yes if you would like to display facets under drawer.
+                        ]]>
+                    </comment>
+                    <validate>required-entry</validate>
+                </field>
+
                 <field id="category_facet_display_method" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Categories Rendering Method</label>
                     <source_model>Wizzy\Search\Model\Admin\Source\CategoriesRenderSelection</source_model>
