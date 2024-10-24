@@ -5,6 +5,7 @@ namespace Wizzy\Search\Services\Model;
 use Wizzy\Search\Helpers\DB\WizzyTables;
 use Wizzy\Search\Model\SyncSkippedEntitiesFactory;
 use Wizzy\Search\Services\DB\ConnectionManager;
+use Wizzy\Search\Model\ResourceModel\SyncSkippedEntities\CollectionFactory;
 
 class SyncSkippedEntities
 {
@@ -13,13 +14,16 @@ class SyncSkippedEntities
 
     private $syncSkippedEntitiesFactory;
     private $connectionManager;
+    public $syncSkippedEntitiesCollectionFactory;
 
     public function __construct(
         SyncSkippedEntitiesFactory $syncSkippedEntitiesFactory,
-        ConnectionManager $connectionManager
+        ConnectionManager $connectionManager,
+        CollectionFactory $syncSkippedEntitiesCollectionFactory
     ) {
         $this->syncSkippedEntitiesFactory = $syncSkippedEntitiesFactory;
         $this->connectionManager = $connectionManager;
+        $this->syncSkippedEntitiesCollectionFactory = $syncSkippedEntitiesCollectionFactory;
     }
 
     public function addSkippedEntities($skippedEntities, $storeId, $entityType = self::ENTITY_TYPE_PRODUCT)
@@ -56,5 +60,22 @@ class SyncSkippedEntities
         $entities->walk('delete');
 
         return $entities;
+    }
+    public function getSkippedEntityById($storeId, $entityId, $entityType = null)
+    {
+        $collection = $this->syncSkippedEntitiesCollectionFactory->create();
+        $collection->addFieldToFilter('store_id', $storeId);
+        $collection->addFieldToFilter('entity_id', $entityId);
+
+        if ($entityType !== null) {
+            $collection->addFieldToFilter('entity_type', $entityType);
+        }
+
+        $skippedEntities = null;
+        foreach ($collection->getItems() as $item) {
+            $skippedEntities = $item->getData('entity_data');
+        }
+
+        return $skippedEntities;
     }
 }
