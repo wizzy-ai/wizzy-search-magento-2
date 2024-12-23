@@ -7,7 +7,9 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
    <div class="wizzy-search-wrapper {{#inOnCategoryPage}}wizzy-category-page{{/inOnCategoryPage}}
         {{#hasFacets}}has-facets{{/hasFacets}}
         {{#hasLeftFacets}}has-left-facets{{/hasLeftFacets}}
-        {{#hasTopFacets}}has-top-facets{{/hasTopFacets}}">
+        {{#hasTopFacets}}has-top-facets{{/hasTopFacets}}
+        {{#displayFacetsInDrawer}}has-facets-in-drawer facets-drawer-on-{{facetDrawerPosition}}
+        {{/displayFacetsInDrawer}}">
 
       <div class="wizzy-search-summary-wrapper">
          {{#summary}}
@@ -47,7 +49,16 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
          <div class="wizzy-search-results-container">
 
             <div class="wizzy-search-filters-top">
-
+            {{#displayFacetsInDrawer}}
+                    <div class="wizzy-search-filters-drawer">
+                        <div class="wizzy-search-filters-drawer-button">
+                            <a href="#" class="wizzy-filters-desktop-entry">
+                                <span class="wizzy-filters-button"></span>
+                                <span>Filters</span>
+                            </a>
+                        </div>
+                    </div>
+            {{/displayFacetsInDrawer}}
                <div class="search-filters-top-wrapper">
                    <div class="wizzy-search-filters-list-top">
                        {{#topFacets}}

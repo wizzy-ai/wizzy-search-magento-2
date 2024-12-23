@@ -311,6 +311,11 @@ class BaseBlock extends Template
                'sessions' => '/wtrack/analytics/session',
             ],
          ],
+         'filters' => [
+            'configs' => [
+               'displayAsDrawer' => $this->storeSearchConfig->leftFacetsHasToDisplayAsDrawer(),
+            ],
+         ],
         ];
 
         return $configs;

@@ -21,6 +21,8 @@ class StoreSearchConfig
 
     const WIZZY_SEARCH_FACETS_CONFIGURATION = self::WIZZY_SEARCH_CONFIGURATION . "/search_results_facets_configuration";
     const WIZZY_FACETS = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/facets_configuration";
+    const WIZZY_FACETS_DISPLAY_AS_DRAWER =
+        self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/left_facets_has_to_display_in_drawer";
     const WIZZY_FACET_CATEGORY_DISPLAY = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/category_facet_display_method";
     const WIZZY_LEFT_FACETS_COLLAPSIBLE = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/left_facets_has_to_collapsible";
     const WIZZY_LEFT_FACETS_DEFAULT_COLLAPSIBLE_BEHAVIOUR =
@@ -100,6 +102,15 @@ class StoreSearchConfig
         }
 
         return json_decode($facetsConfig, true);
+    }
+    public function leftFacetsHasToDisplayAsDrawer()
+    {
+        return (
+            $this->configManager->getStoreConfig(
+                self::WIZZY_FACETS_DISPLAY_AS_DRAWER,
+                $this->storeId
+            ) == '1' ? true : false
+        );
     }
 
     public function getCategoryDisplayMethod()
