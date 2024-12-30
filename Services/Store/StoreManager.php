@@ -128,31 +128,4 @@ class StoreManager
 
         return $storeIds;
     }
-
-    public function getAllStoreBaseUrls()
-    {
-        $baseUrls = [];
-        $storeIds = $this->getActivateWizzyStores();
-
-        foreach ($storeIds as $storeId) {
-            $store = $this->storeManager->getStore($storeId);
-            $storeId = $store->getId();
-            $baseUrl = $store->getBaseUrl();
-
-            $baseUrls[] = [
-                'store_id' => $storeId,
-                'base_url' => $baseUrl,
-            ];
-        }
-
-        return $baseUrls;
-    }
-    
-    public function getCurrentStoreBaseUrl()
-    {
-        return $currentStore = [
-            'store_id' => $this->storeManager->getStore()->getId(),
-            'base_url' => $this->storeManager->getStore()->getBaseUrl(),
-        ];
-    }
 }
