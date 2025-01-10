@@ -277,33 +277,7 @@ class ConfigurableProductsData
             $parentUrlKey = '';
         }
 
-        if ($this->allStoreBaseUrls === null) {
-            $this->allStoreBaseUrls = $this->storeManager->getAllStoreBaseUrls();
-        }
-
-        if (!isset($this->currentStoreBaseUrl[$this->storeId])) {
-            $this->currentStoreBaseUrl[$this->storeId] = $this->storeManager->getCurrentStoreBaseUrl();
-            ;
-        }
-
-        $currentStoreBaseUrl = null;
-
-        if ($this->currentStoreBaseUrl[$this->storeId] &&
-            isset($this->currentStoreBaseUrl[$this->storeId]['base_url'])
-        ) {
-            $currentStoreBaseUrl = $this->currentStoreBaseUrl[$this->storeId];
-            $currentStoreBaseUrl = $currentStoreBaseUrl['base_url'];
-        }
-
-        $categoryUrl = $category->getUrl();
-        foreach ($this->allStoreBaseUrls as $store) {
-            if (strpos($categoryUrl, $store['base_url']) === 0 &&
-            isset($currentStoreBaseUrl) && $currentStoreBaseUrl !== null) {
-                $categoryUrl = str_replace($store['base_url'], '', $categoryUrl);
-                $categoryUrl = $currentStoreBaseUrl."".$categoryUrl;
-                break;
-            }
-        }
+        $category->getUrlInstance()->setScope($this->storeId);
 
         $data =
          ['id' => $category->getId(),
@@ -315,7 +289,7 @@ class ConfigurableProductsData
          'level'  => (int) $category->getLevel(),
          'description' => ($category->getDescription()) ? $category->getDescription() : '',
          'image' => ($category->getImageUrl()) ? $category->getImageUrl() : '',
-         'url' => $categoryUrl,
+         'url' => $category->getUrl(),
          'isActive'=> $category->getIsActive(),
          'pathIds' => $pathIds,
          'parentId' => $parentId,
