@@ -111,6 +111,7 @@ class ProductsMapper
         $this->productPrices->setStore($storeId);
         $this->storeCatalogueConfig->setStore($storeId);
         $this->productURLManager->setStore($storeId);
+        $this->configurableProductsData->setStore($storeId);
         $this->productURLManager->fetchUrls($products);
         $this->setAdminUrl();
         $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();

@@ -34,6 +34,7 @@ class ConfigurableProductsData
     private $productsAttributesManager;
 
     private $eventManager;
+    private $storeId;
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -61,6 +62,10 @@ class ConfigurableProductsData
         $this->productsAttributesManager = $productsAttributesManager;
         $this->hasToIgnoreCategories = $this->storeAutocompleteConfig->hasToIgnoreCategories();
         $this->categoriesToIgnoreInAutoComplete = $this->storeAutocompleteConfig->getIgnoredCategories();
+    }
+    public function setStore($storeId)
+    {
+        $this->storeId = $storeId;
     }
     public function getBrand($categories, $attributes, $storeId)
     {
@@ -262,6 +267,8 @@ class ConfigurableProductsData
         } catch (\Exception $e) {
             $parentUrlKey = '';
         }
+
+        $category->getUrlInstance()->setScope($this->storeId);
 
         $data =
          ['id' => $category->getId(),
