@@ -10,7 +10,9 @@
     <column xsi:type="text" name="errors" nullable="true" comment="Queue Errors log"/>
     <column xsi:type="timestamp" name="queued_at" on_update="false" nullable="false" default="CURRENT_TIMESTAMP" comment="Timestamp when queue entry is added."/>
     <column xsi:type="timestamp" name="last_updated_at" on_update="true" nullable="true" default="CURRENT_TIMESTAMP" comment="Timestamp when queue entry is updated."/>
-    <constraint xsi:type="primary" referenceId="PRIMARY">
+    <column xsi:type="timestamp" name="started_processing_at" on_update="true" nullable="true" default="NULL" comment="Timestamp when queue item has started processing."/>
+    <column xsi:type="timestamp" name="complete_processing_at" on_update="true" nullable="true" default="NULL" comment="Timestamp when queue item has stopped processing."/>
+    <constraint xsi:type="primary" referenceId="PRIMARY"> 
       <column name="id"/>
     </constraint>
   </table>
