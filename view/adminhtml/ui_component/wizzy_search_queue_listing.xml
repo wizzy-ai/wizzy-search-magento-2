@@ -150,6 +150,28 @@
             </argument>
         </column>
 
+        <column name="started_processing_at" class="Magento\Ui\Component\Listing\Columns\Date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">dateRange</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="label" xsi:type="string" translate="true">Started Processing At</item>
+                </item>
+            </argument>
+        </column>
+
+        <column name="complete_processing_at" class="Magento\Ui\Component\Listing\Columns\Date">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="filter" xsi:type="string">dateRange</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/columns/date</item>
+                    <item name="dataType" xsi:type="string">date</item>
+                    <item name="label" xsi:type="string" translate="true">Complete Processing At</item>                     
+                </item>
+            </argument>
+        </column>
+
         <actionsColumn name="actions" class="Wizzy\Search\Ui\Component\Listing\Column\QueueActions">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">

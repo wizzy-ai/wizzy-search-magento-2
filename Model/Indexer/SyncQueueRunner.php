@@ -57,6 +57,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
             $storeId = $jobData['store_id'];
             $data = json_decode($jobData['data'], true);
             $this->output->writeln(__('Started executing Processor #' . $jobData['id']));
+            $jobData['started_processing_at'] = date('Y-m-d H:i:s');
 
             if (class_exists($jobClass)) {
                 try {
@@ -67,6 +68,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
                         $this->queueManager->changeStatus([$jobData], QueueManager::JOB_TO_EXECUTE_STATUS);
                     } elseif ($jobResponse === true) {
                         $this->output->writeln(__('Processor #' . $jobData['id'] . ' executed successfully.'));
+                        $jobData['complete_processing_at'] = date('Y-m-d H:i:s');
                         $this->queueManager->changeStatus([$jobData], QueueManager::JOB_PROCESSED_STATUS);
                     } else {
                         $errorMessage = $this->getQueueError($jobResponse);
