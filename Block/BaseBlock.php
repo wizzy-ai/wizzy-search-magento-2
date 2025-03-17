@@ -294,6 +294,10 @@ class BaseBlock extends Template
             'recentSearches' => [
                'title' => "Recent Searches",
             ],
+            'searchBar' => [
+               'hasAnimatedPlaceholders' => $this->storeSearchFormConfig->hasToEnableAnimatedPlaceholders(),
+               'animatedPlaceholders' => $this->storeSearchFormConfig->getAnimatedPlaceholderTerms(),
+            ],
          ],
          'pageStore' => [
 
