@@ -513,6 +513,35 @@
                     <validate>required-entry</validate>
                 </field>
             </group>
+
+            <group id="animated_placeholder_configuration" translate="label" type="text" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Animated Placeholder</label>
+                
+                <field id="animated_placeholder_enabled" translate="label" type="select" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Enable Animated Placeholder?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Yes if you want to enable animated placeholder.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="animated_placeholder_terms" translate="label" type="text" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Add Terms For Animated Placeholder </label>
+                    <validate>required-entry</validate>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\SectionsSelection</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <depends>
+                        <field id="enable_animated_placeholder">1</field>
+                    </depends>
+                    <comment>
+                     <![CDATA[
+                        Add the terms you want to display in animated placeholder.
+                    ]]>
+                    </comment>
+                </field>
+            </group>
         </section>
 
         <section id="wizzy_search_configuration" translate="label" sortOrder="170" showInDefault="0" showInWebsite="0" showInStore="1">
