@@ -617,7 +617,29 @@
                             Choose Yes if you would like to display facets under drawer.
                         ]]>
                     </comment>
-                    <validate>required-entry</validate>
+                </field>
+
+                <field id="filters_and_sort_icon_position" translate="label" type="select" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Filters and Sort Icon Position in Mobile View</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\FiltersAndSortIconPositionOptions</source_model>
+                    <comment>
+                        <![CDATA[
+                           By default Wizzy display Filters and Sort button at the bottom in the mobile view. Change it to top if you would like to have it changed with an offset.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="filters_and_sort_icon_offset" translate="label" type="text" sortOrder="4" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Filters and Sort Icon Offset in Mobile View</label>
+                    <comment>
+                        <![CDATA[
+                           Please write the offset from top of the mobile view.
+                        ]]>
+                    </comment>
+                     <depends>
+                        <field id="filters_and_sort_icon_position">top</field>
+                    </depends>
+                    <validate>validate-number</validate>
                 </field>
 
                 <field id="category_facet_display_method" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">

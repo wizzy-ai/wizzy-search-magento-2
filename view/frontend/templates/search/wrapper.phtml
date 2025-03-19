@@ -4,12 +4,16 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
 ?>
 <script type="text/template" id="wizzy-search-wrapper">
     <?= $block->getBlockHtml('formkey'); ?>
-   <div class="wizzy-search-wrapper {{#inOnCategoryPage}}wizzy-category-page{{/inOnCategoryPage}}
+   <div class="wizzy-search-wrapper 
+        {{#inOnCategoryPage}}wizzy-category-page{{/inOnCategoryPage}}
+        {{#displayTileView}}display-tile-view{{/displayTileView}}
         {{#hasFacets}}has-facets{{/hasFacets}}
+        {{#hasToDisplayFiltersAtTop}}has-filters-button-at-top{{/hasToDisplayFiltersAtTop}}
         {{#hasLeftFacets}}has-left-facets{{/hasLeftFacets}}
         {{#hasTopFacets}}has-top-facets{{/hasTopFacets}}
         {{#displayFacetsInDrawer}}has-facets-in-drawer facets-drawer-on-{{facetDrawerPosition}}
-        {{/displayFacetsInDrawer}}">
+        {{/displayFacetsInDrawer}}"
+        {{#displayTileView}}wizzy-tile-view-level="{{tileViewLevel}}"{{/displayTileView}}>
 
       <div class="wizzy-search-summary-wrapper">
          {{#summary}}
@@ -19,11 +23,20 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
 
       <div class="wizzy-search-results-wrapper">
           {{#hasFacets}}
-                <a href="#" class="wizzy-filters-mobile-entry {{^sort}}only-filters{{/sort}}">Filters</a>
+                {{#hasToDisplayFiltersAtTop}}
+                    <div class="wizzy-mobile-filter-button">
+                {{/hasToDisplayFiltersAtTop}}
+                    <a href="#" class="wizzy-filters-mobile-entry {{^sort}}only-filters{{/sort}}" 
+                       {{#hasToDisplayFiltersAtTop}} style="top:{{filtersButtonOffset}}px"{{/hasToDisplayFiltersAtTop}}>
+                        Filters <span class="wz-active-filters-mobile-count"></span> 
+                    </a>
+                {{#hasToDisplayFiltersAtTop}}
+                    </div>
+                {{/hasToDisplayFiltersAtTop}}
           {{/hasFacets}}
 
          {{#hasLeftFacets}}
-             <div class="wizzy-search-filters-left">
+             <div class="wizzy-search-filters-left {{#layout}}wizzy-{{layout}}{{/layout}}">
 
                  <div class="wizzy-filters-bg"></div>
                  <div class="wizzy-filters-close-btn"></div>
@@ -35,15 +48,32 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
                  </div>
 
                  <div class="wizzy-search-filters-left-wrapper">
+                    {{#layout}}
+                        <div class="wizzy-facet-list-block">
+                    {{/layout}}
                      {{#leftFacets}}
                         {{{html}}}
                      {{/leftFacets}}
 
-                     <div class="wizzy-search-filters-left-mobile-extra">
-                     </div><!-- ending of wizzy-search-filters-left-mobile-extra -->
+                    {{#layout}}
                  </div>
+                    {{/layout}}
 
-             </div><!-- ending of wizzy-search-filters-->
+                    <div class="wizzy-search-filters-left-mobile-extra"></div>
+
+                    {{#layout}}
+                        <div class="wizzy-mobile-filter-buttons">
+                            <div class="wizzy-filters-close-button-block">
+                                <div class="wizzy-filters-close-button">CLOSE</div>
+                            </div>
+                            <div class="wizzy-filters-close-button-divider"></div>
+                            <div class="wizzy-apply-all-button-block">
+                                <div class="wizzy-apply-all-button">APPLY</div>
+                            </div>
+                        </div>
+                    {{/layout}}
+                </div>
+            </div>
           {{/hasLeftFacets}}
 
          <div class="wizzy-search-results-container">
@@ -75,7 +105,6 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
                </div><!-- ending of search-filters-top-wrapper-->
 
                 <div class="filters-list-top-values-wrapper">
-
                 </div><!-- ending of filters-list-top-values-wrapper -->
 
                 <div class="wizzy-selected-filters">
@@ -91,18 +120,17 @@ $addMoveToTopWidget = $configs['search']['configs']['pagination']['moveToTopWidg
              <div class="wizzy-search-pagination">
                  {{{ pagination }}}
              </div>
-
          </div><!-- ending of wizzy-search-results-->
 
       </div><!-- ending of wizzy-search-results-container -->
    </div><!-- ending of wizzy-search-wrapper-->
 
-    <?php if ($addMoveToTopWidget) {  ?>
+    {{#addMoveToTopWidget}}
         <div class="wizzy-scroll-to-top-wrapper">
             <div class="wizzy-scroll-to-top-button">
 
             </div><!-- ending of wizzy-scroll-to-top-button -->
         </div><!-- ending of wizzy-scroll-to-top-wrapper -->
-    <?php } ?>
+    {{/addMoveToTopWidget}}
 
 </script>

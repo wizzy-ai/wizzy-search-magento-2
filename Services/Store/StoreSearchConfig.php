@@ -33,7 +33,10 @@ class StoreSearchConfig
     const WIZZY_SEARCH_SORT_CONFIGURATION = self::WIZZY_SEARCH_CONFIGURATION . "/search_results_sorts_configuration";
     const WIZZY_SORT_CONFIGURATION =
        self::WIZZY_SEARCH_SORT_CONFIGURATION . "/sorts_configuration";
-
+    const WIZZY_FILTERS_AND_SORT_ICON_POSITION = self::WIZZY_SEARCH_FACETS_CONFIGURATION
+        . "/filters_and_sort_icon_position";
+    const WIZZY_FILTERS_AND_SORT_ICON_OFFSET = self::WIZZY_SEARCH_FACETS_CONFIGURATION
+        . "/filters_and_sort_icon_offset";
     const WIZZY_PAGINATION_CONFIGURATION =
        self::WIZZY_SEARCH_CONFIGURATION . "/search_results_pagination_configuration";
     const WIZZY_PAGINATION_TYPE = self::WIZZY_PAGINATION_CONFIGURATION . "/pagination_type";
@@ -147,6 +150,22 @@ class StoreSearchConfig
         }
 
         return json_decode($sortConfigs, true);
+    }
+    public function getFiltersAndSortIconPosition(): string
+    {
+        $filtersAndSortIconPosition = $this->configManager->getStoreConfig(
+            self::WIZZY_FILTERS_AND_SORT_ICON_POSITION,
+            $this->storeId
+        );
+        return $filtersAndSortIconPosition ?: 'bottom';
+    }
+    public function getFiltersAndSortIconOffset(): int
+    {
+        $filtersAndSortIconOffset = $this->configManager->getStoreConfig(
+            self::WIZZY_FILTERS_AND_SORT_ICON_OFFSET,
+            $this->storeId
+        );
+        return $filtersAndSortIconOffset ?: 0;
     }
 
     public function getSwatchesConfiguration()

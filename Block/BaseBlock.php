@@ -164,6 +164,10 @@ class BaseBlock extends Template
                           ($this->storeSearchConfig->leftFirstFacetCollapsibleBehaviour() ===
                               LeftFacetsDefaultBehaviourSelection::OPENED),
                   ],
+                  'filtersButtonMobile' => [
+                     'position'=> $this->storeSearchConfig->getFiltersAndSortIconPosition(),
+                     'offset' => $this->storeSearchConfig->getFiltersAndSortIconOffset()
+                  ],
                ],
                'sorts' => [
                   'configs' => $this->storeSearchConfig->getSortConfiguration(),
