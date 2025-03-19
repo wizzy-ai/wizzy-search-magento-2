@@ -4,7 +4,8 @@ $configs = $block->getConfigs();
 
 <script type="text/template" id="wizzy-search-sort">
 
-   <div class="wizzy-sort-container">
+   <div class="wizzy-sort-container" {{#hasToDisplayFiltersAtTop}} style="top:{{filtersButtonOffset}}px"
+      {{/hasToDisplayFiltersAtTop}}>
        <select class="wizzy-sort-select" id="wizzy-sort-select">
          {{#options}}
             <option value="{{ field }}"
