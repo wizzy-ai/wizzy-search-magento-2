@@ -185,6 +185,19 @@ class BaseBlock extends Template
                      'add' => $this->storeSearchConfig->hasToAddMoveToTopWidget(),
                   ],
                ],
+               'noProductsFound' => [
+                  "showProducts" => $this->storeSearchConfig->hasToEnableProductSuggestionsOnNoResultPage(),
+                  "defaultPool" => [
+                     "method" => "filters",
+                     "expiry" => "session",
+                     "data" => [
+                        "productsCount" => $this->storeSearchConfig->getNoResultsProductsCount(),
+                        "categories" => [
+                           $this->storeSearchConfig->getNoResultsProductsSelection(),
+                        ],
+                     ],
+                  ],
+               ],
             ],
             'view' => [
                'domSelector' => $this->storeSearchConfig->getDOMSelector(),
@@ -202,6 +215,11 @@ class BaseBlock extends Template
                      'categoryItem' => '#wizzy-facet-category-item',
                      'selectedItem' => '#wizzy-selected-facet-item-common',
                      'selectedCommon' => '#wizzy-selected-facets-block',
+                  ],
+                  'literals' => [
+                     'emptyCategoryPageTitle' => "",
+                     'emptySearchResultPageTitle' => $this->storeSearchConfig->getNoResultsPageTitle(),
+                     'emptySearchResultPageSubTitle' => $this->storeSearchConfig->getNoResultsPageSubTitle(),
                   ],
                   'pagination' => '#wizzy-search-pagination',
                   'sort' => '#wizzy-search-sort',

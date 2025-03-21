@@ -744,6 +744,53 @@
                 </field>
             </group>
 
+            <group id="no_results_page_configuration" translate="label" type="text" sortOrder="60" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>No Results Found Behaviour</label>
+                 <field id="no_results_page_title" translate="label" type="text" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Title</label>
+                    <comment>Title for No Results Page.</comment>
+                </field>
+
+                <field id="show_no_results_products_suggestions" translate="label" type="select" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Display Pinned Products?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Select Yes if you want to display pinned products when the user lands on the no results found page.
+                        ]]>
+                    </comment>
+                </field>
+               
+                 <field id="no_results_products_selection" translate="label" type="multiselect" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Categories</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\CategoriesListWithHandle</source_model>
+                    <comment>
+                        <![CDATA[
+                        Select Category which Wizzy should use to display products on no results found page.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="show_no_results_products_suggestions">1</field>
+                    </depends>
+                </field>
+
+                <field id="no_results_products_count" translate="label" type="text" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Number of products to display</label>
+                    <comment>Enter number of pinned products to display on no results found page, This can not be more then 50.</comment>
+                    <validate>validate-digits validate-not-negative-number validate-digits-range digits-range-0-50</validate>
+                    <depends>
+                        <field id="show_no_results_products_suggestions">1</field>
+                    </depends>
+                </field>
+
+                 <field id="no_results_page_sub_title" translate="label" type="text" sortOrder="0" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Sub Title</label>
+                    <comment>Sub Title for no Results Page.</comment>
+                    <depends>
+                        <field id="show_no_results_products_suggestions">1</field>
+                    </depends>
+                </field>
+            </group>
         </section>
 
         <section id="wizzy_autocomplete_configuration" translate="label" sortOrder="180" showInDefault="0" showInWebsite="0" showInStore="1">
