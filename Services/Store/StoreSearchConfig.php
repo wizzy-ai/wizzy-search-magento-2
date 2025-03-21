@@ -49,6 +49,14 @@ class StoreSearchConfig
     const WIZZY_SEARCH_SWATCHES_CONFIGURATION =
        self::WIZZY_SEARCH_CONFIGURATION . "/search_results_swatches_configuration";
     const WIZZY_SWATCHES_CONFIGURATION = self::WIZZY_SEARCH_SWATCHES_CONFIGURATION . "/swatches_configuration";
+    const WIZZY_NO_RESULTS_PAGE_CONFIGURATION =
+       self::WIZZY_SEARCH_CONFIGURATION . "/no_results_page_configuration";
+    const NO_RESULTS_PAGE_TITLE = self::WIZZY_NO_RESULTS_PAGE_CONFIGURATION . "/no_results_page_title";
+    const SHOW_NO_RESULTS_PRODUCTS_SUGGESTIONS =
+       self::WIZZY_NO_RESULTS_PAGE_CONFIGURATION . "/show_no_results_products_suggestions";
+    const NO_RESULTS_PRODUCTS_SELECTION = self::WIZZY_NO_RESULTS_PAGE_CONFIGURATION . "/no_results_products_selection";
+    const NO_RESULTS_PRODUCTS_COUNT = self::WIZZY_NO_RESULTS_PAGE_CONFIGURATION . "/no_results_products_count";
+    const NO_RESULTS_PAGE_SUB_TITLE = self::WIZZY_NO_RESULTS_PAGE_CONFIGURATION . "/no_results_page_sub_title";
 
     private $storeId;
 
@@ -199,5 +207,28 @@ class StoreSearchConfig
     public function hasToAddMoveToTopWidget()
     {
         return ($this->configManager->getStoreConfig(self::WIZZY_PAGINATION_MOVE_TO_TOP_WIDGET, $this->storeId) == 1);
+    }
+    public function getNoResultsPageTitle()
+    {
+        return ($this->configManager->getStoreConfig(self::NO_RESULTS_PAGE_TITLE, $this->storeId));
+    }
+
+    public function hasToEnableProductSuggestionsOnNoResultPage()
+    {
+        return ($this->configManager->getStoreConfig(self::SHOW_NO_RESULTS_PRODUCTS_SUGGESTIONS, $this->storeId) == 1);
+    }
+
+    public function getNoResultsProductsSelection()
+    {
+        return ($this->configManager->getStoreConfig(self::NO_RESULTS_PRODUCTS_SELECTION, $this->storeId));
+    }
+
+    public function getNoResultsProductsCount()
+    {
+        return ($this->configManager->getStoreConfig(self::NO_RESULTS_PRODUCTS_COUNT, $this->storeId));
+    }
+    public function getNoResultsPageSubTitle()
+    {
+        return ($this->configManager->getStoreConfig(self::NO_RESULTS_PAGE_SUB_TITLE, $this->storeId));
     }
 }
