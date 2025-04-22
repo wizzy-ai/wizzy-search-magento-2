@@ -15,7 +15,7 @@ class Version325
 
     private $defaultConfigs = [
         "wizzy_search_configuration/no_results_page_configuration/no_results_page_title"
-            => "We couldn't find any matches!",
+            => "We could not find any matches!",
         "wizzy_search_configuration/no_results_page_configuration/no_results_products_count"
             => 8,
         "wizzy_search_configuration/no_results_page_configuration/no_results_page_sub_title"
