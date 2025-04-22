@@ -192,10 +192,10 @@ class StoreAutocompleteConfig
 
     public function hasToDisplayRecentlySearchedTerms()
     {
-        return ($this->configManager->getStoreConfig(
+        return $this->configManager->getStoreConfig(
             self::WIZZY_AUTOCOMPLETE_DISPLAY_RECENTLY_SEARCHED_TERMS,
-            $this->storeId == 1
-        ) ? true : false);
+            $this->storeId
+        );
     }
 
     public function hasToDisplayRecentlyViewedProducts()
@@ -208,18 +208,18 @@ class StoreAutocompleteConfig
 
     public function hasToShowDefaultSuggestions()
     {
-        return ($this->configManager->getStoreConfig(
+        return $this->configManager->getStoreConfig(
             self::WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_SUGGESTIONS,
-            $this->storeId == 1
-        ) ? true : false);
+            $this->storeId
+        );
     }
 
     public function hasToShowDefaultProducts()
     {
-        return ($this->configManager->getStoreConfig(
+        return $this->configManager->getStoreConfig(
             self::WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_PRODUCTS,
-            $this->storeId == 1
-        ) ? true : false);
+            $this->storeId
+        );
     }
 
     public function getPinnedTermSelections()
