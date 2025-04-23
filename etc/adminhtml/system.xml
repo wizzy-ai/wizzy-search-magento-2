@@ -94,6 +94,15 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="generate_events" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Generate Search &amp; Filters Events in FB &amp; Google?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If set as Yes, Wizzy will generate required Search & Filters events in your FB and Google Analytics. Which will help marketing team to target those specific users.
+                        ]]>
+                    </comment>
+                </field>
                 <field id="replace_category_page" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Replace Category Page?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
