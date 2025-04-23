@@ -336,6 +336,7 @@ class BaseBlock extends Template
                'clicks' => "/wtrack/analytics/collect",
                'sessions' => '/wtrack/analytics/session',
             ],
+            'generateEvents' => $this->storeGeneralConfig->isGenrateEventsEnabled(),
          ],
          'filters' => [
             'configs' => [

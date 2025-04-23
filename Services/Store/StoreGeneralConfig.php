@@ -21,6 +21,7 @@ class StoreGeneralConfig
         self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/instant_search_form_submission_behavior";
     const REPLACE_CATEGORY_PAGE = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/replace_category_page";
     const CATEGORY_CLICK_BEHAVIOUR = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/category_click_behaviour";
+    const IS_GENERATE_EVENTS_ENABLED = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/generate_events";
 
     private $storeId;
 
@@ -62,6 +63,10 @@ class StoreGeneralConfig
     public function isAnalyticsEnabled()
     {
         return ($this->configManager->getStoreConfig(self::IS_ANALYTICS_ENABLED, $this->storeId) == 1);
+    }
+    public function isGenrateEventsEnabled()
+    {
+        return ($this->configManager->getStoreConfig(self::IS_GENERATE_EVENTS_ENABLED, $this->storeId) == 1);
     }
 
     public function getInstantSearchBehaviour()
