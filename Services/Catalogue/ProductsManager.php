@@ -11,6 +11,7 @@ use Magento\Framework\Api\Search\SearchCriteriaInterface;
 use Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Wizzy\Search\Model\Indexer\Products;
+use DateTime;
 
 class ProductsManager
 {
@@ -183,5 +184,36 @@ class ProductsManager
         ]);
 
         return $products;
+    }
+
+    public function getUpdatedSpecialPriceProductIds()
+    {
+        $startDate = (new DateTime())->format("Y-m-d");
+        $endDate = (new DateTime())->modify("-1 day")->format("Y-m-d");
+    
+        $page = 1;
+        $productIds = [];
+    
+        $collection = $this->productCollectionFactory->create();
+        $collection->addAttributeToSelect('special_from_date')
+                   ->addAttributeToSelect('special_to_date')
+                   ->addAttributeToFilter([
+                       ['attribute' => 'special_from_date', 'eq' => $startDate],
+                       ['attribute' => 'special_to_date', 'eq' => $endDate]
+                   ])
+                   ->setPageSize(self::MAX_PRODUCTS_TO_FETCH);
+    
+        while (true) {
+            $collection->setCurPage($page);
+            $pageProductIds = $collection->getAllIds();
+            $productIds = array_merge($productIds, $pageProductIds);
+            $page++;
+            
+            if (count($pageProductIds) < self:: MAX_PRODUCTS_TO_FETCH) {
+                break;
+            }
+        }
+    
+        return $productIds;
     }
 }
