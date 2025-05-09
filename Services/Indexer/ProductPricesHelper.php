@@ -5,21 +5,25 @@ namespace Wizzy\Search\Services\Indexer;
 use DateTime;
 use Wizzy\Search\Services\Catalogue\CatalogRulePriceManager;
 use Wizzy\Search\Services\Model\ProductPrices;
+use Wizzy\Search\Services\Catalogue\ProductsManager;
 
 class ProductPricesHelper
 {
     private $catalogRulePriceManager;
     private $productPrices;
     private $indexer;
+    private $productsManager;
 
     public function __construct(
         CatalogRulePriceManager $catalogRulePriceManager,
         ProductPrices $productPrices,
-        IndexerManager $indexerManager
+        IndexerManager $indexerManager,
+        ProductsManager $productsManager
     ) {
         $this->catalogRulePriceManager = $catalogRulePriceManager;
         $this->productPrices = $productPrices;
         $this->indexer = $indexerManager;
+        $this->productsManager = $productsManager;
     }
 
     public function markAllProductPricesSynced()
@@ -47,8 +51,9 @@ class ProductPricesHelper
                 ];
             }
         }
-
+        $updatedSpecialPriceProductIds = $this->productsManager->getUpdatedSpecialPriceProductIds();
         $productIds = array_unique(array_column($productsToAddInSync, 'product_id'));
+        $productIds = array_unique(array_merge($productIds, $updatedSpecialPriceProductIds));
         $this->productPrices->deleteAll();
         $this->productPrices->addRulePrices($rulePrices);
         $this->indexer->getProductsIndexer()->reindexList($productIds);
