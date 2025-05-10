@@ -63,6 +63,14 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="custom_endpoint" translate="label" type="text" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Custom Endpoint</label>
+                    <comment>
+                        <![CDATA[
+                             Custom endpoint given by Wizzy team for search and filter operations, Don’t add it without discussing with Wizzy team. It might break the module functionalities.
+                        ]]>
+                    </comment>
+                </field>
                 <field id="instant_search_behavior" translate="label" type="select" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Instant Search Behaviour</label>
                     <source_model>Wizzy\Search\Model\Admin\Source\InstantSearchBehaviours</source_model>

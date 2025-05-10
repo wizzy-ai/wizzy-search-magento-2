@@ -343,6 +343,9 @@ class BaseBlock extends Template
                'displayAsDrawer' => $this->storeSearchConfig->leftFacetsHasToDisplayAsDrawer(),
             ],
          ],
+         'endpoints' => [
+            'common' => $this->storeGeneralConfig->getCustomEndpoint(),
+         ],
         ];
 
         return $configs;
