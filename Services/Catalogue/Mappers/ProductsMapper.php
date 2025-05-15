@@ -174,6 +174,7 @@ class ProductsMapper
         $this->mapCategories($product, $mappedProduct);
         $this->mapImages($product, $mappedProduct);
         $this->mapParentProduct($product, $mappedProduct);
+        $this->mapKSAProduct($mappedProduct);
 
         $this->disptachBeforeSkipCheckEvent($mappedProduct, $product);
         $isValidURL = $this->isValidUrl($mappedProduct['url']);
@@ -221,6 +222,59 @@ class ProductsMapper
         $this->addParentDataInChild($mappedProduct);
         $this->SKUMapper->map($product, $mappedProduct);
         return $mappedProduct;
+    }
+
+    private function shouldSetKSAFromAllSizes(array $simplifiedSizes): int
+    {
+        foreach ($simplifiedSizes as $inStockSize) {
+            if ($inStockSize === 0) {
+                return 0;
+            }
+        }
+        return 1;
+    }
+
+    private function shouldSetKSAFromKeySizes(array $simplifiedSizes): int
+    {
+        $keySizes = $this->storeCatalogueConfig->keySizes();
+        $keySizes = array_map('trim', explode(',', (string)$keySizes));
+        
+        foreach ($keySizes as $size) {
+            $size = trim($size);
+            if (isset($simplifiedSizes[$size])) {
+                if ($simplifiedSizes[$size] === 0) {
+                    return 0;
+                }
+            } else {
+                return 0;
+            }
+        }
+
+        return 1;
+    }
+
+    private function mapKSAProduct(&$mappedProduct)
+    {
+        $productSizes = $mappedProduct['sizes'];
+        $simplifiedSizes = [];
+        foreach ($productSizes as $sizeData) {
+            if (isset($sizeData['value']) && isset($sizeData['inStock'])) {
+                $size = trim($sizeData['value']);
+                if (!isset($simplifiedSizes[$size]) || $simplifiedSizes[$size] != 0) {
+                    $simplifiedSizes[$size] = (int)$sizeData['inStock'];
+                }
+            }
+        }
+        
+        $create_KSA = $this->storeCatalogueConfig->wantToCreateKSAAttribute();
+        if ($create_KSA) {
+            $consider_all_key_sizes = $this->storeCatalogueConfig->considerAllSizesAsKey();
+            if ($consider_all_key_sizes) {
+                $mappedProduct['ksaAttribute'] = $this->shouldSetKSAFromAllSizes($simplifiedSizes);
+            } else {
+                $mappedProduct['ksaAttribute'] = $this->shouldSetKSAFromKeySizes($simplifiedSizes);
+            }
+        }
     }
 
     private function mapConfigurableData($product, &$mappedProduct)

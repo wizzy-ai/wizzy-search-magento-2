@@ -86,6 +86,9 @@ class StoreCatalogueConfig
     const CATALOGUE_CONFIGURATION_ATTRIBUTES = self::WIZZY_CATALOGUE_CONFIGURATION
         ."/catalogue_configuration_attributes";
     const EXTRA_ATTRIBUTES_TO_BE_SYNCED = self::CATALOGUE_CONFIGURATION_ATTRIBUTES. "/extra_attributes_to_be_synced";
+    const CREATE_KSA_ATTRIBUTE = self::CATALOGUE_CONFIGURATION_SIZES. "/create_ksa_attribute";
+    const CONSIDER_ALL_SIZES_AS_KEY = self::CATALOGUE_CONFIGURATION_SIZES. "/consider_all_sizes_as_key";
+    const KEY_SIZES = self::CATALOGUE_CONFIGURATION_SIZES. "/key_sizes";
 
     private $storeId;
 
@@ -121,6 +124,21 @@ class StoreCatalogueConfig
     public function hasSizeVariableProducts()
     {
         return ($this->configManager->getStoreConfig(self::IS_SIZES_VARIABLE_PRODUCTS, $this->storeId)) ? true : false;
+    }
+
+    public function wantToCreateKSAAttribute()
+    {
+        return ($this->configManager->getStoreConfig(self::CREATE_KSA_ATTRIBUTE, $this->storeId)) ? true : false;
+    }
+
+    public function considerAllSizesAsKey()
+    {
+        return ($this->configManager->getStoreConfig(self::CONSIDER_ALL_SIZES_AS_KEY, $this->storeId)) ? true : false;
+    }
+
+    public function keySizes()
+    {
+        return ($this->configManager->getStoreConfig(self::KEY_SIZES, $this->storeId));
     }
 
     public function isMultiGenderStore()
