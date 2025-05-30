@@ -4,6 +4,7 @@ namespace Wizzy\Search\Services\Catalogue;
 
 use Magento\Catalog\Model\ResourceModel\Product\Attribute\CollectionFactory;
 use Magento\Swatches\Helper\Data;
+use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 use Wizzy\Search\Services\Store\StoreManager;
 
 class AttributesManager
@@ -12,18 +13,25 @@ class AttributesManager
     private $attributesCollection;
     private $storeManager;
     private $swatchHelper;
+    private $storeCatalogueConfig;
     private $productsAttributesManager;
+
+    private $productImageManager;
 
     public function __construct(
         CollectionFactory $attributesCollection,
         StoreManager $storeManager,
         Data $swatchHelper,
-        ProductsAttributesManager $productsAttributesManager
+        ProductsAttributesManager $productsAttributesManager,
+        StoreCatalogueConfig $storeCatalogueConfig,
+        ProductImageManager $productImageManager
     ) {
         $this->attributesCollection = $attributesCollection;
         $this->storeManager = $storeManager;
         $this->swatchHelper = $swatchHelper;
         $this->productsAttributesManager = $productsAttributesManager;
+        $this->storeCatalogueConfig=$storeCatalogueConfig;
+        $this->productImageManager=$productImageManager;
     }
 
     public function fetchAll()
@@ -85,6 +93,13 @@ class AttributesManager
 
             $swatchValue = $this->getSwatchValues($optionIds);
             if (count($optionIds) && $swatchValue !== null) {
+                if ($this->storeCatalogueConfig->shouldUseProductImageAsSwatch() && $swatchType === 'visual') {
+                    return [
+                        'type' => $swatchType,
+                        'value' => $this->productImageManager->getThumbnail($product, $product->getThumbnail()),
+                       ];
+                }
+
                 return [
                  'type' => $swatchType,
                  'value' => $swatchValue,

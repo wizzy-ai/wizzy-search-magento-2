@@ -46,6 +46,9 @@ class StoreCatalogueConfig
     const COLORS_IDENTIFIABLE_ATTRIBUTES =
        self::CATALOGUE_CONFIGURATION_COLORS . "/colors_identifiable_attributes_selection";
 
+    const HAS_TO_SHOW_PRODUCT_IMAGE_AS_SWATCH =
+        self::CATALOGUE_CONFIGURATION_COLORS . "/has_to_show_productImage_asSwatch";
+    
   // SIZE VARIABLE CONFIGURATION
     const CATALOGUE_CONFIGURATION_SIZES = self::WIZZY_CATALOGUE_CONFIGURATION . "/catalogue_configuration_sizes";
 
@@ -121,6 +124,15 @@ class StoreCatalogueConfig
     public function hasSizeVariableProducts()
     {
         return ($this->configManager->getStoreConfig(self::IS_SIZES_VARIABLE_PRODUCTS, $this->storeId)) ? true : false;
+    }
+
+    public function shouldUseProductImageAsSwatch()
+    {
+        return ($this->configManager->getStoreConfig(
+            self::HAS_TO_SHOW_PRODUCT_IMAGE_AS_SWATCH,
+            $this->storeId
+        )
+        ) ? true : false;
     }
 
     public function isMultiGenderStore()

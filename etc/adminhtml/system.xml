@@ -353,6 +353,15 @@
                         <field id="has_color_variable_products">1</field>
                     </depends>
                 </field>
+                 <field id="has_to_show_productImage_asSwatch" translate="label" type="select" sortOrder="7" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Consider Product Image as Swatch?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            If yes, Wizzy will consider product's main (first) image as color swatch.
+                        ]]>
+                    </comment>
+                </field>
             </group>
 
             <group id="catalogue_configuration_sizes" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
