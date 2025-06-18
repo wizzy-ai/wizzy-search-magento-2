@@ -36,4 +36,7 @@
     <event name="admin_system_config_changed_section_wizzy_debug_sync">
         <observer name="custom_admin_system_config_changed_section_wizzy_debug_sync" instance="Wizzy\Search\Model\Observer\AdminConfigs\DebugSyncFormSubmitted"/>
     </event>
+     <event name="catalog_product_import_bunch_delete_commit_before">
+        <observer name="wizzy_before_import_product_delete" instance="Wizzy\Search\Model\Observer\ProductImportDeleteObserver"/>
+    </event>
 </config>
