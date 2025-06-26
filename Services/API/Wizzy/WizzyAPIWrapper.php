@@ -272,4 +272,74 @@ class WizzyAPIWrapper
 
         return $credentials;
     }
+
+    public function getSynonyms($storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::WIZZY_API_SYNONYMS,
+            'GET',
+            [],
+            $this->authHeaders->getFromArray($credentials, true)
+        );
+    }
+
+    public function addSynonyms($storeId, $payload): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::WIZZY_API_SYNONYMS,
+            'POST',
+            $payload,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
+    public function deleteSynonyms($storeId, $payload): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        $endPoint = WizzyAPIEndPoints::WIZZY_API_SYNONYMS;
+        $endPoint = $endPoint . $payload;
+        
+        return $this->wizzyApiConnector->send(
+            $endPoint,
+            'delete',
+            [],
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
+    public function editSynonyms($storeId, $payload)
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            WizzyAPIEndPoints::WIZZY_API_SYNONYMS,
+            'PUT',
+            $payload,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
 }

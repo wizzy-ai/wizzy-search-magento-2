@@ -55,6 +55,15 @@
                 resource="Wizzy_Search::main"
         />
         <add
+                id="Wizzy_Search::synonyms"
+                title="Synonyms"
+                module="Wizzy_Search"
+                sortOrder="60"
+                parent="Wizzy_Search::main"
+                action="wizzy_search/synonyms/index"
+                resource="Wizzy_Search::main"
+        />
+        <add
                 id="Wizzy_Search::advanced"
                 title="Advanced Setup"
                 module="Wizzy_Search"
