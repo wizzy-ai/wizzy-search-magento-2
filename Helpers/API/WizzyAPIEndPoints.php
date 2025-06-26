@@ -30,4 +30,5 @@ class WizzyAPIEndPoints
     const COLLECT_CLICK_EVENT = self::EVENTS_BASE_AUTH . '/click';
     const COLLECT_VIEW_EVENT = self::EVENTS_BASE_AUTH . '/view';
     const COLLECT_CONVERTED_EVENT = self::EVENTS_BASE_AUTH . '/converted';
+    const WIZZY_API_SYNONYMS = self::BASE_END_POINT . '/synonyms/';
 }

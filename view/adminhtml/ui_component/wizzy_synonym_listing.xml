@@ -1,0 +1,74 @@
+<listing name="wizzy_synonym_listing" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">wizzy_synonym_listing.wizzy_synonym_listing_data_source</item>
+            <item name="deps" xsi:type="string">wizzy_synonym_listing.wizzy_synonym_listing_data_source</item>
+        </item>
+        <item name="spinner" xsi:type="string">wizzy_synonym_columns</item>
+        <item name="buttons" xsi:type="array">
+            <item name="add_synonym" xsi:type="string">Wizzy\Search\Ui\Component\Control\Button\AddSynonym</item>
+        </item>
+    </argument>
+
+    <dataSource name="wizzy_synonym_listing_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Wizzy\Search\Ui\Component\DataProvider\SynonymDataProvider</argument>
+            <argument name="name" xsi:type="string">wizzy_synonym_listing_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magento_Ui/js/grid/provider</item>
+                    <item name="update_url" xsi:type="url" path="mui/index/render"/>
+                    <item name="storageConfig" xsi:type="array">
+                        <item name="indexField" xsi:type="string">id</item>
+                    </item>
+                </item>
+            </argument>
+        </argument>
+    </dataSource>
+
+    <columns name="wizzy_synonym_columns">
+        <column name="id">
+            <settings>
+                <visible>false</visible>
+                <filter>false</filter>
+                <sortable>false</sortable>
+                <label translate="true">ID</label>
+            </settings>
+        </column>
+        <column name="keyword">
+            <settings>
+                <label>Keyword</label>
+                <filter>false</filter>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="type">
+            <settings>
+                <label>Type</label>
+                <filter>false</filter>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <column name="relatedWords">
+            <settings>
+                <label>Related Words</label>
+                <bodyTmpl>ui/grid/cells/html</bodyTmpl>
+                <filter>false</filter>
+                <sortable>false</sortable>
+            </settings>
+        </column>
+        <actionsColumn name="actions" class="Wizzy\Search\Ui\Component\Listing\Column\SynonymActions">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Actions</item>
+                    <item name="sortable" xsi:type="boolean">false</item>
+                    <item name="filter" xsi:type="boolean">false</item>
+                    <item name="bodyTmpl" xsi:type="string">ui/grid/cells/html</item>
+                </item>
+            </argument>
+        </actionsColumn>
+    </columns>
+</listing>

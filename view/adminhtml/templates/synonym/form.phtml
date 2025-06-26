@@ -1,0 +1,113 @@
+<?php $data = $block->getSynonymData(); ?>
+
+<div style="color:rgba(109, 113, 117, 1); 
+            display: flex; 
+            gap: 30px; padding: 40px; 
+            align-items: flex-start; 
+            margin-top: 20px;">
+    <div style="flex: 1;">
+        <h3 style="color: rgba(109, 113, 117, 1); font-weight: bold;">Synonym Types:</h3>
+        <ul style="padding-left: 20px;">
+            <li>
+                <strong>Regular:</strong> 
+                Keyword and Related Words can be replaced with each other during search and autocomplete.
+                <br>
+                <em>(e.g. Tees[Keyword], Tshirts, T-shirts)</em>
+            </li>
+            <li style="margin-top: 10px;">
+                <strong>One Way:</strong> 
+                Keyword is replaced with Related Words during 
+                search and autocomplete but not vice-versa.
+                <br>
+                <em>(e.g. Tablet[Keyword], iPad, Silk)</em><br>
+                When user searches for tablet we automatically search for iPad
+                and Silk but when user searches for
+                iPad we don't search for all Tablets.
+            </li>
+        </ul>
+
+        <p style="font-style: italic; color: #666; margin-top: 20px;">
+            <strong>Hint:</strong> 
+            Generally the Keywords are part of Category, 
+            Brand/Manufacturer or some words from product description.
+        </p>
+        <p style="font-style: italic; color: #666;">
+            If you still have any confusion, contact our team or read our user guides.
+        </p>
+    </div>
+
+    <div style="flex: 1.5;">
+        <form action="<?= $block->escapeUrl($block->getFormAction()) ?>" 
+        method="post" enctype="multipart/form-data">
+            <?= $block->getBlockHtml('formkey') ?>
+
+            <?php if (!empty($data['id'])): ?>
+                <input type="hidden" name="id" 
+                value="<?= $block->escapeHtmlAttr($data['id']) ?>" />
+            <?php endif; ?>
+
+            <div class="admin__fieldset">
+
+                <div class="admin__field field-keyword required">
+                    <label class="admin__field-label" for="keyword">
+                    <span><?= $block->escapeHtml(__('Keyword')) ?></span>
+                    </label>
+                    <div class="admin__field-control">
+                        <input placeholder="Enter synonym keyword" type="text" name="keyword" 
+                        id="keyword"
+                        class="admin__control-text required-entry"
+                        value="<?= $block->escapeHtmlAttr($data['keyword'] ?? '') ?>" 
+                        required />
+                    </div>
+                </div>
+
+                <div class="admin__field field-type required">
+                    <label class="admin__field-label" for="type">
+                        <span><?= $block->escapeHtml(__('Type')) ?></span>
+                    </label>
+                    <div class="admin__field-control">
+                        <select name="type" id="type" class="admin__control-select required-entry" required>
+                            <option value="regular"
+                                <?= (isset($data['type']) && $data['type'] === 'regular') ? 'selected' : '' ?>>
+                                <?= $block->escapeHtml(__('Regular')) ?>
+                            </option>
+                            <option value="one-way"
+                                <?= (isset($data['type']) && $data['type'] === 'one-way') ? 'selected' : '' ?>>
+                                <?= $block->escapeHtml(__('One Way')) ?>
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="admin__field field-relatedWords required">
+                    <label class="admin__field-label" for="relatedWords">
+                        <span><?= $block->escapeHtml(__('Related Words')) ?></span>
+                    </label>
+                    <div class="admin__field-control">
+                        <textarea placeholder="Enter related words"
+                        name="relatedWords"
+                        id="relatedWords"
+                        rows="5"
+                        class="admin__control-textarea required-entry"
+                        required><?= $block->escapeHtml($data['relatedWords'] ?? '') ?></textarea>
+                        <p style="font-size: 12px; 
+                        color: #666; 
+                        margin-top: 5px;">
+                        Please enter each related word on new line in textarea
+                        </p>
+                        <div class="admin__form-actions" style="margin-top: 20px;">
+                            <div class="actions" style="display:flex; gap:15px">
+                                <button type="submit" class="action-primary">
+                                    <span><?= $block->escapeHtml(__('Save Synonym')) ?></span>
+                                </button>
+                                <a href="<?= $block->escapeUrl($block->getBackUrl()) ?>" class="action-default">
+                                    <span><?= $block->escapeHtml(__('Back')) ?></span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

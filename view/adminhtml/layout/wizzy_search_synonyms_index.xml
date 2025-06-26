@@ -1,0 +1,75 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+     
+    <body>
+        <referenceContainer name="head.additional">
+            <block class="Magento\Framework\View\Element\Text" name="wizzy.inline.style">
+                <arguments>
+                    <argument name="text" xsi:type="string">
+                        <![CDATA[
+                        <style>
+                            .wizzy-synonym-wrapper {
+                                display: flex;
+                                flex-direction: column;
+                                gap: 20px;
+                            }
+                        </style>
+                        ]]>
+                    </argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="content">
+            <container name="wizzy.synonym.wrapper"
+               htmlTag="div"
+               htmlClass="wizzy-synonym-wrapper"
+               htmlAttributes='data-bind="style: { display: \"flex\", flexDirection: \"column\", gap: \"20px\" }"'>
+        
+                <block class="Magento\Backend\Block\Store\Switcher" name="adminhtml.system.config.switcher" template="Magento_Backend::store/switcher.phtml">
+                    <arguments>
+                        <argument name="switch_websites" xsi:type="string">1</argument>
+                        <argument name="switch_store_groups" xsi:type="string">0</argument>
+                        <argument name="switch_store_views" xsi:type="string">1</argument>
+                        <argument name="default_selection_name" translate="true" xsi:type="string">Default Config</argument>
+                        <argument name="show_manage_stores_link" xsi:type="string">1</argument>
+                    </arguments>
+                </block>
+                <container name="wizzy.synonym.ui.placeholder" htmlTag="div">
+                    <uiComponent name="wizzy_synonym_listing"/>
+                </container>
+                 <block class="Magento\Framework\View\Element\Text" name="wizzy.synonym.grid.updatejs">
+                    <arguments>
+                        <argument name="text" xsi:type="string">
+                            <![CDATA[
+                           <script type="text/javascript">
+                                require(['uiRegistry'], function (registry) {
+                                    function applyStoreId() {
+                                        var dataSource = registry.get('wizzy_synonym_listing.wizzy_synonym_listing_data_source');
+                                        if (dataSource) {
+                                            var path = window.location.pathname;
+                                            var match = path.match(/\/store\/(\d+)/);
+                                            var storeId = match ? match[1] : 1;
+
+                                            if (!dataSource.params) {
+                                                dataSource.params = {};
+                                            }
+
+                                            dataSource.params.store = storeId;
+                                            dataSource.set('params', dataSource.params);
+                                            dataSource.reload();
+                                        } else {
+                                            setTimeout(applyStoreId, 100);
+                                        }
+                                    }
+
+                                    applyStoreId();
+                                });
+                            </script>
+                            ]]>
+                        </argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceContainer>
+    </body>
+</page>
