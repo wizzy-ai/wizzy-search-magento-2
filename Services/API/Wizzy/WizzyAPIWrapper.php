@@ -6,6 +6,8 @@ use Wizzy\Search\Helpers\API\AuthHeaders;
 use Wizzy\Search\Helpers\API\ResponseBuilder;
 use Wizzy\Search\Helpers\API\WizzyAPIEndPoints;
 use Wizzy\Search\Model\API\Response;
+use Wizzy\Search\Services\API\Wizzy\WizzyWebhookAPI;
+use Wizzy\Search\Services\Store\StoreAdvancedConfig;
 use Wizzy\Search\Services\Store\StoreManager;
 
 class WizzyAPIWrapper
@@ -16,18 +18,24 @@ class WizzyAPIWrapper
 
     private $responseBuilder;
     private $authHeaders;
+    private $wizzyWebhookAPI;
+    private $storeAdvancedConfig;
 
     public function __construct(
         StoreManager $storeManager,
         WizzyAPIConnector $wizzyApiConnector,
         ResponseBuilder $responseBuilder,
-        AuthHeaders $authHeaders
+        AuthHeaders $authHeaders,
+        WizzyWebhookAPI $wizzyWebhookAPI,
+        StoreAdvancedConfig $storeAdvancedConfig
     ) {
         $this->storeManager = $storeManager;
         $this->wizzyApiConnector = $wizzyApiConnector;
 
         $this->responseBuilder = $responseBuilder;
         $this->authHeaders = $authHeaders;
+        $this->wizzyWebhookAPI = $wizzyWebhookAPI;
+        $this->storeAdvancedConfig = $storeAdvancedConfig;
     }
 
     public function collectClick(array $clickData, $storeId, array $headers): Response
@@ -89,10 +97,12 @@ class WizzyAPIWrapper
             return $this->responseBuilder->error('Invalid store credentials.', []);
         }
 
+        $mappedProducts = $this->getTransformedProductsFromWebhook($products, $credentials);
+        
         return $this->wizzyApiConnector->send(
             WizzyAPIEndPoints::SAVE_PRODUCTS,
             'POST',
-            $products,
+            $mappedProducts,
             $this->authHeaders->getFromArray($credentials, true),
             true
         );
@@ -105,7 +115,12 @@ class WizzyAPIWrapper
         if ($credentials === false) {
             return $this->responseBuilder->error('Invalid store credentials.', []);
         }
-
+        $this->wizzyWebhookAPI->broadcast(
+            $this->storeAdvancedConfig,
+            $credentials,
+            WizzyWebhookAPI::TOPIC_BEFORE_PRODUCTS_DELETE,
+            $products
+        );
         return $this->wizzyApiConnector->send(
             WizzyAPIEndPoints::DELETE_PRODUCTS,
             'DELETE',
@@ -341,5 +356,19 @@ class WizzyAPIWrapper
             $this->authHeaders->getFromArray($credentials, true),
             true
         );
+    }
+    private function getTransformedProductsFromWebhook(array $products, $credentials)
+    {
+        $response = $this->wizzyWebhookAPI->broadcast(
+            $this->storeAdvancedConfig,
+            $credentials,
+            WizzyWebhookAPI::TOPIC_BEFORE_PRODUCTS_SYNC,
+            $products
+        );
+        if (is_array($response)) {
+            return $response;
+        }
+
+        return $products;
     }
 }
