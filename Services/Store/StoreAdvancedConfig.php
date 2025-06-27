@@ -20,6 +20,8 @@ class StoreAdvancedConfig
     "/has_to_add_products_in_sync_on_attribute_save";
     const REINDEX = self::WIZZY_ADVANCED_CONFIGURATION . "/reindex";
     const HAS_TO_ADD_ALL_PRODUCTS_IN_SYNC = self::REINDEX . "/has_to_add_all_products_in_sync";
+    const DEVELOPER = self::WIZZY_ADVANCED_CONFIGURATION . "/developer";
+    const WEBHOOK_URL = self::DEVELOPER . "/webhook_url";
 
     private $storeId;
 
@@ -69,6 +71,10 @@ class StoreAdvancedConfig
             $syncDequeueSize = 7;
         }
         return $syncDequeueSize;
+    }
+    public function getWebhookURLs()
+    {
+        return  $this->configManager->getStoreConfig(self::WEBHOOK_URL, $this->storeId);
     }
 
     public function hasToEnableSyncDebugging()

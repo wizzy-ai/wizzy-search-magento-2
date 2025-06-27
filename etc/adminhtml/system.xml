@@ -1183,6 +1183,40 @@
                     </comment>
                 </field>
             </group>
+            <group id="developer" translate="label" type="text" sortOrder="30" showInDefault="0" showInWebsite="0" showInStore="1">
+                <label>Developer</label>
+                <field id="webhook_url" translate="label" type="textarea" sortOrder="1" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Webhook URL</label>
+                    <comment>
+                        <![CDATA[
+                        <div>
+                            This section is for developers who want to extend the default catalog syncing process and modify the data according to business needs.
+                                <br/><br/>
+                                Configure the Webhook URL in the following field and you will receive a webhook request before/after each syncing process along with their topics.
+                                <br/><br/>
+
+                                <strong>We support following topics for now :</strong><br/>
+                                <blockquote>
+                                    <ul>
+                                        <li>Before Products Sync (<code>before_products_sync</code>)</li>
+                                    </ul>
+                                </blockquote>
+                                <strong>The Webhook requests will as follow :</strong><br/>
+                                <blockquote>
+                                    <ul>
+                                        <li>Request Method: <code>POST</code></li>
+                                        <li><code>x-store-secret</code> header – This is the Store Secret configured on the configuration page. It helps to verify the authenticity of the request.</li>
+                                        <li>Request and Response Content Type: <code>application/json</code></li>
+                                        <li>Payload would have two keys: <code>data</code>, <code>topic</code></li>
+                                        <li>Data will be in JSON format based on our <a href="https://docs.api.wizzy.ai/" target="_blank">Documentation.</a></li>
+                                        <li>Return the received data in response after modifying it, in JSON format.</li>
+                                    </ul>
+                                </blockquote>
+                        </div>
+                        ]]>
+                    </comment>
+                </field>
+            </group>
         </section>
         <section id="wizzy_copy_configuration" translate="label" sortOrder="200" showInDefault="0" showInWebsite="0" showInStore="1">
             <class>separator-top</class>
