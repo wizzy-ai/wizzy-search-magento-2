@@ -187,4 +187,14 @@ class QueueManager
 
         return $jobsData;
     }
+
+    public function deleteJob($queueId)
+    {
+        $queue = $this->queueFactory->create()->load($queueId);
+        if ($queue->getId()) {
+            $queue->delete();
+            return true;
+        }
+        return false;
+    }
 }
