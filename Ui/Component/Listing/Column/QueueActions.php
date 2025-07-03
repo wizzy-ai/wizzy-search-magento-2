@@ -26,17 +26,32 @@ class QueueActions extends Column
     {
         if (isset($dataSource['data']['items'])) {
             foreach ($dataSource['data']['items'] as &$item) {
-                $item[$this->getData('name')] = [
-                 'view' => [
-                  'href' => $this->urlBuilder->getUrl(
-                      'wizzy_search/queue/view',
-                      [
-                        'id' => $item['id'],
-                      ]
-                  ),
-                  'label' => __('View'),
-                 ],
+                $actions = [];
+
+                // View action
+                $actions['view'] = [
+                    'href' => $this->urlBuilder->getUrl(
+                        'wizzy_search/queue/view',
+                        ['id' => $item['id']]
+                    ),
+                    'label' => __('View'),
                 ];
+
+                // Delete action
+                $actions['delete'] = [
+                    'href' => $this->urlBuilder->getUrl(
+                        'wizzy_search/queue/delete',
+                        ['id' => $item['id']]
+                    ),
+                    'label' => __('Delete'),
+                    'confirm' => [
+                        'title' => __('Delete Queue Item'),
+                        'message' => __('Are you sure you want to delete this queue item?')
+                    ],
+                    'post' => true,
+                ];
+
+                $item[$this->getData('name')] = $actions;
             }
         }
 
