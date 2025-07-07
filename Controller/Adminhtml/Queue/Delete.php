@@ -63,7 +63,7 @@ class Delete extends Action
         }
 
         if ($deleted) {
-            $this->flashMessagesManager->success(__('Queue item deleted successfully.'));
+            $this->flashMessagesManager->success(__('Queue item has been deleted successfully.'));
         } else {
             $this->flashMessagesManager->error(__('Queue item could not be deleted.'));
         }
