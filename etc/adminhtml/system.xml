@@ -379,6 +379,40 @@
                         <field id="has_size_variable_products">1</field>
                     </depends>
                 </field>
+                <field id="create_ksa_attribute" translate="label" type="select" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Create KSA Attribute ?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Change to Yes if you would like to create KSA (Key Sizes Availability) Attribute for usage in products sorting.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="consider_all_sizes_as_key" translate="label" type="select" sortOrder="16" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Consider All Sizes as Key Sizes?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <default>1</default>
+                    <comment>
+                        <![CDATA[
+                            Select No if you would like mention only few Sizes as key sizes.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="create_ksa_attribute">1</field>
+                    </depends>
+                </field>
+                <field id="key_sizes" translate="label" type="textarea" sortOrder="20" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Key Sizes</label>
+                    <comment>
+                        <![CDATA[
+                            Mention all Keys sizes separated by comma.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="create_ksa_attribute">1</field>
+                        <field id="consider_all_sizes_as_key">0</field>
+                    </depends>
+                </field>
             </group>
 
             <group id="catalogue_configuration_description" translate="label" type="text" sortOrder="10" showInDefault="0" showInWebsite="0" showInStore="1">
