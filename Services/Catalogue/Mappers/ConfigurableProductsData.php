@@ -13,6 +13,7 @@ use Wizzy\Search\Services\Catalogue\ProductsAttributesManager;
 use Wizzy\Search\Services\Queue\SessionStorage\CategoriesSessionStorage;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Magento\Framework\Event\ManagerInterface;
+use Wizzy\Search\Services\Store\StoreCatalogueConfig;
 
 class ConfigurableProductsData
 {
@@ -26,6 +27,8 @@ class ConfigurableProductsData
 
     private $categoriesManager;
     private $attributesManager;
+
+    private $storeCatalogueConfig;
 
     private $autocompleteAttributes;
     private $categoriesSessionStorage;
@@ -46,7 +49,8 @@ class ConfigurableProductsData
         StoreAutocompleteConfig $storeAutocompleteConfig,
         AttributesManager $attributesManager,
         CategoriesSessionStorage $categoriesSessionStorage,
-        ProductsAttributesManager $productsAttributesManager
+        ProductsAttributesManager $productsAttributesManager,
+        StoreCatalogueConfig $storeCatalogueConfig
     ) {
         $this->eventManager = $eventManager;
         $this->brandConfigurable = $brandConfigurable;
@@ -62,6 +66,7 @@ class ConfigurableProductsData
         $this->productsAttributesManager = $productsAttributesManager;
         $this->hasToIgnoreCategories = $this->storeAutocompleteConfig->hasToIgnoreCategories();
         $this->categoriesToIgnoreInAutoComplete = $this->storeAutocompleteConfig->getIgnoredCategories();
+        $this->storeCatalogueConfig = $storeCatalogueConfig;
     }
     public function setStore($storeId)
     {
@@ -70,6 +75,72 @@ class ConfigurableProductsData
     public function getBrand($categories, $attributes, $storeId)
     {
         return $this->brandConfigurable->getValue($categories, $attributes, $storeId);
+    }
+
+    public function getKeySizesCount(&$mappedProducts)
+    {
+        $KSAVariantsCount = [];
+        $varitionIdColorMapping = [];
+        $keySizes = null;
+
+        $considerAllSizesAsKeySizes = $this->storeCatalogueConfig->considerAllSizesAsKey();
+        if (!$considerAllSizesAsKeySizes) {
+            $keySizes = explode(',', strtolower($this->storeCatalogueConfig->keySizes()));
+            $keySizes = array_map('trim', $keySizes);
+            $keySizes = array_flip($keySizes);
+        }
+
+        foreach ($mappedProducts as &$mappedProduct) {
+            if (isset($mappedProduct['colors']) && isset($mappedProduct['groupId']) && $mappedProduct['groupId']) {
+                foreach ($mappedProduct['colors'] as $color) {
+                    $groupKey = $color['value'] . $mappedProduct['groupId'];
+                    $KSAVariantsCount[$groupKey] = 0;
+                    $varitionIdColorMapping[$mappedProduct['id']] = $color['value'];
+                }
+            }
+        }
+
+        foreach ($mappedProducts as &$mappedProduct) {
+            if (isset($mappedProduct['sizes']) &&
+                isset($mappedProduct['colors']) &&
+                isset($mappedProduct['groupId']) &&
+                $mappedProduct['groupId']
+            ) {
+                foreach ($mappedProduct['sizes'] as $size) {
+                    if ((($keySizes === null ||
+                        isset($keySizes[strtolower($size['value'])])) &&
+                        $size['inStock']) &&
+                        isset($varitionIdColorMapping[$mappedProduct['id']])
+                    ) {
+                        $KSAVariantsCount[$varitionIdColorMapping[$mappedProduct['id']] . $mappedProduct['groupId']]++;
+                    }
+                }
+            }
+        }
+
+        $resultCounts = [];
+        foreach ($mappedProducts as &$mappedProduct) {
+            $totalSizes = 0;
+            $groupId = isset($mappedProduct['groupId']) ? $mappedProduct['groupId'] : null;
+            if ($groupId &&
+                isset($mappedProduct['sizes']) &&
+                isset($mappedProduct['colors']) &&
+                isset($varitionIdColorMapping[$mappedProduct['id']])
+            ) {
+                $totalSizes = $KSAVariantsCount[$varitionIdColorMapping[$mappedProduct['id']] . $groupId];
+            } elseif (isset($mappedProduct['sizes'])) {
+                foreach ($mappedProduct['sizes'] as $size) {
+                    if (($keySizes === null || isset($keySizes[strtolower($size['value'])])) && $size['inStock']) {
+                        $totalSizes++;
+                    }
+                }
+            }
+
+            $resultCounts[$mappedProduct['id']] = $totalSizes;
+            
+        }
+
+        return $resultCounts;
     }
 
     public function getGender($categories, $attributes, $storeId)

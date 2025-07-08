@@ -47,6 +47,7 @@ class ProductsMapper
     private $SKUMapper;
     private $productsSessionStorage;
     public $processedProducts;
+    const ATTRIBUTE_TYPE_FLOAT = 'float';
 
     public function __construct(
         ManagerInterface $eventManager,
@@ -127,6 +128,7 @@ class ProductsMapper
                 $mappedProducts[] = $mappedProduct;
             }
         }
+        $this->addKSAAttribute($mappedProducts);
         $this->updateSkippedProducts($mappedProducts);
         $dataObject = new DataObject([
             'products' => $mappedProducts,
@@ -137,7 +139,7 @@ class ProductsMapper
             'wizzy_after_products_mapped',
             ['data' => $dataObject]
         );
-        
+
         return $this->processedProducts =  [
             'toAdd' => $dataObject->getDataByKey('products'),
             'toDelete' => $dataObject->getDataByKey('productsToDelete')
@@ -221,6 +223,89 @@ class ProductsMapper
         $this->addParentDataInChild($mappedProduct);
         $this->SKUMapper->map($product, $mappedProduct);
         return $mappedProduct;
+    }
+
+    public function addAttribute(
+        &$product,
+        $id,
+        $name,
+        array $values,
+        $type = "string",
+        $isSearchable = false,
+        $isFilterable = false,
+        $isVariantAware = false,
+        $addInAutoComplete = false,
+        $autocompletePosition = "front",
+        $addInAutocompleteIndividually = false,
+        $autocompleteGlue = ""
+    ) {
+
+        $attribute = [
+            'id'   => $id,
+            'type' => $type,
+            'name' => $name,
+            'addInAutocomplete' => $addInAutoComplete,
+            'autocompletePosition' => $autocompletePosition,
+            'autocompleteGlue' => $autocompleteGlue,
+            'addInAutocompleteIndividually' => $addInAutocompleteIndividually,
+            'isSearchable'=> $isSearchable,
+            'isFilterable'=> $isFilterable,
+            'values' => [],
+        ];
+
+        if (isset($product['attributes'][$attribute['id']])) {
+            $attribute = $product['attributes'][$attribute['id']];
+        }
+
+        foreach ($values as $aValue) {
+            $valueAttribute = [
+                'value' => [
+                    $aValue
+                ],
+                'variationId' => $product['id'],
+                'inStock' => $product['inStock'],
+            ];
+
+            if (is_array($aValue) && $isVariantAware && isset($aValue['value']) && count($aValue['value'])) {
+                foreach ($aValue as $keyValueAttribute => $valueValueAttribute) {
+                    $valueAttribute[$keyValueAttribute] = $valueValueAttribute;
+                }
+                $attribute['values'][] = $valueAttribute;
+            } else {
+                $attribute['values'][$aValue] = $valueAttribute;
+            }
+        }
+
+        $attribute['values'] = array_values($attribute['values']);
+
+        $product['attributes'][$attribute['id']] = $attribute;
+    }
+
+    private function addKSAAttribute(&$mappedProducts)
+    {
+
+        $hasToCreateKsaAttribute =  $this->storeCatalogueConfig->hasToCreateKSAAttribute();
+        if (!$hasToCreateKsaAttribute) {
+            return;
+        }
+        
+        $totalSizesPerProduct = $this->configurableProductsData->getKeySizesCount($mappedProducts);
+
+        foreach ($mappedProducts as &$mappedProduct) {
+            $productId = $mappedProduct['id'];
+            $totalSizes = isset($totalSizesPerProduct[$productId]) ? $totalSizesPerProduct[$productId] : 0;
+
+            $this->addAttribute(
+                $mappedProduct,
+                "wZ_ksa",
+                "ksa",
+                [$totalSizes],
+                self::ATTRIBUTE_TYPE_FLOAT,
+                false,
+                true,
+                false
+            );
+        }
     }
 
     private function mapConfigurableData($product, &$mappedProduct)
