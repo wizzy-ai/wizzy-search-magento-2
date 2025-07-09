@@ -10,6 +10,7 @@ use Wizzy\Search\Services\Queue\Processors\IndexProductsProcessor;
 use Wizzy\Search\Services\Queue\Processors\QueueProcessorBase;
 use Wizzy\Search\Services\Queue\Processors\UpdateCurrencyOptions;
 use Wizzy\Search\Services\Queue\Processors\UpdateCurrencyRates;
+use Wizzy\Search\Services\Queue\Processors\AddImportedProductsInQueueProcessor;
 
 class QueueProcessors implements OptionSourceInterface
 {
@@ -20,6 +21,7 @@ class QueueProcessors implements OptionSourceInterface
       IndexProductsProcessor::class => 'Index Products',
       UpdateCurrencyOptions::class => 'Index Currencies',
       UpdateCurrencyRates::class => 'Index Currency Rates',
+      AddImportedProductsInQueueProcessor::class => 'Add Imported Products In Sync',
     ];
 
     public function toOptionArray()

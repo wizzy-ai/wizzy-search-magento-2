@@ -152,20 +152,30 @@ class ProductsManager
 
     public function getProductsBySKUs($SKUs)
     {
-        $filters = [
-         $this->filterBuilder
-            ->setField('sku')
-            ->setConditionType('in')
-            ->setValue($SKUs)
-            ->create(),
-        ];
+        $allProducts = [];
+        $chunkSize = 2000;
+        $skuChunks = array_chunk($SKUs, $chunkSize);
 
-        $this->filterGroup->setFilters($filters);
+        foreach ($skuChunks as $skuChunk) {
+            $filters = [
+                $this->filterBuilder
+                    ->setField('sku')
+                    ->setConditionType('in')
+                    ->setValue($skuChunk)
+                    ->create(),
+            ];
 
-        $this->searchCriteria->setFilterGroups([$this->filterGroup]);
-        $products = $this->productRepository->getList($this->searchCriteria);
-        $products = $products->getItems();
-        return $products;
+            $this->filterGroup->setFilters($filters);
+            $this->searchCriteria->setFilterGroups([$this->filterGroup]);
+
+            $result = $this->productRepository->getList($this->searchCriteria);
+            $items = $result->getItems();
+
+            foreach ($items as $product) {
+                $allProducts[] = $product;
+            }
+        }
+        return $allProducts;
     }
 
     public function getById($productId)
