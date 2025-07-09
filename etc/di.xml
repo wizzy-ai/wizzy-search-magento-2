@@ -12,6 +12,9 @@
     <type name="Magento\Catalog\Model\ResourceModel\Attribute">
         <plugin name="wizzyAttributesObserver" type="Wizzy\Search\Model\Observer\AttributesObserver"/>
     </type>
+    <type name="Magento\Inventory\Model\ResourceModel\SourceItem\SaveMultiple">
+        <plugin name="wizzy_after_source_item_save" type="Wizzy\Search\Plugin\Import\AfterSourceItemsUpdated"/>
+    </type>
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <arguments>
             <argument name="collections" xsi:type="array">
