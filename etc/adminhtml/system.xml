@@ -391,7 +391,6 @@
                 <field id="consider_all_sizes_as_key" translate="label" type="select" sortOrder="16" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Consider All Sizes as Key Sizes?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <default>1</default>
                     <comment>
                         <![CDATA[
                             Select No if you would like mention only few Sizes as key sizes.

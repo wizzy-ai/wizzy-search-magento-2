@@ -4,15 +4,19 @@ namespace Wizzy\Search\Services\Store;
 
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Wizzy\Search\Services\Store\StoreGeneralConfig;
 
 class StoreManager
 {
-
     private $storeManager;
+    private $storeGeneralConfig;
 
-    public function __construct(StoreManagerInterface $storeManager)
-    {
+    public function __construct(
+        StoreManagerInterface $storeManager,
+        StoreGeneralConfig $storeGeneralConfig
+    ) {
         $this->storeManager = $storeManager;
+        $this->storeGeneralConfig = $storeGeneralConfig;
     }
 
     /**
@@ -78,8 +82,10 @@ class StoreManager
                 $storeId = trim($storeConfigs['store_id']);
                 $storeSecret = trim($storeConfigs['store_secret']);
                 $apiKey = trim($storeConfigs['api_key']);
+                $this->storeGeneralConfig->setStore($store->getId());
+                $isSyncEnabled =  $this->storeGeneralConfig->isSyncEnabled();
 
-                if (!empty($storeId) && !empty($storeSecret) && !empty($apiKey)) {
+                if (!empty($storeId) && !empty($storeSecret) && !empty($apiKey) && $isSyncEnabled) {
                     $storeIds[] = $store->getId();
                 }
             }

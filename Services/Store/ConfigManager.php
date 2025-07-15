@@ -5,6 +5,7 @@ namespace Wizzy\Search\Services\Store;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Storage\WriterInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 class ConfigManager
 {
@@ -22,7 +23,7 @@ class ConfigManager
 
     public function __construct(
         WriterInterface $configWriter,
-        StoreManager $storeManager,
+        StoreManagerInterface $storeManager,
         ScopeConfigInterface $scopeConfig
     ) {
         $this->configWriter = $configWriter;
