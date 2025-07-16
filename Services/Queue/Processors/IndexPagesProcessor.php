@@ -40,38 +40,36 @@ class IndexPagesProcessor extends QueueProcessorBase
     {
         $this->storeAutocompleteConfig->setStore($storeId);
         if ($this->storeAutocompleteConfig->hasToSyncPages() == false) {
+            $this->output->writeln(__('Index Pages Processor Skipped as Page Sync is disabled.'));
             return true;
         }
-        $storeIds = $this->storeManager->getToSyncStoreIds($storeId);
+
         $pages = $this->pagesManager->fetchAll();
 
-        foreach ($storeIds as $storeId) {
-            $this->storeGeneralConfig->setStore($storeId);
-            $this->output->writeln(__('Processing ' .count($pages) . ' for Store #' . $storeId));
+        $this->storeGeneralConfig->setStore($storeId);
+        $this->output->writeln(__('Processing ' .count($pages) . ' Pages for Store #' . $storeId));
 
-            if (!$this->storeGeneralConfig->isSyncEnabled()) {
-                $this->output->writeln(__('Index Pages Processor Skipped as Sync is disabled.'));
-                return true;
+        if (!$this->storeGeneralConfig->isSyncEnabled()) {
+            $this->output->writeln(__('Index Pages Processor Skipped as Sync is disabled.'));
+            return true;
+        }
+
+        $pagesToSave = $this->getPagesToSave($pages, $storeId);
+        $pagesToDelete = $this->getPagesToDelete($pagesToSave, $storeId);
+        if (count($pagesToSave)) {
+            $this->output->writeln(__('Saving ' .count($pagesToSave) . ' Pages'));
+            $response = $this->pagesSaver->save($pagesToSave, $storeId);
+
+            if ($response) {
+                $this->output->writeln(__('Saved ' .count($pagesToSave) . ' Pages successfully'));
             }
+        }
+        if (count($pagesToDelete)) {
+            $this->output->writeln(__('Deleting ' .count($pagesToDelete) . ' Pages'));
 
-            $this->storeAutocompleteConfig->setStore($storeId);
-            $pagesToSave = $this->getPagesToSave($pages, $storeId);
-            $pagesToDelete = $this->getPagesToDelete($pagesToSave, $storeId);
-            if (count($pagesToSave)) {
-                $this->output->writeln(__('Saving ' .count($pagesToSave) . ' Pages'));
-                $response = $this->pagesSaver->save($pagesToSave, $storeId);
-
-                if ($response) {
-                    $this->output->writeln(__('Saved ' .count($pagesToSave) . ' Pages successfully'));
-                }
-            }
-            if (count($pagesToDelete)) {
-                $this->output->writeln(__('Deleting ' .count($pagesToDelete) . ' Pages'));
-
-                $response = $this->pagesSaver->delete($pagesToDelete, $storeId);
-                if ($response) {
-                    $this->output->writeln(__('Deleted ' .count($pagesToDelete) . ' Pages successfully'));
-                }
+            $response = $this->pagesSaver->delete($pagesToDelete, $storeId);
+            if ($response) {
+                $this->output->writeln(__('Deleted ' .count($pagesToDelete) . ' Pages successfully'));
             }
         }
 

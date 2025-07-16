@@ -6,21 +6,25 @@ use Wizzy\Search\Services\Queue\Processors\IndexPagesProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Magento;
+use Wizzy\Search\Services\Store\StoreManager;
 
 class Pages implements Magento\Framework\Indexer\ActionInterface, Magento\Framework\Mview\ActionInterface
 {
     private $storeAutocompleteConfig;
     private $queueManager;
     private $output;
+    private $storeManager;
 
     public function __construct(
         QueueManager $queueManager,
         IndexerOutput $output,
-        StoreAutocompleteConfig $storeAutocompleteConfig
+        StoreAutocompleteConfig $storeAutocompleteConfig,
+        StoreManager $storeManager
     ) {
         $this->storeAutocompleteConfig = $storeAutocompleteConfig;
         $this->queueManager = $queueManager;
         $this->output = $output;
+        $this->storeManager = $storeManager;
     }
 
    /*
@@ -60,17 +64,25 @@ class Pages implements Magento\Framework\Indexer\ActionInterface, Magento\Framew
 
     private function addPagesForSync($slugs)
     {
+        $storeIds = $this->storeManager->getToSyncStoreIds();
+        
+        foreach ($storeIds as $storeId) {
+            $this->storeAutocompleteConfig->setStore($storeId);
+            if ($this->storeAutocompleteConfig->hasToSyncPages() == false) {
+                $this->output->writeDiv();
 
-        if ($this->storeAutocompleteConfig->hasToSyncPages() == false) {
-            return true;
+                $this->output->writeln(__(
+                    "Adding Pages in Sync Skipped for Store Id #" . $storeId .
+                    " (Based on Sync Pages configuration)"
+                ));
+                continue;
+            }
+            $this->queueManager->enqueue(IndexPagesProcessor::class, $storeId, [
+            'slugs' => $slugs,
+            ]);
+
+            $this->output->writeDiv();
+            $this->output->writeln(__('Added all Pages for Sync for the store Id #' . $storeId));
         }
-        if (!count($slugs)) {
-            $this->queueManager->clear(0, IndexPagesProcessor::class);
-        }
-        $this->queueManager->enqueue(IndexPagesProcessor::class, 0, [
-         'slugs' => $slugs,
-        ]);
-        $this->output->writeDiv();
-        $this->output->writeln(__('Added ' . count($slugs) . ' Pages for Sync.'));
     }
 }
