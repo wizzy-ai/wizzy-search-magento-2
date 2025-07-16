@@ -45,7 +45,7 @@ class ConfigManager
             $key,
             $value,
             ScopeInterface::SCOPE_STORES,
-            $this->storeManager->getCurrentStoreId(),
+            $this->storeManager->getStore()->getId(),
             $isCustomConfig
         );
     }
