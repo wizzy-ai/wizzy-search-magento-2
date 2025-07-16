@@ -12,14 +12,13 @@ use Wizzy\Search\Services\Store\StoreManager;
 
 class WizzyAPIWrapper
 {
-
     private $storeManager;
     private $wizzyApiConnector;
-
     private $responseBuilder;
     private $authHeaders;
     private $wizzyWebhookAPI;
     private $storeAdvancedConfig;
+    private $wizzyAPIEndpoints;
 
     public function __construct(
         StoreManager $storeManager,
@@ -27,7 +26,8 @@ class WizzyAPIWrapper
         ResponseBuilder $responseBuilder,
         AuthHeaders $authHeaders,
         WizzyWebhookAPI $wizzyWebhookAPI,
-        StoreAdvancedConfig $storeAdvancedConfig
+        StoreAdvancedConfig $storeAdvancedConfig,
+        WizzyAPIEndPoints $wizzyAPIEndpoints
     ) {
         $this->storeManager = $storeManager;
         $this->wizzyApiConnector = $wizzyApiConnector;
@@ -36,6 +36,7 @@ class WizzyAPIWrapper
         $this->authHeaders = $authHeaders;
         $this->wizzyWebhookAPI = $wizzyWebhookAPI;
         $this->storeAdvancedConfig = $storeAdvancedConfig;
+        $this->wizzyAPIEndpoints = $wizzyAPIEndpoints;
     }
 
     public function collectClick(array $clickData, $storeId, array $headers): Response
@@ -47,7 +48,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::COLLECT_CLICK_EVENT,
+            $this->wizzyAPIEndpoints->getCollectClickEventEndpoint(),
             'POST',
             $clickData,
             array_merge($headers, $this->authHeaders->getFromArray($credentials, true)),
@@ -64,7 +65,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::COLLECT_VIEW_EVENT,
+            $this->wizzyAPIEndpoints->getCollectViewEventEndpoint(),
             'POST',
             $viewData,
             array_merge($headers, $this->authHeaders->getFromArray($credentials, true)),
@@ -81,7 +82,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::COLLECT_CONVERTED_EVENT,
+            $this->wizzyAPIEndpoints->getCollectConvertedEventEndpoint(),
             'POST',
             $data,
             array_merge($headers, $this->authHeaders->getFromArray($credentials, true)),
@@ -100,7 +101,7 @@ class WizzyAPIWrapper
         $mappedProducts = $this->getTransformedProductsFromWebhook($products, $credentials);
         
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::SAVE_PRODUCTS,
+            $this->wizzyAPIEndpoints->getSaveProductsEndpoint(),
             'POST',
             $mappedProducts,
             $this->authHeaders->getFromArray($credentials, true),
@@ -122,7 +123,7 @@ class WizzyAPIWrapper
             $products
         );
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::DELETE_PRODUCTS,
+            $this->wizzyAPIEndpoints->getDeleteProductsEndpoint(),
             'DELETE',
             $products,
             $this->authHeaders->getFromArray($credentials, true),
@@ -138,7 +139,7 @@ class WizzyAPIWrapper
             return $this->responseBuilder->error('Invalid store credentials.', []);
         }
 
-        return $this->wizzyApiConnector->send(WizzyAPIEndPoints::SET_DEFAULT_CURRENCY, 'PUT', [
+        return $this->wizzyApiConnector->send($this->wizzyAPIEndpoints->getSetDefaultCurrencyEndpoint(), 'PUT', [
         'code' => $currencyCode
         ], $this->authHeaders->getFromArray($credentials, true));
     }
@@ -151,7 +152,7 @@ class WizzyAPIWrapper
             return $this->responseBuilder->error('Invalid store credentials.', []);
         }
 
-        return $this->wizzyApiConnector->send(WizzyAPIEndPoints::SET_DISPLAY_CURRENCY, 'PUT', [
+        return $this->wizzyApiConnector->send($this->wizzyAPIEndpoints->getSetDisplayCurrencyEndpoint(), 'PUT', [
          'code' => $currencyCode
         ], $this->authHeaders->getFromArray($credentials, true));
     }
@@ -165,7 +166,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::SAVE_CURRENCIES,
+            $this->wizzyAPIEndpoints->getSaveCurrenciesEndpoint(),
             'POST',
             $currencies,
             $this->authHeaders->getFromArray($credentials, true),
@@ -182,7 +183,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::SAVE_PAGES,
+            $this->wizzyAPIEndpoints->getSavePagesEndpoint(),
             'POST',
             $pages,
             $this->authHeaders->getFromArray($credentials, true),
@@ -199,7 +200,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::SAVE_CURRENCIES_RATES,
+            $this->wizzyAPIEndpoints->getSaveCurrenciesRatesEndpoint(),
             'POST',
             $currencyRates,
             $this->authHeaders->getFromArray($credentials, true),
@@ -216,7 +217,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::DELETE_CURRENCIES,
+            $this->wizzyAPIEndpoints->getDeleteCurrenciesEndpoint(),
             'DELETE',
             $currencies,
             $this->authHeaders->getFromArray($credentials, true),
@@ -233,7 +234,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::DELETE_PAGES,
+            $this->wizzyAPIEndpoints->getDeletePagesEndpoint(),
             'DELETE',
             $pages,
             $this->authHeaders->getFromArray($credentials, true),
@@ -250,7 +251,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::GET_CURRENCIES,
+            $this->wizzyAPIEndpoints->getCurrenciesEndpoint(),
             'GET',
             [],
             $this->authHeaders->getFromArray($credentials)
@@ -266,7 +267,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::GET_PAGES,
+            $this->wizzyAPIEndpoints->getPagesEndpoint(),
             'GET',
             [],
             $this->authHeaders->getFromArray($credentials, true)
@@ -297,7 +298,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::WIZZY_API_SYNONYMS,
+            $this->wizzyAPIEndpoints->getSynonymsEndpoint(),
             'GET',
             [],
             $this->authHeaders->getFromArray($credentials, true)
@@ -313,7 +314,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::WIZZY_API_SYNONYMS,
+            $this->wizzyAPIEndpoints->getSynonymsEndpoint(),
             'POST',
             $payload,
             $this->authHeaders->getFromArray($credentials, true),
@@ -329,7 +330,7 @@ class WizzyAPIWrapper
             return $this->responseBuilder->error('Invalid store credentials.', []);
         }
 
-        $endPoint = WizzyAPIEndPoints::WIZZY_API_SYNONYMS;
+        $endPoint = $this->wizzyAPIEndpoints->getSynonymsEndpoint();
         $endPoint = $endPoint . $payload;
         
         return $this->wizzyApiConnector->send(
@@ -350,7 +351,7 @@ class WizzyAPIWrapper
         }
 
         return $this->wizzyApiConnector->send(
-            WizzyAPIEndPoints::WIZZY_API_SYNONYMS,
+            $this->wizzyAPIEndpoints->getSynonymsEndpoint(),
             'PUT',
             $payload,
             $this->authHeaders->getFromArray($credentials, true),

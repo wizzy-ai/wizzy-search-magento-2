@@ -14,6 +14,7 @@ class StoreGeneralConfig
     const WIZZY_GENERAL_SECTION_CONFIGURATION = self::WIZZY_GENERAL_CONFIGURATION . "/general_configuration";
     const IS_SYNC_ENABLED = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/enable_sync";
     const IS_SEARCH_ENABLED = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/enable_instant_search";
+    const CUSTOM_ENDPOINT = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/custom_endpoint";
     const IS_AUTOCOMPLETE_ENABLED = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/enable_autocomplete";
     const IS_ANALYTICS_ENABLED = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/enable_analytics";
     const INSTANT_SEARCH_BEHAVIOUR = self::WIZZY_GENERAL_SECTION_CONFIGURATION . "/instant_search_behavior";
@@ -48,6 +49,11 @@ class StoreGeneralConfig
     public function isInstantSearchEnabled()
     {
         return ($this->configManager->getStoreConfig(self::IS_SEARCH_ENABLED, $this->storeId) == 1);
+    }
+
+    public function getCustomEndpoint()
+    {
+        return ($this->configManager->getStoreConfig(self::CUSTOM_ENDPOINT, $this->storeId));
     }
 
     public function hasToReplaceCategoryPage()

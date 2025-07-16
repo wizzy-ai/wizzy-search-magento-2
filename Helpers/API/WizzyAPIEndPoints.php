@@ -2,33 +2,126 @@
 
 namespace Wizzy\Search\Helpers\API;
 
+use Wizzy\Search\Services\Store\StoreGeneralConfig;
+
 class WizzyAPIEndPoints
 {
+    private $storeGeneralConfig;
     const BASE_END_POINT = "https://api.wizsearch.in/v1";
-    const STORES_BASE_AUTH = self::BASE_END_POINT.'/stores';
-    const PRODUCTS_BASE_AUTH = self::BASE_END_POINT.'/products';
-    const CURRENCIES_BASE_AUTH = self::BASE_END_POINT.'/currencies';
-    const PAGES_BASE_AUTH = self::BASE_END_POINT.'/pages';
-    const EVENTS_BASE_AUTH = self::BASE_END_POINT.'/events';
 
-    const STORE_AUTH = self::STORES_BASE_AUTH . '/auth';
+    public function __construct(
+        StoreGeneralConfig $storeGeneralConfig
+    ) {
+        $this->storeGeneralConfig = $storeGeneralConfig;
+    }
 
-    const SAVE_PRODUCTS = self::PRODUCTS_BASE_AUTH . '/save';
-    const DELETE_PRODUCTS = self::PRODUCTS_BASE_AUTH . '/delete';
+    private function getBaseEndpoint()
+    {
+        return $this->storeGeneralConfig->getCustomEndpoint() ?: self::BASE_END_POINT;
+    }
+    
+    private function getStoresBaseAuth()
+    {
+        return $this->getBaseEndpoint() . '/stores';
+    }
+    
+    private function getProductsBaseAuth()
+    {
+        return $this->getBaseEndpoint() . '/products';
+    }
+    
+    private function getCurrenciesBaseAuth()
+    {
+        return $this->getBaseEndpoint() . '/currencies';
+    }
+    
+    private function getPagesBaseAuth()
+    {
+        return $this->getBaseEndpoint() . '/pages';
+    }
+    
+    private function getEventsBaseAuth()
+    {
+        return $this->getBaseEndpoint() . '/events';
+    }
+    
+    public function getStoreAuthEndpoint()
+    {
+        return $this->getStoresBaseAuth() . '/auth';
+    }
+    
+    public function getSaveProductsEndpoint()
+    {
+        return $this->getProductsBaseAuth() . '/save';
+    }
+    
+    public function getDeleteProductsEndpoint()
+    {
+        return $this->getProductsBaseAuth() . '/delete';
+    }
+    
+    public function getSetDefaultCurrencyEndpoint()
+    {
+        return $this->getCurrenciesBaseAuth() . '/default-currency';
+    }
+    
+    public function getSetDisplayCurrencyEndpoint()
+    {
+        return $this->getCurrenciesBaseAuth() . '/display-currency';
+    }
+    
+    public function getSaveCurrenciesEndpoint()
+    {
+        return $this->getCurrenciesBaseAuth() . '/';
+    }
+    
+    public function getCurrenciesEndpoint()
+    {
+        return $this->getCurrenciesBaseAuth() . '/';
+    }
 
-    const SET_DEFAULT_CURRENCY = self::CURRENCIES_BASE_AUTH . '/default-currency';
-    const SET_DISPLAY_CURRENCY = self::CURRENCIES_BASE_AUTH . '/display-currency';
-    const SAVE_CURRENCIES = self::CURRENCIES_BASE_AUTH . '/';
-    const GET_CURRENCIES = self::CURRENCIES_BASE_AUTH . '/';
-    const SAVE_CURRENCIES_RATES = self::CURRENCIES_BASE_AUTH . '/rates';
-    const DELETE_CURRENCIES = self::CURRENCIES_BASE_AUTH . '/';
+    public function getSaveCurrenciesRatesEndpoint()
+    {
+        return $this->getCurrenciesBaseAuth() . '/rates';
+    }
+    
+    public function getDeleteCurrenciesEndpoint()
+    {
+        return $this->getCurrenciesBaseAuth() . '/';
+    }
+    
+    public function getSavePagesEndpoint()
+    {
+        return $this->getPagesBaseAuth() . '/';
+    }
+    
+    public function getPagesEndpoint()
+    {
+        return $this->getPagesBaseAuth() . '/';
+    }
+    
+    public function getDeletePagesEndpoint()
+    {
+        return $this->getPagesBaseAuth() . '/';
+    }
+    
+    public function getCollectClickEventEndpoint()
+    {
+        return $this->getEventsBaseAuth() . '/click';
+    }
+    
+    public function getCollectViewEventEndpoint()
+    {
+        return $this->getEventsBaseAuth() . '/view';
+    }
+    
+    public function getCollectConvertedEventEndpoint()
+    {
+        return $this->getEventsBaseAuth() . '/converted';
+    }
 
-    const SAVE_PAGES = self::PAGES_BASE_AUTH . '/';
-    const GET_PAGES = self::PAGES_BASE_AUTH . '/';
-    const DELETE_PAGES = self::PAGES_BASE_AUTH . '/';
-
-    const COLLECT_CLICK_EVENT = self::EVENTS_BASE_AUTH . '/click';
-    const COLLECT_VIEW_EVENT = self::EVENTS_BASE_AUTH . '/view';
-    const COLLECT_CONVERTED_EVENT = self::EVENTS_BASE_AUTH . '/converted';
-    const WIZZY_API_SYNONYMS = self::BASE_END_POINT . '/synonyms/';
+    public function getSynonymsEndpoint()
+    {
+        return $this->getBaseEndpoint() . '/synonyms/';
+    }
 }
