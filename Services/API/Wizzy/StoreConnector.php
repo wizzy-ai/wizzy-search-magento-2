@@ -9,17 +9,22 @@ class StoreConnector
 {
     private $wizzyAPIConnector;
     private $authHeaders;
+    private $wizzyAPIEndpoints;
 
-    public function __construct(WizzyAPIConnector $wizzyAPIConnector, AuthHeaders $authHeaders)
-    {
+    public function __construct(
+        WizzyAPIConnector $wizzyAPIConnector,
+        AuthHeaders $authHeaders,
+        WizzyAPIEndPoints $wizzyAPIEndpoints
+    ) {
         $this->wizzyAPIConnector = $wizzyAPIConnector;
         $this->authHeaders = $authHeaders;
+        $this->wizzyAPIEndpoints = $wizzyAPIEndpoints;
     }
 
     public function auth(string $storeId, string $storeApiKey, string  $storeSecret)
     {
         $response = $this->wizzyAPIConnector->send(
-            WizzyAPIEndPoints::STORE_AUTH,
+            $this->wizzyAPIEndpoints->getStoreAuthEndpoint(),
             'post',
             [],
             $this->authHeaders->get($storeId, $storeApiKey, $storeSecret)

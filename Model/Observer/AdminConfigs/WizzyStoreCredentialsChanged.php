@@ -7,11 +7,9 @@ use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\App\RequestInterface;
 use Wizzy\Search\Helpers\FlashMessagesManager;
 use Wizzy\Search\Services\API\Wizzy\StoreConnector;
-use Wizzy\Search\Services\Config\CurrencyOptions;
 use Wizzy\Search\Services\Config\WizzyCredentials;
-use Wizzy\Search\Services\Queue\Processors\UpdateCurrencyOptions;
-use Wizzy\Search\Services\Queue\QueueManager;
 use Wizzy\Search\Services\Store\StoreManager;
+use Wizzy\Search\Services\Store\StoreGeneralConfig;
 
 class WizzyStoreCredentialsChanged implements ObserverInterface
 {
@@ -20,18 +18,21 @@ class WizzyStoreCredentialsChanged implements ObserverInterface
     private $storeConnector;
     private $storeManager;
     private $wizzyCredentialsConfig;
+    private $storeGeneralConfig;
 
     public function __construct(
         RequestInterface $request,
         FlashMessagesManager $flashMessagesManager,
         StoreConnector $storeConnector,
         StoreManager $storeManager,
-        WizzyCredentials $wizzyCredentials
+        WizzyCredentials $wizzyCredentials,
+        StoreGeneralConfig $storeGeneralConfig
     ) {
         $this->request = $request;
         $this->messageManager = $flashMessagesManager;
         $this->storeConnector = $storeConnector;
         $this->storeManager = $storeManager;
+        $this->storeGeneralConfig = $storeGeneralConfig;
         $this->wizzyCredentialsConfig = $wizzyCredentials;
     }
 
@@ -50,6 +51,9 @@ class WizzyStoreCredentialsChanged implements ObserverInterface
             );
             return $this;
         }
+
+        $currentStoreId = $observer->getData('store');
+        $this->storeGeneralConfig->setStore($currentStoreId);
 
        // Verifying the store credentials.
         if ($this->storeConnector->auth($storeId, $storeAPIKey, $storeSecret)) {

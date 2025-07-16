@@ -22,6 +22,7 @@ use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Wizzy\Search\Services\Store\StoreSearchFormConfig;
 use Wizzy\Search\Services\Store\StoreStockConfig;
 use Wizzy\Search\Block\Adminhtml\Version;
+use Laminas\Uri\Http as HttpUri;
 
 class BaseBlock extends Template
 {
@@ -344,7 +345,9 @@ class BaseBlock extends Template
             ],
          ],
         ];
-
+        if ($this->getCustomEndpoint()) {
+            $configs['endpoints']['common'] = $this->getCustomEndpoint();
+        }
         return $configs;
     }
 
@@ -360,5 +363,21 @@ class BaseBlock extends Template
           ->createBlock(\Magento\Framework\View\Element\Template::class)
           ->setTemplate($template)
           ->toHtml();
+    }
+
+    public function getCustomEndpoint()
+    {
+        $customBaseUrl = $this->storeGeneralConfig->getCustomEndpoint();
+
+        if (!$customBaseUrl) {
+            return false;
+        }
+
+        $customBaseUrl = new HttpUri($customBaseUrl);
+        $scheme = $customBaseUrl->getScheme();
+        $host = $customBaseUrl->getHost();
+        $customBaseUrl = "{$scheme}://{$host}";
+
+        return $customBaseUrl;
     }
 }
