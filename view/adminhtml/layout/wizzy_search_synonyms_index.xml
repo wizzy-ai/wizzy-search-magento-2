@@ -23,7 +23,7 @@
             <container name="wizzy.synonym.wrapper"
                htmlTag="div"
                htmlClass="wizzy-synonym-wrapper"
-               htmlAttributes='data-bind="style: { display: \"flex\", flexDirection: \"column\", gap: \"20px\" }"'>
+               >
         
                 <block class="Magento\Backend\Block\Store\Switcher" name="adminhtml.system.config.switcher" template="Magento_Backend::store/switcher.phtml">
                     <arguments>
