@@ -1003,10 +1003,8 @@ class ProductsMapper
         $hoverImage = "";
 
         $index = 0;
-        $mainImageUrl = "";
-        $hoverImageUrl = "";
 
-        $thumbnail = $this->getImageByType($this->storeCatalogueConfig->getThumbnailImageType(), $product);
+        $thumbnailFile = $this->getImageByType($this->storeCatalogueConfig->getThumbnailImageType(), $product);
         $hoverImageFile = $this->getImageByType($this->storeCatalogueConfig->getHoverImageType(), $product);
 
         foreach ($product->getMediaGalleryImages() as $productImage) {
@@ -1015,32 +1013,27 @@ class ProductsMapper
                 continue;
             }
 
-            if ($index == 0 || $thumbnail == $productImageData['file']) {
+            if ($index == 0 || $thumbnailFile == $productImageData['file']) {
                 $mainImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
-                $mainImageUrl = $productImageData['url'];
             } else {
-                $images[] = $productImageData['url'];
+                $images[] = $this->productImageManager->getThumbnail($product, $productImageData['file']);
             }
-            $index++;
-
             if ($hoverImageFile == $productImageData['file']) {
                 $hoverImage = $this->productImageManager->getThumbnail($product, $productImageData['file']);
-                $hoverImageUrl = $productImageData['url'];
             }
+            $index++;
         }
 
         if ($mainImage === '') {
-            if ($mainImageUrl !== "") {
-                $mainImage = $mainImageUrl;
+            if ($thumbnailFile) {
+                $mainImage = $this->productImageManager->getThumbnail($product, $thumbnailFile);
             } else {
                 $mainImage = $this->productImageManager->getPlaceholderImage($this->storeId);
             }
         }
 
-        if ($hoverImage === '') {
-            if ($hoverImageUrl !== "") {
-                $hoverImage = $hoverImageUrl;
-            }
+        if ($hoverImage === '' && $hoverImageFile) {
+            $hoverImage = $this->productImageManager->getThumbnail($product, $hoverImageFile);
         }
 
         return [
