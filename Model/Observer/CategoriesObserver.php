@@ -2,85 +2,132 @@
 
 namespace Wizzy\Search\Model\Observer;
 
-use Magento\Catalog\Model\Category as CategoryMainModel;
-use Magento\Catalog\Model\ResourceModel\Category as CategoryResourceModel;
-use Magento\Catalog\Model\Category\Interceptor as CategoryInterceptor;
-use Magento\Catalog\Model\ResourceModel\Category\Interceptor as ResourceCategoryInterceptor;
-use Wizzy\Search\Services\Indexer\IndexerManager;
-use Wizzy\Search\Services\Model\WizzyProduct;
+use Magento\Catalog\Api\CategoryRepositoryInterface;
+use Magento\Catalog\Model\Category;
+use Psr\Log\LoggerInterface;
 use Wizzy\Search\Services\Queue\Processors\IndexCategoryProductsProcessor;
 use Wizzy\Search\Services\Queue\QueueManager;
 use Wizzy\Search\Services\Store\StoreManager;
+use Wizzy\Search\Services\Indexer\IndexerManager;
+use Wizzy\Search\Services\Model\WizzyProduct;
+use Magento\Framework\App\ResourceConnection;
 
 class CategoriesObserver
 {
+    protected $indexer;
+    protected $logger;
+    protected $categoryRepository;
+    protected $queueManager;
+    protected $indexerManager;
+    protected $storeManager;
+    protected $productsManager;
+    protected $wizzyProduct;
+    protected $indexCategoryProductsProcessor;
+    protected $resource;
 
-    private $queueManager;
-    private $wizzyProduct;
-    private $storeManager;
-
-    /**
-     * @param IndexerManager $indexerRegistry
-     */
-    public function __construct(WizzyProduct $wizzyProduct, QueueManager $queueManager, StoreManager $storeManager)
-    {
+    public function __construct(
+        LoggerInterface $logger,
+        CategoryRepositoryInterface $categoryRepository,
+        QueueManager $queueManager,
+        IndexerManager $indexerManager,
+        StoreManager $storeManager,
+        WizzyProduct $wizzyProduct,
+        IndexCategoryProductsProcessor $indexCategoryProductsProcessor,
+        ResourceConnection $resource
+    ) {
+        $this->logger = $logger;
+        $this->categoryRepository = $categoryRepository;
         $this->queueManager = $queueManager;
-        $this->wizzyProduct = $wizzyProduct;
+        $this->indexer = $indexerManager->getProductsIndexer();
         $this->storeManager = $storeManager;
+        $this->wizzyProduct = $wizzyProduct;
+        $this->indexCategoryProductsProcessor = $indexCategoryProductsProcessor;
+        $this->resource = $resource;
     }
 
-    /**
-     * @param CategoryResourceModel $categoryResource
-     * @param CategoryResourceModel $result
-     * @param CategoryMainModel $category
-     *
-     * @return CategoryResourceModel
-     */
-    public function afterSave(
-        CategoryResourceModel $categoryResourceModel,
-        CategoryResourceModel $resourceModelResult,
-        CategoryMainModel $category
-    ) {
-        $storeId = $this->storeManager->getCurrentStoreId();
-        $jobData = $this->queueManager->getLatestInQueueByClass(IndexCategoryProductsProcessor::class, $storeId);
+    public function beforeSave(Category $category)
+    {
+        $changes = [];
+        $origData = $category->getOrigData();
+        $storeId = $category->getStoreId();
         $data = [
-            'categoryIds' => [
-                $category->getId()
-            ]
+            'categoryIds' => [$category->getId()],
         ];
+     
+        if ($category->getName() !== null && $category->getName() !== '' &&
+            $category->getName() !== $origData['name']) {
+            $changes[] = 'name';
+        }
 
-        $existingCategoryIds = [];
-        if ($jobData != null) {
-            $existingCategoryIds = json_decode($jobData['data'], true);
-            $existingCategoryIds = $existingCategoryIds['categoryIds'];
+        if ($category->getUrlKey() !== null && $category->getUrlKey() !== '' &&
+            $category->getUrlKey() !== $origData['url_key']) {
+            $changes[] = 'url_key';
+        }
 
-            if (count($existingCategoryIds) > 500) {
-                $existingCategoryIds = [];
+        if ($category->getIsActive() !== null && (int)$category->getIsActive() !== (int)($origData['is_active'])) {
+            $changes[] = 'is_active';
+        }
+      
+        if (array_intersect($changes, ['name', 'url_key', 'is_active'])) {
+            $this->queueManager->enqueue(IndexCategoryProductsProcessor::class, $storeId, $data);
+        }
+
+        $newPositions = $category->getPostedProducts() ?? [];
+        $changedProductIds = [];
+        $removedProductIds = [];
+
+        if (!empty($newPositions) && $category->getId() && $storeId == 0) {
+            try {
+                $existingPositions = $this->getCategoryProductPositions($category->getId());
+                $existingProductIds = array_keys($existingPositions);
+                $newProductIds = array_keys($newPositions);
+
+                foreach ($newPositions as $productId => $newPosition) {
+                    $oldPosition = $existingPositions[$productId] ?? null;
+                    if ($oldPosition !== null && (int)$oldPosition !== (int)$newPosition) {
+                        $changedProductIds[] = $productId;
+                    }
+                }
+
+                $removedProductIds = array_diff($existingProductIds, $newProductIds);
+
+                $affectedProductIds = array_values(array_unique(array_merge($changedProductIds, $removedProductIds)));
+                if (!empty($affectedProductIds)) {
+                    $this->wizzyProduct->addProductsInSync($affectedProductIds, $category->getStoreId());
+                }
+
+            } catch (\Exception $e) {
+                $this->logger->error("Error processing category product positions: " . $e->getMessage());
             }
         }
 
-        if (count($existingCategoryIds)) {
-            $categoryIds = array_unique(array_merge($existingCategoryIds, [$category->getId()]));
-            $data['categoryIds'] = $categoryIds;
-            $jobData['data'] = json_encode($data);
-            $this->queueManager->edit($jobData);
-        } else {
-            $this->queueManager->enqueue(IndexCategoryProductsProcessor::class, $storeId, $data);
-        }
-        return $resourceModelResult;
+        return [$category];
     }
+    protected function getCategoryProductPositions($categoryId): array
+    {
+        $connection = $this->resource->getConnection();
+        $table = $this->resource->getTableName('catalog_category_product');
 
-    /**
-     * @param ResourceCategoryInterceptor $categoryResource
-     * @param CategoryInterceptor $result
-     *
-     * @return ResourceCategoryInterceptor
-     */
-    public function beforeDelete(
-        ResourceCategoryInterceptor $categoryResourceModel,
-        CategoryInterceptor $categoryInterceptor
-    ) {
-        $productIdsToUpdate = array_keys($categoryInterceptor->getProductsPosition());
-        $this->wizzyProduct->addProductsInSync($productIdsToUpdate);
+        $positions = [];
+        $page = 1;
+        $pageSize = 10000;
+
+        do {
+            $select = $connection->select()
+                ->from($table, ['product_id', 'position'])
+                ->where('category_id = ?', $categoryId)
+                ->limitPage($page, $pageSize);
+
+            $result = $connection->fetchPairs($select);
+
+            if (!empty($result)) {
+                $positions += $result;
+            }
+
+            $page++;
+
+        } while (!empty($result));
+
+        return $positions;
     }
 }
