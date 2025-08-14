@@ -22,7 +22,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
     private $output;
     private $productPricesHelper;
     private $storeAdvancedConfig;
-
+    public $storeId;
     public function __construct(
         ProductsManager $productsManager,
         QueueManager $queueManager,
@@ -44,7 +44,15 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         $this->output = $output;
         $this->productPricesHelper = $productPricesHelper;
     }
+    public function setStoreId($storeId)
+    {
+        $this->storeId = (int) $storeId;
+    }
 
+    public function getStoreId()
+    {
+        return $this->storeId;
+    }
   /*
    * Allows process indexer in the "Update on schedule" mode.
    * Add set of scheduled entities to Wizzy for reindexing.
@@ -103,8 +111,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
             return;
         }
 
-        $storeIds = $this->storeManager->getToSyncStoreIds($storeId);
-
+        $storeIds = $this->storeManager->getToSyncStoreIds($this->storeId);
         foreach ($storeIds as $storeId) {
             $this->storeAdvancedConfig->setStore($storeId);
             $this->maxProductsInSingleQueue = $this->storeAdvancedConfig->getProductsSyncBatchSize();
