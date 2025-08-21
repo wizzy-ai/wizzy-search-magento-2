@@ -10,6 +10,7 @@ use Wizzy\Search\Model\Observer\ImportProductsObserver;
 use Wizzy\Search\Services\Queue\QueueManager;
 use Wizzy\Search\Services\Store\StoreManager;
 use Wizzy\Search\Services\Queue\Processors\AddImportedProductsInQueueProcessor;
+use Magento\Framework\App\RequestInterface;
 
 class AfterSourceItemsUpdated
 {
@@ -19,11 +20,13 @@ class AfterSourceItemsUpdated
     private $importProductsObserver;
     private $queueManager;
     private $storeManager;
+    private $request;
 
     public function __construct(
         Configurable $configurable,
         ProductsManager $productsManager,
         IndexerManager $indexerManager,
+        RequestInterface $request,
         ImportProductsObserver $importProductsObserver,
         QueueManager $queueManager,
         StoreManager $storeManager
@@ -34,6 +37,7 @@ class AfterSourceItemsUpdated
         $this->importProductsObserver = $importProductsObserver;
         $this->queueManager = $queueManager;
         $this->storeManager = $storeManager;
+        $this->request = $request;
     }
 
     public function afterExecute(
@@ -41,20 +45,23 @@ class AfterSourceItemsUpdated
         $result,
         array $sourceItems
     ): void {
-        $skus = array_map(function ($item) {
-            return $item->getSku();
-        }, $sourceItems);
+        $fullActionName = $this->request->getFullActionName();
+        if ($fullActionName == 'adminhtml_import_start') {
+            $skus = array_map(function ($item) {
+                return $item->getSku();
+            }, $sourceItems);
 
-        $data = $this->importProductsObserver->createSkuFile($skus);
-        if ($data) {
-            $storeIds = $this->storeManager->getToSyncStoreIds();
-            if ($storeIds) {
-                foreach ($storeIds as $storeId) {
-                    $this->queueManager->enqueue(
-                        AddImportedProductsInQueueProcessor::class,
-                        $storeId,
-                        $data
-                    );
+            $data = $this->importProductsObserver->createSkuFile($skus);
+            if ($data) {
+                $storeIds = $this->storeManager->getToSyncStoreIds();
+                if ($storeIds) {
+                    foreach ($storeIds as $storeId) {
+                        $this->queueManager->enqueue(
+                            AddImportedProductsInQueueProcessor::class,
+                            $storeId,
+                            $data
+                        );
+                    }
                 }
             }
         }
