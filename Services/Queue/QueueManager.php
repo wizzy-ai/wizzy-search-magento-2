@@ -71,7 +71,7 @@ class QueueManager
         $this->queueResourceModel->save($queue);
     }
 
-    public function changeStatus(array $jobs, int $status, $errors = null)
+    public function changeStatus(array $jobs, int $status, ?string $errors = null)
     {
         if (count($jobs) > 0) {
             foreach ($jobs as $index => $job) {
@@ -110,7 +110,7 @@ class QueueManager
         return $jobsData;
     }
 
-    public function clear($storeId, $jobClass = null)
+    public function clear($storeId, ?string $jobClass = null)
     {
         $jobs = $this->getAllInProgressJobs($storeId, $jobClass);
         $this->changeStatus($jobs, self::JOB_CANCELLED_STATUS);
@@ -169,7 +169,7 @@ class QueueManager
         return $jobs;
     }
 
-    private function getAllInProgressJobs($storeId, $jobClass = null)
+    private function getAllInProgressJobs($storeId, ?string $jobClass = null)
     {
         $jobs = $this->queueFactory->create()->getCollection()
          ->addFieldToFilter('status', self::JOB_TO_EXECUTE_STATUS)

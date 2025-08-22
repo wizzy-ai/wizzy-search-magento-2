@@ -61,7 +61,7 @@ class SyncSkippedEntities
 
         return $entities;
     }
-    public function getSkippedEntityById($storeId, $entityId, $entityType = null)
+    public function getSkippedEntityById($storeId, $entityId, ?string $entityType = null)
     {
         $collection = $this->syncSkippedEntitiesCollectionFactory->create();
         $collection->addFieldToFilter('store_id', $storeId);
