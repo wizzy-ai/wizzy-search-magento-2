@@ -4,7 +4,7 @@ namespace Wizzy\Search\Helpers\API;
 
 class AuthHeaders
 {
-    public function get(string $storeId, string $storeAPIKey, string $storeSecret = null)
+    public function get(string $storeId, string $storeAPIKey, ?string $storeSecret = null)
     {
         $headers = [
         'x-api-key'  => $storeAPIKey,

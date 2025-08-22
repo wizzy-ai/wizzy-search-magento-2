@@ -101,7 +101,7 @@ class ProductsObserver
     *
     * @return Action
     */
-    public function afterUpdateAttributes(Action $subject, Action $result = null, $productIds)
+    public function afterUpdateAttributes(Action $subject, ?Action $result, array $productIds)
     {
         if (!$this->indexer->isScheduled()) {
             $productIds = $this->getProductIdsToIndex($productIds);
@@ -118,7 +118,7 @@ class ProductsObserver
     *
     * @return mixed
     */
-    public function afterUpdateWebsites(Action $subject, Action $result = null, array $productIds)
+    public function afterUpdateWebsites(Action $subject, ?Action $result, array $productIds)
     {
         if (!$this->indexer->isScheduled()) {
             $productIds = $this->getProductIdsToIndex($productIds);
