@@ -50,10 +50,14 @@ class StoreAutocompleteConfig
         "/show_default_products";
     const WIZZY_AUTOCOMPLETE_DISPLAY_RECENTLY_SEARCHED_TERMS = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
         "/display_recently_searched_terms";
+    const WIZZY_AUTOCOMPLETE_SHOW_PINNED_TERMS = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/autocomplete_pinned_term";
     const WIZZY_AUTOCOMPLETE_PINNED_TERM_SELECTION = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
         "/pinned_term_selection";
     const WIZZY_AUTOCOMPLETE_RECENTLY_VIEWED_PRODUCTS = self:: WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
     "/autocomplete_recently_viewed_products";
+    const WIZZY_AUTOCOMPLETE_SHOW_PINNED_PRODUCTS = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
+        "/autocomplete_pinned_products";
     const WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_SELECTION = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
         "/pinned_products_selection";
     const WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_COUNT = self::WIZZY_AUTTOCOMPLETE_ADVANCED_CONFIGURATION .
@@ -222,6 +226,13 @@ class StoreAutocompleteConfig
         );
     }
 
+    public function hasToShowPinnedTerms()
+    {
+        return $this->configManager->getStoreConfig(
+            self::WIZZY_AUTOCOMPLETE_SHOW_PINNED_TERMS,
+            $this->storeId
+        );
+    }
     public function getPinnedTermSelections()
     {
         $pinnedTerms = $this->configManager->getStoreConfig(
@@ -249,6 +260,13 @@ class StoreAutocompleteConfig
         }
 
         return $defaultPool;
+    }
+    public function hasToShowPinnedProducts()
+    {
+        return $this->configManager->getStoreConfig(
+            self::WIZZY_AUTOCOMPLETE_SHOW_PINNED_PRODUCTS,
+            $this->storeId
+        );
     }
 
     public function getPinnedProductsSelections()
