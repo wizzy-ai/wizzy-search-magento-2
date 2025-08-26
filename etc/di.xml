@@ -6,7 +6,7 @@
     <type name="Magento\Catalog\Model\Product\Action">
         <plugin name="wizzyProductsBulkUpdateObserver" type="Wizzy\Search\Model\Observer\ProductsObserver"/>
     </type>
-    <type name="Magento\Catalog\Model\ResourceModel\Category">
+    <type name="Magento\Catalog\Model\Category">
         <plugin name="wizzyCategoriesObserver" type="Wizzy\Search\Model\Observer\CategoriesObserver"/>
     </type>
     <type name="Magento\Catalog\Model\ResourceModel\Attribute">
