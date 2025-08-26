@@ -45,27 +45,38 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
 
     public function execute(array $data, $storeId)
     {
-
-        $storeIds = $this->storeManager->getToSyncStoreIds($storeId);
+        if ($storeId == 0) {
+            $storeIds = $this->storeManager->getToSyncStoreIds();
+        } else {
+            $storeIds = [$storeId];
+        }
 
         foreach ($storeIds as $storeId) {
             $this->storeGeneralConfig->setStore($storeId);
+
             if (!$this->storeGeneralConfig->isSyncEnabled() || !isset($data['categoryIds'])) {
                 if (!$this->storeGeneralConfig->isSyncEnabled()) {
-                    $this->output->writeln(__('Category Products Indexing Skipped as Sync is disabled.'));
+                    $this->output->writeln(__('Category Products Indexing Skipped as Sync is disabled
+                    for Store ID: %1', $storeId));
                 }
                 continue;
             }
 
             $categoryIds = $data['categoryIds'];
-            $this->output->writeln(__('Started processing '.count($categoryIds).' Categories.'));
+            $this->output->writeln(__(
+                'Started processing %1 categories for Store ID: %2',
+                count($categoryIds),
+                $storeId
+            ));
+
             $categories = $this->categoriesManager->fetch($categoryIds, $storeId);
+
             if (count($categories)) {
                 foreach ($categories as $category) {
                     $this->processAllDescendants($category);
                 }
                 $this->addProductsToSync($storeId);
-                $this->wizzyProduct->addProductsInSync($this->productsToSync);
+                $this->wizzyProduct->addProductsInSync($this->productsToSync, $storeId);
             }
         }
 
@@ -78,7 +89,6 @@ class IndexCategoryProductsProcessor extends QueueProcessorBase
             array_keys($this->categoriesToProcess),
             $storeId
         );
-        $this->output->writeln(__('Added '.count($productIds).' Products for processing.'));
         $this->productsToSync = $productIds;
     }
 
