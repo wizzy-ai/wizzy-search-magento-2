@@ -88,6 +88,11 @@ class CopyConfigurationOptionUpdated implements ObserverInterface
             StoreSearchConfig::INFINITE_SCROLL_OFFSET_MOBILE,
             StoreSearchConfig::WIZZY_SWATCHES_CONFIGURATION,
             StoreSearchConfig::WIZZY_SORT_CONFIGURATION,
+            StoreSearchConfig::NO_RESULTS_PAGE_TITLE,
+            StoreSearchConfig::SHOW_NO_RESULTS_PRODUCTS_SUGGESTIONS,
+            StoreSearchConfig::NO_RESULTS_PRODUCTS_SELECTION,
+            StoreSearchConfig::NO_RESULTS_PRODUCTS_COUNT,
+            StoreSearchConfig::NO_RESULTS_PAGE_SUB_TITLE,
             StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_MENU_SUGGESTIONS_COUNT,
             StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_MENU_CATEGOIRES_TITLE,
             StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_MENU_OTHERS_TITLE,
@@ -105,8 +110,21 @@ class CopyConfigurationOptionUpdated implements ObserverInterface
             StoreAutocompleteConfig::WIZZY_AUTTOCOMPLETE_EXCLUDE_PAGES,
             StoreAutocompleteConfig::WIZZY_AUTTOCOMPLETE_SYNC_PAGES,
             StoreAutocompleteConfig::AUTOCOMPLETE_ENABLED_ATTRIBUTES,
+            StoreAutocompleteConfig::WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_SUGGESTIONS,
+            StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_DISPLAY_RECENTLY_SEARCHED_TERMS,
+            StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_SHOW_PINNED_TERMS,
+            StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_PINNED_TERM_SELECTION,
+            StoreAutocompleteConfig::WIZZY_AUTTOCOMPLETE_SHOW_DEFAULT_PRODUCTS,
+            StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_SHOW_PINNED_PRODUCTS,
+            StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_SELECTION,
+            StoreAutocompleteConfig::WIZZY_AUTOCOMPLETE_PINNED_PRODUCTS_COUNT,
             StoreAdvancedConfig::INCLUDE_CUSTOM_CSS,
-            StoreAdvancedConfig::TEMPLATE_ATTRIBUTES
+            StoreAdvancedConfig::TEMPLATE_ATTRIBUTES,
+            StoreAdvancedConfig::PRODUCTS_SYNC_BATCH_SIZE,
+            StoreAdvancedConfig::SYNC_DEQUEUE_SIZE,
+            StoreAdvancedConfig::HAS_TO_ADD_PRODUCTS_IN_SYNC_ON_ATTRIBUTE_SAVE,
+            StoreAdvancedConfig::SYNC_DEBUGGING,
+            StoreAdvancedConfig::HAS_TO_ADD_ALL_PRODUCTS_IN_SYNC
         ];
 
         foreach ($configPath as $path) {
