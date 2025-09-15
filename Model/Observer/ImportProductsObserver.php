@@ -43,11 +43,11 @@ class ImportProductsObserver implements ObserverInterface
         $bunch = $observer->getEvent()->getData('bunch');
         $SKUs = array_column($bunch, 'sku');
 
-        $data = $this->createSkuFile($SKUs);
-        if ($data) {
-            $storeIds = $this->storeManager->getToSyncStoreIds();
-            if ($storeIds) {
-                foreach ($storeIds as $storeId) {
+        $storeIds = $this->storeManager->getToSyncStoreIds();
+        if ($storeIds) {
+            foreach ($storeIds as $storeId) {
+                $data = $this->createSkuFile($SKUs, $storeId);
+                if ($data) {
                     $this->queueManager->enqueue(
                         AddImportedProductsInQueueProcessor::class,
                         $storeId,
@@ -58,7 +58,7 @@ class ImportProductsObserver implements ObserverInterface
         }
     }
 
-    public function createSkuFile(array $skus)
+    public function createSkuFile(array $skus, $storeId)
     {
         $varDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
 
@@ -71,7 +71,7 @@ class ImportProductsObserver implements ObserverInterface
             }
         }
 
-        $fileName = 'import_skus_' . date('Ymd_His') . '.json';
+        $fileName = 'import_skus_' . date('Ymd_His') . '_store' . $storeId . '.json';
         $fullFilePath = $directoryPath . $fileName;
 
         $varDirectory->writeFile(
