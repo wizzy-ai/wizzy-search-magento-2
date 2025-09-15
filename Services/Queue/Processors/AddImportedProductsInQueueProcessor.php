@@ -3,35 +3,35 @@
 namespace Wizzy\Search\Services\Queue\Processors;
 
 use Wizzy\Search\Services\Catalogue\ProductsManager;
-use Wizzy\Search\Services\Indexer\IndexerManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Wizzy\Search\Model\Observer\ProductsObserver;
 use Magento\Framework\Filesystem;
+use Wizzy\Search\Services\Model\WizzyProduct;
 
 class AddImportedProductsInQueueProcessor extends QueueProcessorBase
 {
-    private $productsIndexer;
     private $storeGeneralConfig;
     private $productsManager;
     private $output;
     private $productsObserver;
     private $filesystem;
+    private $wizzyProduct;
 
     public function __construct(
-        IndexerManager $indexerManager,
         ProductsManager $productsManager,
         StoreGeneralConfig $storeGeneralConfig,
         IndexerOutput $output,
         ProductsObserver $productsObserver,
-        Filesystem $filesystem
+        Filesystem $filesystem,
+        WizzyProduct $wizzyProduct
     ) {
-        $this->productsIndexer = $indexerManager->getProductsIndexer();
         $this->storeGeneralConfig = $storeGeneralConfig;
         $this->productsManager = $productsManager;
         $this->output = $output;
         $this->productsObserver = $productsObserver;
+        $this->wizzyProduct = $wizzyProduct;
         $this->filesystem = $filesystem;
     }
 
@@ -70,8 +70,8 @@ class AddImportedProductsInQueueProcessor extends QueueProcessorBase
         $productIds = $this->productsManager->getProductIds($products);
         $productIdsToIndex = $this->productsObserver->getProductIdsToIndex($productIds);
 
-        if (!$this->productsIndexer->isScheduled() && !empty($productIdsToIndex)) {
-            $this->productsIndexer->reindexList($productIdsToIndex);
+        if (!empty($productIdsToIndex)) {
+            $this->wizzyProduct->addProductsInSync($productIdsToIndex, $storeId);
         }
 
         return true;

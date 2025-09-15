@@ -51,11 +51,11 @@ class AfterSourceItemsUpdated
                 return $item->getSku();
             }, $sourceItems);
 
-            $data = $this->importProductsObserver->createSkuFile($skus);
-            if ($data) {
+            if ($skus) {
                 $storeIds = $this->storeManager->getToSyncStoreIds();
                 if ($storeIds) {
                     foreach ($storeIds as $storeId) {
+                        $data = $this->importProductsObserver->createSkuFile($skus, $storeId);
                         $this->queueManager->enqueue(
                             AddImportedProductsInQueueProcessor::class,
                             $storeId,
