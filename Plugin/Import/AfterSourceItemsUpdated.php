@@ -46,24 +46,32 @@ class AfterSourceItemsUpdated
         array $sourceItems
     ): void {
         $fullActionName = $this->request->getFullActionName();
-        if ($fullActionName == 'adminhtml_import_start') {
-            $skus = array_map(function ($item) {
-                return $item->getSku();
-            }, $sourceItems);
+        $entity = $this->request->getParam('entity');
 
-            if ($skus) {
-                $storeIds = $this->storeManager->getToSyncStoreIds();
-                if ($storeIds) {
-                    foreach ($storeIds as $storeId) {
-                        $data = $this->importProductsObserver->createSkuFile($skus, $storeId);
-                        $this->queueManager->enqueue(
-                            AddImportedProductsInQueueProcessor::class,
-                            $storeId,
-                            $data
-                        );
-                    }
-                }
-            }
+        if ($fullActionName !== 'adminhtml_import_start' || $entity !== 'stock_sources') {
+            return;
+        }
+
+        $skus = array_unique(array_map(function ($item) {
+            return $item->getSku();
+        }, $sourceItems));
+
+        if (empty($skus)) {
+            return;
+        }
+
+        $storeIds = $this->storeManager->getToSyncStoreIds();
+        if (!$storeIds) {
+            return;
+        }
+
+        foreach ($storeIds as $storeId) {
+            $data = $this->importProductsObserver->createSkuFile($skus, $storeId);
+            $this->queueManager->enqueue(
+                AddImportedProductsInQueueProcessor::class,
+                $storeId,
+                $data
+            );
         }
     }
 }
