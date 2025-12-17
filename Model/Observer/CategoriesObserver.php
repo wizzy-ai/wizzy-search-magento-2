@@ -54,17 +54,21 @@ class CategoriesObserver
             'categoryIds' => [$category->getId()],
         ];
      
+        $origName = $origData['name'] ?? null;
+        $origUrlKey = $origData['url_key'] ?? null;
+        $origIsActive = $origData['is_active'] ?? null;
+
         if ($category->getName() !== null && $category->getName() !== '' &&
-            $category->getName() !== $origData['name']) {
+            $category->getName() !== $origName) {
             $changes[] = 'name';
         }
 
         if ($category->getUrlKey() !== null && $category->getUrlKey() !== '' &&
-            $category->getUrlKey() !== $origData['url_key']) {
+            $category->getUrlKey() !== $origUrlKey) {
             $changes[] = 'url_key';
         }
 
-        if ($category->getIsActive() !== null && (int)$category->getIsActive() !== (int)($origData['is_active'])) {
+        if ($category->getIsActive() !== null && (int)$category->getIsActive() !== (int)($origIsActive)) {
             $changes[] = 'is_active';
         }
       
