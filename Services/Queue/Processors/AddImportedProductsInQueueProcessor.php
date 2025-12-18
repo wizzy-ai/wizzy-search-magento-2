@@ -81,12 +81,17 @@ class AddImportedProductsInQueueProcessor extends QueueProcessorBase
         $varDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::VAR_DIR);
         $filePath = 'wizzy_import/' . $fileName;
 
-        if ($varDirectory->isExist($filePath)) {
+        if (!$varDirectory->isExist($filePath)) {
+            return [];
+        }
+
+        try {
             $fileContents = $varDirectory->readFile($filePath);
             $skus = json_decode($fileContents, true, 512, JSON_THROW_ON_ERROR);
-            $varDirectory->delete($filePath);
             return $skus;
+        } catch (\Throwable $e) {
+            $this->output->writeln('Error reading file: ' . $e->getMessage());
+            return [];
         }
-        return [];
     }
 }
