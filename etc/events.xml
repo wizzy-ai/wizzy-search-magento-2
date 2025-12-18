@@ -24,6 +24,9 @@
     <event name="catalog_product_import_bunch_save_after">
         <observer name="wizzy_after_products_imported" instance="Wizzy\Search\Model\Observer\ImportProductsObserver" />
     </event>
+    <event name="catalog_product_import_finish_before">
+        <observer name="wizzy_process_import_skus" instance="Wizzy\Search\Model\Observer\ImportProductsFinishObserver"/>
+    </event>
      <event name="sales_order_save_after">
         <observer name="wizzy_after_order_saved" instance="Wizzy\Search\Model\Observer\AfterOrderSaveObserver" />
     </event>
