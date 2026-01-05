@@ -7,7 +7,7 @@
             module="Wizzy_Search"
             sortOrder="999"
             parent="Magento_Backend::stores"
-            resource="Magento_Backend::stores"
+            resource="Wizzy_Search::wizzy_config"
         />
         <add
             id="Wizzy_Search::storeCredentials"
@@ -16,7 +16,7 @@
             sortOrder="10"
             parent="Wizzy_Search::main"
             action="adminhtml/system_config/edit/section/wizzy_store_credentials/store/1/"
-            resource="Wizzy_Search::main"
+            resource="Wizzy_Search::wizzy_config"
         />
         <add
                 id="Wizzy_Search::generalSetup"
@@ -25,7 +25,7 @@
                 sortOrder="20"
                 parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_general_configuration/store/1/"
-                resource="Wizzy_Search::main"
+                resource="Wizzy_Search::wizzy_config"
         />
         <add
                 id="Wizzy_Search::catalogueConfiguration"
@@ -34,7 +34,7 @@
                 sortOrder="30"
                 parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_catalogue_configuration/store/1/"
-                resource="Wizzy_Search::main"
+                resource="Wizzy_Search::wizzy_config"
         />
         <add
                 id="Wizzy_Search::searchResultsPage"
@@ -43,7 +43,7 @@
                 sortOrder="40"
                 parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_search_configuration/store/1/"
-                resource="Wizzy_Search::main"
+                resource="Wizzy_Search::wizzy_config"
         />
         <add
                 id="Wizzy_Search::autocompleteMenu"
@@ -52,7 +52,7 @@
                 sortOrder="50"
                 parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_autocomplete_configuration/store/1/"
-                resource="Wizzy_Search::main"
+                resource="Wizzy_Search::wizzy_config"
         />
         <add
                 id="Wizzy_Search::synonyms"
@@ -61,7 +61,7 @@
                 sortOrder="60"
                 parent="Wizzy_Search::main"
                 action="wizzy_search/synonyms/index"
-                resource="Wizzy_Search::main"
+                resource="Wizzy_Search::wizzy_config"
         />
         <add
                 id="Wizzy_Search::advanced"
@@ -70,7 +70,7 @@
                 sortOrder="60"
                 parent="Wizzy_Search::main"
                 action="adminhtml/system_config/edit/section/wizzy_advanced_configuration/store/1/"
-                resource="Wizzy_Search::main"
+                resource="Wizzy_Search::wizzy_config"
         />
         <add
             id="Wizzy_Search::queue"
@@ -79,7 +79,7 @@
             sortOrder="70"
             parent="Wizzy_Search::main"
             action="wizzy_search/queue/status"
-            resource="Wizzy_Search::main"
+            resource="Wizzy_Search::wizzy_config"
         />
         <add
             id="Wizzy_Search::skippedEntities"
@@ -88,7 +88,7 @@
             sortOrder="80"
             parent="Wizzy_Search::main"
             action="wizzy_search/sync/skippedentities"
-            resource="Wizzy_Search::main"
+            resource="Wizzy_Search::wizzy_config"
         />
         <add
             id="Wizzy_Search::debugSync"
@@ -97,7 +97,7 @@
             sortOrder="90"
             parent="Wizzy_Search::main"
             action="adminhtml/system_config/edit/section/wizzy_debug_sync/store/1/"
-            resource="Wizzy_Search::main"
+            resource="Wizzy_Search::wizzy_config"
         />
     </menu>
 </config>
