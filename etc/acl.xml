@@ -12,6 +12,7 @@
             </resource>
 
             <resource id="Magento_Backend::stores">
+                <resource id="Wizzy_Search::main" title="Wizzy Search" translate="title" sortOrder="10" />
                 <resource id="Magento_Backend::stores_settings">
                     <resource id="Magento_Config::config">
                         <resource id="Wizzy_Search::wizzy_config" title="Wizzy" translate="title" sortOrder="50" />

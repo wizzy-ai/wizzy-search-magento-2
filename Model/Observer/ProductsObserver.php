@@ -54,22 +54,31 @@ class ProductsObserver
         return $resourceModelResult;
     }
 
-    public function getProductIdsToIndex($productIds)
+    public function getProductIdsToIndex(array $productIds): array
     {
-        $productIdsToIndex = $productIds;
+        $ids = $productIds;
+        $additionalIds = [];
+
         foreach ($productIds as $productId) {
+
             $parentProductIds = $this->configurable->getParentIdsByChild($productId);
-            if (is_array($parentProductIds) && count($parentProductIds)) {
-                array_push($productIdsToIndex, ...$parentProductIds);
+            if (!empty($parentProductIds)) {
+                foreach ($parentProductIds as $id) {
+                    $additionalIds[] = $id;
+                }
             }
+
             $childProductIds = $this->configurable->getChildrenIds($productId);
-            if (is_array($childProductIds) && count($childProductIds)) {
-                foreach ($childProductIds as $childProductId) {
-                    array_push($productIdsToIndex, ...$childProductId);
+            if (!empty($childProductIds)) {
+                foreach ($childProductIds as $childIds) {
+                    foreach ($childIds as $id) {
+                        $additionalIds[] = $id;
+                    }
                 }
             }
         }
-        return array_values(array_unique($productIdsToIndex));
+
+        return array_values(array_unique(array_merge($ids, $additionalIds)));
     }
 
    /**
