@@ -61,10 +61,20 @@ class ImportProductsFinishObserver implements ObserverInterface
 
             $filePath = $directoryPath . $fileName;
             try {
-                $varDirectory->writeFile(
-                    $filePath,
-                    json_encode($skus, JSON_THROW_ON_ERROR)
-                );
+                if (defined('JSON_THROW_ON_ERROR')) {
+                    // PHP 7.3+
+                    $jsonData = json_encode($skus, JSON_THROW_ON_ERROR);
+                } else {
+                    // PHP < 7.3
+                    $jsonData = json_encode($skus);
+
+                    if (json_last_error() !== JSON_ERROR_NONE) {
+                        return;
+                    }
+                }
+
+                $varDirectory->writeFile($filePath, $jsonData);
+
             } catch (\Exception $e) {
                 return;
             }

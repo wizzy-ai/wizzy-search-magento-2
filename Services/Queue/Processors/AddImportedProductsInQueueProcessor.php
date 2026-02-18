@@ -87,9 +87,22 @@ class AddImportedProductsInQueueProcessor extends QueueProcessorBase
 
         try {
             $fileContents = $varDirectory->readFile($filePath);
-            $skus = json_decode($fileContents, true, 512, JSON_THROW_ON_ERROR);
-            return $skus;
-        } catch (\Throwable $e) {
+
+            if (defined('JSON_THROW_ON_ERROR')) {
+                // PHP 7.3+
+                $skus = json_decode($fileContents, true, 512, JSON_THROW_ON_ERROR);
+            } else {
+                // PHP < 7.3
+                $skus = json_decode($fileContents, true);
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    return;
+                }
+            }
+
+            return $skus ?: [];
+
+        } catch (\Exception $e) {
             $this->output->writeln('Error reading file: ' . $e->getMessage());
             return [];
         }
