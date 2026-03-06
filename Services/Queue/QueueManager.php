@@ -17,6 +17,7 @@ class QueueManager
     const JOB_TO_EXECUTE_STATUS = 0;
     const JOB_IN_PROGRESS_STATUS = 1;
     const JOB_PROCESSED_STATUS = 2;
+    const JOB_FAILED_STATUS = 3;
     const JOB_CANCELLED_STATUS = -1;
     const JOB_EXECUTION_BACK_IN_QUEUE = -2;
 
@@ -196,5 +197,48 @@ class QueueManager
             return true;
         }
         return false;
+    }
+
+    /**
+     * Put a failed job back in queue for retry (status TO_EXECUTE, tries reset to 0).
+     *
+     * @param int $queueId
+     * @return bool True if job was found and reset, false otherwise
+     */
+    public function retryFailedJob($queueId)
+    {
+        $job = $this->get($queueId);
+        if (!$job || (int) $job['status'] !== self::JOB_FAILED_STATUS) {
+            return false;
+        }
+        $job['status'] = self::JOB_TO_EXECUTE_STATUS;
+        $job['tries'] = 0;
+        $job['errors'] = null;
+        $job['last_updated_at'] = date('Y-m-d H:i:s');
+        $this->connectionManager->insertMultiple(WizzyTables::$SYNC_QUEUE_TABLE_NAME, [$job], true);
+        return true;
+    }
+
+    /**
+     * Put all failed jobs back in queue for retry (same as Retry for each).
+     *
+     * @return int Number of jobs put back in queue
+     */
+    public function retryAllFailedJobs(): int
+    {
+        $jobs = $this->queueFactory->create()->getCollection()
+            ->addFieldToFilter('status', self::JOB_FAILED_STATUS)
+            ->setOrder('id', 'ASC');
+        $count = 0;
+        foreach ($jobs as $job) {
+            $jobData = $job->getData();
+            $jobData['status'] = self::JOB_TO_EXECUTE_STATUS;
+            $jobData['tries'] = 0;
+            $jobData['errors'] = null;
+            $jobData['last_updated_at'] = date('Y-m-d H:i:s');
+            $this->connectionManager->insertMultiple(WizzyTables::$SYNC_QUEUE_TABLE_NAME, [$jobData], true);
+            $count++;
+        }
+        return $count;
     }
 }

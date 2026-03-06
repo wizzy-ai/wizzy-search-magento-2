@@ -23,6 +23,10 @@ class QueueStatuses implements OptionSourceInterface
             'label' => 'Completed',
          ],
          [
+            'value' => QueueManager::JOB_FAILED_STATUS,
+            'label' => 'Failed',
+         ],
+         [
             'value' => QueueManager::JOB_CANCELLED_STATUS,
             'label' => 'Cancelled',
          ],

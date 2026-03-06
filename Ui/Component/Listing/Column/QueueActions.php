@@ -6,6 +6,7 @@ use Magento\Ui\Component\Listing\Columns\Column;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\UiComponentFactory;
 use Magento\Framework\View\Element\UiComponent\ContextInterface;
+use Wizzy\Search\Services\Queue\QueueManager;
 
 class QueueActions extends Column
 {
@@ -36,6 +37,18 @@ class QueueActions extends Column
                     ),
                     'label' => __('View'),
                 ];
+
+                // Retry action (only for Failed jobs)
+                if (isset($item['status']) && (int) $item['status'] === QueueManager::JOB_FAILED_STATUS) {
+                    $actions['retry'] = [
+                        'href' => $this->urlBuilder->getUrl(
+                            'wizzy_search/queue/retry',
+                            ['id' => $item['id']]
+                        ),
+                        'label' => __('Retry'),
+                        'post' => true,
+                    ];
+                }
 
                 // Delete action
                 $actions['delete'] = [

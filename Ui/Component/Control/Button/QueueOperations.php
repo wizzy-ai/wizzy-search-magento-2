@@ -40,6 +40,10 @@ class QueueOperations implements ButtonProviderInterface
                 'default' => true,
                 'onclick' => $this->getOnClickUrl('*/*/addAllProductsForSync')
             ],
+            'retryAllFailed' => [
+                'label' => __('Retry All Failed'),
+                'onclick' => $this->getOnClickUrl('*/*/retryAllFailed')
+            ],
             'backToQueue' => [
                 'label' => __('Enqueue All In Progress'),
                 'onclick' => $this->getOnClickUrl('*/*/backToQueue')
