@@ -15,6 +15,8 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
     private $maxQueueJobsToExecute;
     private $output;
 
+    private const MAX_RETRIES = 3;
+
     public function __construct(
         QueueManager $queueManager,
         IndexerOutput $output,
@@ -80,11 +82,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
                            'Error' => $errorMessage,
                         ]);
 
-                        $this->queueManager->changeStatus(
-                            [$jobData],
-                            QueueManager::JOB_TO_EXECUTE_STATUS,
-                            $errorMessage
-                        );
+                        $this->handleJobFailure($jobData, $errorMessage);
                     }
                 } catch (\Exception $exception) {
                     $this->output->log([
@@ -98,11 +96,7 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
                       'Trace' => $exception->getTraceAsString(),
                     ]);
 
-                    $this->queueManager->changeStatus(
-                        [$jobData],
-                        QueueManager::JOB_TO_EXECUTE_STATUS,
-                        $exception->getMessage()
-                    );
+                    $this->handleJobFailure($jobData, $exception->getMessage());
                 }
             } else {
                 $this->output->log([
@@ -116,6 +110,35 @@ class SyncQueueRunner implements Magento\Framework\Indexer\ActionInterface, Mage
         }
 
         return $this;
+    }
+
+    /**
+     * On failure: if tries (current attempt) >= maxRetries, mark job as FAILED so the queue can
+     * process other jobs. Otherwise put it back to TO_EXECUTE for retry.
+     * Note: tries in DB was already incremented when status was set to IN_PROGRESS.
+     */
+    private function handleJobFailure(array $jobData, string $errorMessage)
+    {
+        $currentTries = (int) ($jobData['tries'] ?? 0) + 1;
+        if ($currentTries >= self::MAX_RETRIES) {
+            $this->output->writeln(__(
+                'Processor #%1 marked as Failed after %2 tries. Error: %3',
+                $jobData['id'],
+                $currentTries,
+                $errorMessage
+            ));
+            $this->queueManager->changeStatus(
+                [$jobData],
+                QueueManager::JOB_FAILED_STATUS,
+                $errorMessage
+            );
+        } else {
+            $this->queueManager->changeStatus(
+                [$jobData],
+                QueueManager::JOB_TO_EXECUTE_STATUS,
+                $errorMessage
+            );
+        }
     }
 
     private function getQueueError($jobResponse)
