@@ -52,4 +52,11 @@
         </description>
     </indexer>
 
+     <indexer id="wizzy_recover_stale_entities_indexer" view_id="wizzy_recover_stale_entities_indexer" class="Wizzy\Search\Model\Indexer\RecoverStaleEntities">
+        <title translate="true">Wizzy Recover Stale Entities</title>
+        <description translate="true">
+            Recover products which are stuck during sync process.
+        </description>
+    </indexer>
+
 </config>
