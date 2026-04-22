@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="Wizzy_Search_Cron_WizzySyncQueueRunner" instance="Wizzy\Search\Cron\WizzySyncQueueRunner" method="execute">
+            <config_path>wizzy_advanced_configuration/cron_schedules/sync_queue_runner_schedule</config_path>
+        </job>
+        <job name="Wizzy_Search_Cron_InvalidateUnresponsiveSyncIndexer" instance="Wizzy\Search\Cron\InvalidateUnresponsiveSyncIndexer" method="execute">
+            <config_path>wizzy_advanced_configuration/cron_schedules/invalidate_unresponsive_sync_schedule</config_path>
+        </job>
+        <job name="Wizzy_Search_Cron_ProductsPricesIndexer" instance="Wizzy\Search\Cron\ProductsPricesIndexer" method="execute">
+            <config_path>wizzy_advanced_configuration/cron_schedules/products_prices_schedule</config_path>
+        </job>
+        <job name="Wizzy_Search_Cron_RecoverStaleEntitiesIndexer" instance="Wizzy\Search\Cron\RecoverStaleEntitiesIndexer" method="execute">
+            <config_path>wizzy_advanced_configuration/cron_schedules/recover_stale_entities_schedule</config_path>
+        </job>
+     </group>
+</config>

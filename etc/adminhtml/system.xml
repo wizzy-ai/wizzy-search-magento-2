@@ -1145,7 +1145,7 @@
             </group>
         </section>
 
-        <section id="wizzy_advanced_configuration" translate="label" sortOrder="190" showInDefault="0" showInWebsite="0" showInStore="1">
+        <section id="wizzy_advanced_configuration" translate="label" sortOrder="190" showInDefault="1" showInWebsite="0" showInStore="1">
             <class>separator-top</class>
             <label>Advanced Setup</label>
             <tab>wizzy_config</tab>
@@ -1208,6 +1208,78 @@
                     <comment>
                         <![CDATA[
                             If enabled, Wizzy will generate some logs during sync to debug and fix any bugs.
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+            <group id="cron_schedules" translate="label" type="text" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
+                <label>Cron Schedules</label>
+                <comment>
+                    <![CDATA[
+                        Configure cron schedules for Wizzy indexers. Use standard cron expression format (e.g. <code>*/7 * * * *</code> = every 7 minutes). Flush cache after saving.
+                    ]]>
+                </comment>
+                <field id="enable_sync_queue_runner" translate="label" type="select" sortOrder="5" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Sync Queue Runner</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="sync_queue_runner_schedule" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Sync Queue Runner Schedule</label>
+                    <backend_model>Wizzy\Search\Model\Admin\Config\Backend\CronExpressionValidator</backend_model>
+                    <depends>
+                        <field id="enable_sync_queue_runner">1</field>
+                    </depends>
+                    <comment> 
+                        <![CDATA[ 
+                            Default: every 7 minutes (<code>*/7 * * * *</code>)
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enable_invalidate_unresponsive_sync" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Invalidate Unresponsive Sync</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="invalidate_unresponsive_sync_schedule" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Invalidate Unresponsive Sync Schedule</label>
+                    <backend_model>Wizzy\Search\Model\Admin\Config\Backend\CronExpressionValidator</backend_model>
+                    <depends>
+                        <field id="enable_invalidate_unresponsive_sync">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                            Default: every hour (<code>0 * * * *</code>)
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enable_products_prices_indexer" translate="label" type="select" sortOrder="25" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Products Prices Indexer</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="products_prices_schedule" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Products Prices Indexer Schedule</label>
+                    <backend_model>Wizzy\Search\Model\Admin\Config\Backend\CronExpressionValidator</backend_model>
+                    <depends>
+                        <field id="enable_products_prices_indexer">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                            Default: daily at 12:01 AM. (<code>1 0 * * *</code>)
+                        ]]>
+                    </comment>
+                </field>
+                <field id="enable_recover_stale_entities" translate="label" type="select" sortOrder="35" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Enable Recover Stale Entities</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="recover_stale_entities_schedule" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Recover Stale Entities Schedule</label>
+                    <backend_model>Wizzy\Search\Model\Admin\Config\Backend\CronExpressionValidator</backend_model>
+                    <depends>
+                        <field id="enable_recover_stale_entities">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                            Default: every 4 hours (<code>0 */4 * * *</code>)
                         ]]>
                     </comment>
                 </field>

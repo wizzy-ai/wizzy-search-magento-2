@@ -22,6 +22,11 @@ class StoreAdvancedConfig
     const HAS_TO_ADD_ALL_PRODUCTS_IN_SYNC = self::REINDEX . "/has_to_add_all_products_in_sync";
     const DEVELOPER = self::WIZZY_ADVANCED_CONFIGURATION . "/developer";
     const WEBHOOK_URL = self::DEVELOPER . "/webhook_url";
+    const CRON_SCHEDULES = self::WIZZY_ADVANCED_CONFIGURATION . "/cron_schedules";
+    const ENABLE_SYNC_QUEUE_RUNNER = self::CRON_SCHEDULES . "/enable_sync_queue_runner";
+    const ENABLE_INVALIDATE_UNRESPONSIVE_SYNC = self::CRON_SCHEDULES . "/enable_invalidate_unresponsive_sync";
+    const ENABLE_PRODUCTS_PRICES_INDEXER = self::CRON_SCHEDULES . "/enable_products_prices_indexer";
+    const ENABLE_RECOVER_STALE_ENTITIES = self::CRON_SCHEDULES . "/enable_recover_stale_entities";
 
     private $storeId;
 
@@ -93,5 +98,25 @@ class StoreAdvancedConfig
     public function hasToAddAllProductsInSync($storeId)
     {
         return ($this->configManager->getStoreConfig(self::HAS_TO_ADD_ALL_PRODUCTS_IN_SYNC, $storeId));
+    }
+
+    public function hasToEnableSyncQueueRunner()
+    {
+        return ($this->configManager->getDefaultConfig(self::ENABLE_SYNC_QUEUE_RUNNER) == 1);
+    }
+
+    public function hasToEnableInvalidateUnresponsiveSync()
+    {
+        return ($this->configManager->getDefaultConfig(self::ENABLE_INVALIDATE_UNRESPONSIVE_SYNC) == 1);
+    }
+
+    public function hasToEnableProductsPricesIndexer()
+    {
+        return ($this->configManager->getDefaultConfig(self::ENABLE_PRODUCTS_PRICES_INDEXER) == 1);
+    }
+
+    public function hasToEnableRecoverStaleEntities()
+    {
+        return ($this->configManager->getDefaultConfig(self::ENABLE_RECOVER_STALE_ENTITIES) == 1);
     }
 }
