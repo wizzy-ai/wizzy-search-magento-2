@@ -63,6 +63,11 @@ class ConfigManager
         return $this->get($key, ScopeInterface::SCOPE_STORES, $storeId);
     }
 
+    public function getDefaultConfig($key)
+    {
+        return $this->scopeConfig->getValue($key, ScopeConfigInterface::SCOPE_TYPE_DEFAULT);
+    }
+
     public function getCustomStoreConfig($key, $storeId)
     {
         return $this->get($key, ScopeInterface::SCOPE_STORES, $storeId, true);
