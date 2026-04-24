@@ -3,13 +3,13 @@
     <default>
         <wizzy_advanced_configuration>
             <cron_schedules>
-                <enable_sync_queue_runner>1</enable_sync_queue_runner>
+                <enable_sync_queue_runner>0</enable_sync_queue_runner>
                 <sync_queue_runner_schedule>*/7 * * * *</sync_queue_runner_schedule>
-                <enable_invalidate_unresponsive_sync>1</enable_invalidate_unresponsive_sync>
+                <enable_invalidate_unresponsive_sync>0</enable_invalidate_unresponsive_sync>
                 <invalidate_unresponsive_sync_schedule>0 * * * *</invalidate_unresponsive_sync_schedule>
-                <enable_products_prices_indexer>1</enable_products_prices_indexer>
+                <enable_products_prices_indexer>0</enable_products_prices_indexer>
                 <products_prices_schedule>1 0 * * *</products_prices_schedule>
-                <enable_recover_stale_entities>1</enable_recover_stale_entities>
+                <enable_recover_stale_entities>0</enable_recover_stale_entities>
                 <recover_stale_entities_schedule>0 */4 * * *</recover_stale_entities_schedule>
             </cron_schedules>
         </wizzy_advanced_configuration>
