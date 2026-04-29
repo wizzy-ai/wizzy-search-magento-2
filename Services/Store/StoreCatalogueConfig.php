@@ -86,6 +86,10 @@ class StoreCatalogueConfig
     const CATALOGUE_CONFIGURATION_ATTRIBUTES = self::WIZZY_CATALOGUE_CONFIGURATION
         ."/catalogue_configuration_attributes";
     const EXTRA_ATTRIBUTES_TO_BE_SYNCED = self::CATALOGUE_CONFIGURATION_ATTRIBUTES. "/extra_attributes_to_be_synced";
+    const CHILD_ATTRIBUTES_USE_PARENT_VALUE_ENABLED = self::CATALOGUE_CONFIGURATION_ATTRIBUTES
+        . '/child_attributes_use_parent_value_enabled';
+     const CHILD_ATTRIBUTES_USE_PARENT_VALUE = self::CATALOGUE_CONFIGURATION_ATTRIBUTES
+        . "/child_attributes_use_parent_value";
     const CREATE_KSA_ATTRIBUTE = self::CATALOGUE_CONFIGURATION_SIZES. "/create_ksa_attribute";
     const CONSIDER_ALL_SIZES_AS_KEY = self::CATALOGUE_CONFIGURATION_SIZES. "/consider_all_sizes_as_key";
     const KEY_SIZES = self::CATALOGUE_CONFIGURATION_SIZES. "/key_sizes";
@@ -290,5 +294,23 @@ class StoreCatalogueConfig
             return [];
         }
         return explode(",", $extraAttributes);
+    }
+
+    public function getChildAttributesToUseParentValue()
+    {
+        $attributes = $this->configManager->getStoreConfig(self::CHILD_ATTRIBUTES_USE_PARENT_VALUE, $this->storeId);
+        if (!$attributes) {
+            return [];
+        }
+
+        return explode(",", $attributes);
+    }
+
+    public function isChildAttributesUseParentValueEnabled(): bool
+    {
+        return ($this->configManager->getStoreConfig(
+            self::CHILD_ATTRIBUTES_USE_PARENT_VALUE_ENABLED,
+            $this->storeId
+        ) == 1) ? true : false;
     }
 }

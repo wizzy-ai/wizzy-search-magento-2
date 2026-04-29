@@ -29,11 +29,26 @@ class ProductsAttributesManager
             if ($product->getTypeID() == Configurable::TYPE_CODE) {
                 $children = $product->getTypeInstance()->getUsedProducts($product);
                 foreach ($children as $child) {
+                    $childId = $child->getId();
                     $childAttributes = $child->getAttributes();
 
                     foreach ($childAttributes as $childAttribute) {
+                        $attributeId = $childAttribute->getId();
+                        // Don't overwrite a value already stored for this child by the
+                        // top-level loop. The top-level loop processes the fully-loaded
+                        // product object (with the getData() fallback below); the child
+                        // object returned by getUsedProducts() is lightweight and may
+                        // resolve missing attribute data to a default (e.g. a Yes/No
+                        // attribute coerces null to "No"), which would silently replace
+                        // the child's real value.
+                        if (isset($this->values[$childId][$attributeId])) {
+                            continue;
+                        }
                         $value = $childAttribute->getFrontend()->getValue($child);
-                        $this->setValue($childAttribute->getId(), $child->getId(), $value);
+                        if (empty($value)) {
+                            $value = $child->getData($childAttribute->getAttributeCode());
+                        }
+                        $this->setValue($attributeId, $childId, $value);
                     }
                 }
             }

@@ -547,6 +547,28 @@
                         ]]>
                     </comment>
                 </field>
+                <field id="child_attributes_use_parent_value_enabled" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Replace Child Attribute Value With Parent?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Default: No.
+                            If Yes, child product attribute values will be replaced with parent product values for the selected attributes.
+                        ]]>
+                    </comment>
+                </field>
+                <field id="child_attributes_use_parent_value" translate="label" type="multiselect" sortOrder="3" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Child Attributes to Use Parent Value</label>
+                    <source_model>Wizzy\Search\Model\Admin\Source\AttributesList</source_model>
+                      <depends>
+                        <field id="child_attributes_use_parent_value_enabled">1</field>
+                    </depends>
+                    <comment>
+                        <![CDATA[
+                        Select attributes for which child product values should be replaced with the parent product value during sync.
+                        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
 
