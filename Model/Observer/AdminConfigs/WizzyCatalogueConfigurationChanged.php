@@ -44,16 +44,17 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         $storeCatalogueConfigurations = $this->request->getParam('groups');
+        $affectedStoreId = $this->request->getParam('store');
         $storeCatalogueConfigurations = json_encode($storeCatalogueConfigurations);
 
         $previousConfigurations = $this->configManager->getCustomStoreConfig(
             ConfigManager::CATALOGUE_CONFIG,
-            $this->storeManager->getCurrentStoreId()
+            $affectedStoreId
         );
 
         if ($storeCatalogueConfigurations != $previousConfigurations &&
            $this->entitiesSync->hasAnyEntitiesAddedInSync(
-               $this->storeManager->getCurrentStoreId(),
+               $affectedStoreId,
                EntitiesSync::ENTITY_TYPE_PRODUCT
            )
         ) {
@@ -62,10 +63,8 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
                 Catalogue data has been added for sync again. 
                 Please execute the Queue Runner Indexer if you want to do it now!'
             );
-            $this->wizzyCatalogueConfiguration->clearProductIndexingJobs($this->storeManager->getCurrentStoreId());
-            $this->queueManager->enqueue(CatalogueReindexer::class, $this->storeManager->getCurrentStoreId(), [
-
-            ]);
+            $this->wizzyCatalogueConfiguration->clearProductIndexingJobs($affectedStoreId);
+            $this->queueManager->enqueue(CatalogueReindexer::class, $affectedStoreId, [$affectedStoreId]);
         }
 
         $this->configManager->saveStoreConfig(ConfigManager::CATALOGUE_CONFIG, $storeCatalogueConfigurations);

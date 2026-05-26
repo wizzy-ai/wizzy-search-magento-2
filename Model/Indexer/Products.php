@@ -30,7 +30,8 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         StoreManager $storeManager,
         ProductPricesHelper $productPricesHelper,
         IndexerOutput $output,
-        StoreAdvancedConfig $storeAdvancedConfig
+        StoreAdvancedConfig $storeAdvancedConfig,
+        array $data = []
     ) {
         $this->productsManager = $productsManager;
         $this->queueManager = $queueManager;
@@ -43,6 +44,12 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
         $this->storeManager = $storeManager;
         $this->output = $output;
         $this->productPricesHelper = $productPricesHelper;
+
+        if (isset($data['store_id'])) {
+            $this->storeId = (int) $data['store_id'];
+        } elseif (isset($data['storeId'])) {
+            $this->storeId = (int) $data['storeId'];
+        }
     }
     public function setStoreId($storeId)
     {
@@ -93,7 +100,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
    */
     public function executeList(array $ids)
     {
-        $this->addProductsInQueue($ids, '', true);
+        $this->addProductsInQueue($ids, $this->storeId, true);
     }
 
   /*
