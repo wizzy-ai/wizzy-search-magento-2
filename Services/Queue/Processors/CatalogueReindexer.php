@@ -3,10 +3,10 @@
 namespace Wizzy\Search\Services\Queue\Processors;
 
 use Wizzy\Search\Services\Catalogue\ProductsManager;
-use Wizzy\Search\Services\Indexer\IndexerManager;
 use Wizzy\Search\Services\Indexer\IndexerOutput;
 use Wizzy\Search\Services\Model\EntitiesSync;
 use Wizzy\Search\Services\Store\StoreGeneralConfig;
+use Wizzy\Search\Model\Indexer\Products as ProductsIndexer;
 
 class CatalogueReindexer extends QueueProcessorBase
 {
@@ -18,13 +18,13 @@ class CatalogueReindexer extends QueueProcessorBase
     private $output;
 
     public function __construct(
-        IndexerManager $indexerManager,
+        ProductsIndexer $productsIndexer,
         StoreGeneralConfig $storeGeneralConfig,
         EntitiesSync $entitiesSync,
         ProductsManager $productsManager,
         IndexerOutput $output
     ) {
-        $this->productsIndexer = $indexerManager->getProductsIndexer();
+        $this->productsIndexer = $productsIndexer;
         $this->entitiesSync = $entitiesSync;
         $this->productsManager = $productsManager;
         $this->storeGeneralConfig = $storeGeneralConfig;
@@ -41,7 +41,8 @@ class CatalogueReindexer extends QueueProcessorBase
         $this->entitiesSync->markAllEntitiesSynced($storeId, EntitiesSync::ENTITY_TYPE_PRODUCT);
         $productIds = $this->productsManager->getAllProductIds($storeId);
         $this->output->writeln(__('Added '.count($productIds).' Products for processing.'));
-        $this->productsIndexer->reindexList($productIds);
+        $this->productsIndexer->setStoreId($storeId);
+        $this->productsIndexer->executeList($productIds);
 
         return true;
     }

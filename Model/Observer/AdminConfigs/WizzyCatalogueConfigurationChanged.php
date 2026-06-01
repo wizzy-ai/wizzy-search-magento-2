@@ -5,6 +5,8 @@ namespace Wizzy\Search\Model\Observer\AdminConfigs;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Framework\Event\Observer as EventObserver;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\ScopeInterface;
 use Wizzy\Search\Helpers\FlashMessagesManager;
 use Wizzy\Search\Services\Config\WizzyCatalogueConfiguration;
 use Wizzy\Search\Services\Model\EntitiesSync;
@@ -44,16 +46,22 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         $storeCatalogueConfigurations = $this->request->getParam('groups');
+        $affectedStoreId = $this->getValidatedStoreId();
+
+        if ($affectedStoreId === null) {
+            return $this;
+        }
+
         $storeCatalogueConfigurations = json_encode($storeCatalogueConfigurations);
 
         $previousConfigurations = $this->configManager->getCustomStoreConfig(
             ConfigManager::CATALOGUE_CONFIG,
-            $this->storeManager->getCurrentStoreId()
+            $affectedStoreId
         );
 
         if ($storeCatalogueConfigurations != $previousConfigurations &&
            $this->entitiesSync->hasAnyEntitiesAddedInSync(
-               $this->storeManager->getCurrentStoreId(),
+               $affectedStoreId,
                EntitiesSync::ENTITY_TYPE_PRODUCT
            )
         ) {
@@ -62,13 +70,43 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
                 Catalogue data has been added for sync again. 
                 Please execute the Queue Runner Indexer if you want to do it now!'
             );
-            $this->wizzyCatalogueConfiguration->clearProductIndexingJobs($this->storeManager->getCurrentStoreId());
-            $this->queueManager->enqueue(CatalogueReindexer::class, $this->storeManager->getCurrentStoreId(), [
-
-            ]);
+            $this->wizzyCatalogueConfiguration->clearProductIndexingJobs($affectedStoreId);
+            $this->queueManager->enqueue(CatalogueReindexer::class, $affectedStoreId, [$affectedStoreId]);
         }
 
-        $this->configManager->saveStoreConfig(ConfigManager::CATALOGUE_CONFIG, $storeCatalogueConfigurations);
+        $this->configManager->save(
+            ConfigManager::CATALOGUE_CONFIG,
+            $storeCatalogueConfigurations,
+            ScopeInterface::SCOPE_STORES,
+            $affectedStoreId
+        );
         return $this;
+    }
+
+    private function getValidatedStoreId()
+    {
+        $storeId = $this->request->getParam('store');
+
+        if ($storeId === null || is_array($storeId)) {
+            return null;
+        }
+
+        $storeId = trim((string) $storeId);
+
+        if ($storeId === '' || !ctype_digit($storeId)) {
+            return null;
+        }
+
+        $storeId = (int) $storeId;
+
+        if ($storeId <= 0) {
+            return null;
+        }
+
+        try {
+            return (int) $this->storeManager->getStoreById($storeId)->getId();
+        } catch (NoSuchEntityException $exception) {
+            return null;
+        }
     }
 }
