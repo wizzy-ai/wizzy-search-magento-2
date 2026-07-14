@@ -87,7 +87,7 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
     {
         $storeId = $this->request->getParam('store');
 
-        if ($storeId === null || is_array($storeId)) {
+        if (!is_string($storeId) && !is_int($storeId)) {
             return null;
         }
 
@@ -104,9 +104,15 @@ class WizzyCatalogueConfigurationChanged implements ObserverInterface
         }
 
         try {
-            return (int) $this->storeManager->getStoreById($storeId)->getId();
+            $store = $this->storeManager->getStoreById($storeId);
         } catch (NoSuchEntityException $exception) {
             return null;
         }
+
+        if ($store === null || (int) $store->getId() !== $storeId) {
+            return null;
+        }
+
+        return $storeId;
     }
 }

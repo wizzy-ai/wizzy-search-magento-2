@@ -46,6 +46,9 @@ class ProductsMapper
     private $productURLManager;
     private $SKUMapper;
     private $productsSessionStorage;
+    private $childAttributesUseParentValue;
+    private $isChildAttributesUseParentValueEnabled = false;
+    private $parentProductsByChildId = [];
     public $processedProducts;
     const ATTRIBUTE_TYPE_FLOAT = 'float';
 
@@ -89,6 +92,8 @@ class ProductsMapper
         $this->productURLManager = $productURLManager;
         $this->SKUMapper = $SKUMapper;
         $this->processedProducts = [];
+        $this->childAttributesUseParentValue = [];
+        $this->parentProductsByChildId = [];
     }
 
     private function resetEntitiesToIgnore()
@@ -106,6 +111,7 @@ class ProductsMapper
 
     public function mapAll($products, $productReviews, $orderItems, $storeId)
     {
+        $this->parentProductsByChildId = [];
         $this->storeId = $storeId;
         $this->productReviews = $productReviews;
         $this->orderItems = $orderItems;
@@ -116,10 +122,21 @@ class ProductsMapper
         $this->productURLManager->fetchUrls($products);
         $this->setAdminUrl();
         $this->isBrandMandatory = $this->storeCatalogueConfig->isBrandMandatoryForSync();
+        $this->childAttributesUseParentValue = [];
+        $this->isChildAttributesUseParentValueEnabled = $this->storeCatalogueConfig
+            ->isChildAttributesUseParentValueEnabled();
+        if ($this->isChildAttributesUseParentValueEnabled) {
+            $this->childAttributesUseParentValue = array_flip(
+                $this->storeCatalogueConfig->getChildAttributesToUseParentValue()
+            );
+        }
         $this->resetEntitiesToIgnore();
         $mappedProducts = [];
         $this->skippedProducts = [];
-        $this->productsAttributesManager->setAttributeValues($products);
+        $this->productsAttributesManager->setAttributeValues(
+            $products,
+            $this->getSupplementalProductsAttributeCacheContext($products)
+        );
         
         foreach ($products as $product) {
             $mappedProduct = $this->map($product);
@@ -151,6 +168,28 @@ class ProductsMapper
         $mappedProductIds = array_column($mappedProducts, 'id');
         $this->syncSkippedEntities->deleteSkippedEntities($mappedProductIds, $this->storeId);
         $this->syncSkippedEntities->addSkippedEntities(array_values($this->skippedProducts), $this->storeId);
+    }
+
+    private function getSupplementalProductsAttributeCacheContext($products)
+    {
+        if (!$this->isChildAttributesUseParentValueEnabled || !count($this->childAttributesUseParentValue)) {
+            return [];
+        }
+
+        $primaryProductIds = [];
+        foreach ($products as $product) {
+            $primaryProductIds[$product->getId()] = true;
+        }
+
+        $supplementalProductsById = [];
+        foreach ($products as $product) {
+            $parentProduct = $this->getParentProduct($product);
+            if ($parentProduct && !isset($primaryProductIds[$parentProduct->getId()])) {
+                $supplementalProductsById[$parentProduct->getId()] = $parentProduct;
+            }
+        }
+
+        return array_values($supplementalProductsById);
     }
 
     private function disptachBeforeSkipCheckEvent(&$mappedProduct, $product)
@@ -464,7 +503,7 @@ class ProductsMapper
                     array_push($sizes, ...$childSizes);
                 }
 
-                $this->mapAttributes($child, $mappedProduct, $variationInStock, true);
+                $this->mapAttributes($child, $mappedProduct, $variationInStock, true, $product);
             }
 
             $mappedProduct['stockQty'] = $highestChildQty;
@@ -590,11 +629,25 @@ class ProductsMapper
         return $isSearchable;
     }
 
-    private function mapAttributes($product, &$mappedProduct, $variationInStock, $isForChild = false)
+    private function mapAttributes(
+        $product,
+        &$mappedProduct,
+        $variationInStock,
+        $isForChild = false,
+        $knownParentProduct = null
+    )
     {
         $attributes = [];
         if (isset($mappedProduct['attributes'])) {
             $attributes = $mappedProduct['attributes'];
+        }
+        $parentProduct = null;
+        if ($this->isChildAttributesUseParentValueEnabled &&
+            count($this->childAttributesUseParentValue)
+        ) {
+            $parentProduct = $knownParentProduct !== null
+                ? $knownParentProduct
+                : $this->getParentProduct($product);
         }
         $autocompleteAttributes = $this->configurableProductsData->getAutocompleteAttributes($this->storeId);
         $productAttributes = $product->getAttributes();
@@ -631,12 +684,14 @@ class ProductsMapper
             if (($isUserDefined || $this->isSystemDefinedAttribute($attribute)) &&
                 ($isSearchableOrFilterable || $isExtraAttributeToBeAdded)
             ) {
-                $value = $this->getAttributeValue($product, $attribute);
+                $attributeSourceProduct = $product;
+                $value = $this->getAttributeValue($attributeSourceProduct, $attribute);
+                if ($this->hasToUseParentAttributeValue($attribute, $parentProduct)) {
+                    $attributeSourceProduct = $parentProduct;
+                    $value = $this->getAttributeValue($attributeSourceProduct, $attribute);
+                }
                 $label = $attribute->getFrontendLabel();
-                if (count($value) === 0 || (count($value) == 1 && empty($value[0]))
-                    || (count($value) == 1 && $value[0] === null)
-                    || (is_array($value[0]))
-                    || (strlen($value[0]) > 9999)) {
+                if ($this->isInvalidAttributeValue($value)) {
                     continue;
                 }
 
@@ -647,7 +702,7 @@ class ProductsMapper
                 'inStock' => $variationInStock,
                 'variationId' => $product->getId(),
                 ];
-                $swatch = $this->attributesManager->getSwatchDetails($product, $attribute);
+                $swatch = $this->attributesManager->getSwatchDetails($attributeSourceProduct, $attribute);
                 if ($swatch) {
                     $attributeValueToAdd['swatch'] = $swatch;
                 }
@@ -666,7 +721,15 @@ class ProductsMapper
                 ];
 
                 if (isset($attributes[$id])) {
-                    $attributes[$id]['values'][] = $attributeValueToAdd;
+                    if (!$isForChild) {
+                        // Parent's own value should appear first in values[] for the configurable
+                        // parent's mapped entry. Children are iterated before the parent in map(),
+                        // so without this the first slot is always a child's variant-specific
+                        // value instead of the parent's own.
+                        array_unshift($attributes[$id]['values'], $attributeValueToAdd);
+                    } else {
+                        $attributes[$id]['values'][] = $attributeValueToAdd;
+                    }
                 } else {
                     $attributes[$id] = $attributeToPush;
                 }
@@ -679,6 +742,35 @@ class ProductsMapper
             }
             $mappedProduct['attributes'] = $attributes;
         }
+    }
+
+    private function isInvalidAttributeValue($value)
+    {
+        $firstValue = isset($value[0]) ? $value[0] : null;
+
+        return (
+            count($value) === 0 ||
+            (count($value) == 1 && $firstValue === null) ||
+            (count($value) == 1 && is_string($firstValue) && trim($firstValue) === '') ||
+            (count($value) == 1 && $firstValue === false) ||
+            (is_array($firstValue)) ||
+            (is_scalar($firstValue) && strlen((string) $firstValue) > 9999)
+        );
+    }
+
+    private function hasToUseParentAttributeValue($attribute, $parentProduct)
+    {
+        if (!$parentProduct) {
+            return false;
+        }
+
+        $attributeId = $attribute->getAttributeId();
+        if (!isset($this->childAttributesUseParentValue[$attributeId])) {
+            return false;
+        }
+
+        $parentValue = $this->getAttributeValue($parentProduct, $attribute);
+        return !$this->isInvalidAttributeValue($parentValue);
     }
 
     private function getReservedAttributeCodes(): array
@@ -773,36 +865,53 @@ class ProductsMapper
 
     private function mapParentProduct($product, &$mappedProduct)
     {
-        $parentProductIds = $this->configurable->getParentIdsByChild($product->getId());
-        if (count($parentProductIds)) {
-            $parentProductId = array_shift($parentProductIds);
+        $parentProduct = $this->getParentProduct($product);
+        if ($parentProduct) {
+            $parentProductId = $parentProduct->getId();
             $mappedProduct['groupId'] = $parentProductId;
 
-            $parentProducts = $this->productsSessionStorage->getByIds([$parentProductId]);
-            if (count($parentProducts)) {
-                foreach ($parentProducts as $parentProduct) {
-                    $mappedProduct['url'] = $this->productURLManager->getUrl($parentProduct);
-                    $visibility = $parentProduct->getVisibility();
-                    $mappedProduct['isSearchable'] = (
-                       $visibility == Visibility::VISIBILITY_IN_SEARCH ||
-                       $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
-                    $mappedProduct['isVisibleInCatalog'] = (
-                       $visibility == Visibility::VISIBILITY_IN_CATALOG ||
-                       $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
+            $mappedProduct['url'] = $this->productURLManager->getUrl($parentProduct);
+            $visibility = $parentProduct->getVisibility();
+            $mappedProduct['isSearchable'] = (
+               $visibility == Visibility::VISIBILITY_IN_SEARCH ||
+               $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
+            $mappedProduct['isVisibleInCatalog'] = (
+               $visibility == Visibility::VISIBILITY_IN_CATALOG ||
+               $visibility == Visibility::VISIBILITY_BOTH) ? true : false;
 
-                    if (!$mappedProduct['mainImage'] ||
-                        $mappedProduct['mainImage'] ==
-                            $this->productImageManager->getPlaceholderImage($this->storeId)
-                            || $this->storeCatalogueConfig->hasToReplaceChildImage()) {
-                                $this->mapImages($parentProduct, $mappedProduct);
-                    }
-                    if ($this->storeCatalogueConfig->hasToReplaceChildName()) {
-                        $mappedProduct['name'] = $parentProduct->getName();
-                    }
-                    break;
-                }
+            if (!$mappedProduct['mainImage'] ||
+                $mappedProduct['mainImage'] ==
+                    $this->productImageManager->getPlaceholderImage($this->storeId)
+                    || $this->storeCatalogueConfig->hasToReplaceChildImage()) {
+                        $this->mapImages($parentProduct, $mappedProduct);
+            }
+            if ($this->storeCatalogueConfig->hasToReplaceChildName()) {
+                $mappedProduct['name'] = $parentProduct->getName();
             }
         }
+    }
+
+    private function getParentProduct($product)
+    {
+        $productId = $product->getId();
+        if (array_key_exists($productId, $this->parentProductsByChildId)) {
+            return $this->parentProductsByChildId[$productId];
+        }
+
+        $parentProductIds = $this->configurable->getParentIdsByChild($productId);
+        if (!count($parentProductIds)) {
+            return $this->parentProductsByChildId[$productId] = null;
+        }
+
+        $parentProductIds = array_values(array_unique($parentProductIds));
+        sort($parentProductIds, SORT_NUMERIC);
+        $parentProducts = $this->productsSessionStorage->getByIds($parentProductIds);
+
+        foreach ($parentProducts as $parentProduct) {
+            return $this->parentProductsByChildId[$productId] = $parentProduct;
+        }
+
+        return $this->parentProductsByChildId[$productId] = null;
     }
 
     private function getFloatVal($value)

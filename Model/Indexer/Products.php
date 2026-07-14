@@ -22,7 +22,7 @@ class Products implements Magento\Framework\Indexer\ActionInterface, Magento\Fra
     private $output;
     private $productPricesHelper;
     private $storeAdvancedConfig;
-    public $storeId;
+    public $storeId = null;
     public function __construct(
         ProductsManager $productsManager,
         QueueManager $queueManager,
