@@ -2,9 +2,13 @@
 
 namespace Wizzy\Search\Services\Store;
 
+use Magento\Framework\Exception\LocalizedException;
+use Wizzy\Search\Model\Admin\Config\GridFiltersConfigurationValidator;
+
 class StoreSearchConfig
 {
     private $configManager;
+    private $gridFiltersConfigurationValidator;
 
     const WIZZY_SEARCH_CONFIGURATION = "wizzy_search_configuration";
 
@@ -21,6 +25,8 @@ class StoreSearchConfig
 
     const WIZZY_SEARCH_FACETS_CONFIGURATION = self::WIZZY_SEARCH_CONFIGURATION . "/search_results_facets_configuration";
     const WIZZY_FACETS = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/facets_configuration";
+    const WIZZY_GRID_FILTERS_ENABLED = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/grid_filters_enabled";
+    const WIZZY_GRID_FILTERS_CONFIGURATION = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/grid_filters_configuration";
     const WIZZY_FACETS_DISPLAY_AS_DRAWER =
         self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/left_facets_has_to_display_in_drawer";
     const WIZZY_FACET_CATEGORY_DISPLAY = self::WIZZY_SEARCH_FACETS_CONFIGURATION . "/category_facet_display_method";
@@ -60,9 +66,13 @@ class StoreSearchConfig
 
     private $storeId;
 
-    public function __construct(ConfigManager $configManager)
+    public function __construct(
+        ConfigManager $configManager,
+        GridFiltersConfigurationValidator $gridFiltersConfigurationValidator
+    )
     {
         $this->configManager = $configManager;
+        $this->gridFiltersConfigurationValidator = $gridFiltersConfigurationValidator;
     }
 
     public function setStore(string $storeId)
@@ -112,8 +122,62 @@ class StoreSearchConfig
             return [];
         }
 
-        return json_decode($facetsConfig, true);
+        $facets = json_decode($facetsConfig, true);
+
+        return is_array($facets) && json_last_error() === JSON_ERROR_NONE ? $facets : [];
     }
+
+    public function getGridFiltersConfiguration()
+    {
+        $enabled = $this->configManager->getStoreConfig(self::WIZZY_GRID_FILTERS_ENABLED, $this->storeId) == 1;
+
+        if (!$enabled) {
+            return [
+                'enabled' => false,
+                'filters' => [],
+            ];
+        }
+
+        $gridFiltersConfig = $this->configManager->getStoreConfig(
+            self::WIZZY_GRID_FILTERS_CONFIGURATION,
+            $this->storeId
+        );
+
+        if ($gridFiltersConfig === null || $gridFiltersConfig === '') {
+            return [
+                'enabled' => $enabled,
+                'filters' => [],
+            ];
+        }
+
+        $filters = json_decode($gridFiltersConfig, true);
+        if (!is_array($filters) || json_last_error() !== JSON_ERROR_NONE) {
+            throw new LocalizedException(__('Grid Filters configuration is invalid.'));
+        }
+
+        $filters = $this->gridFiltersConfigurationValidator->normalize(
+            $filters,
+            $this->getFacetsConfiguration()
+        );
+
+        $formattedFilters = [];
+        foreach ($filters as $filter) {
+            $formattedFilters[] = [
+                'key' => $filter['key'],
+                'question' => $filter['question'],
+                'after' => [
+                    'web' => $filter['after_web'],
+                    'mobile' => $filter['after_mobile'],
+                ],
+            ];
+        }
+
+        return [
+            'enabled' => $enabled,
+            'filters' => $formattedFilters,
+        ];
+    }
+
     public function leftFacetsHasToDisplayAsDrawer()
     {
         return (

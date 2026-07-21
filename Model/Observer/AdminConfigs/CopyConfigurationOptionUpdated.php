@@ -15,6 +15,8 @@ use Wizzy\Search\Services\Store\StoreSearchFormConfig;
 use Magento\Framework\Event\Observer as EventObserver;
 use Wizzy\Search\Services\Store\StoreAutocompleteConfig;
 use Magento\Framework\App\Config\Storage\WriterInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Wizzy\Search\Model\Admin\Config\GridFiltersConfigurationValidator;
 
 class CopyConfigurationOptionUpdated implements ObserverInterface
 {
@@ -23,19 +25,22 @@ class CopyConfigurationOptionUpdated implements ObserverInterface
     private $_configWriter;
     private $cacheTypeList;
     private $storeCopyConfig;
+    private $gridFiltersConfigurationValidator;
 
     public function __construct(
         Http $request,
         ConfigManager $configManager,
         WriterInterface $configWriter,
         TypeListInterface $cacheTypeList,
-        StoreCopyConfig $storeCopyConfig
+        StoreCopyConfig $storeCopyConfig,
+        GridFiltersConfigurationValidator $gridFiltersConfigurationValidator
     ) {
         $this->request = $request;
         $this->_configWriter = $configWriter;
         $this->cacheTypeList = $cacheTypeList;
         $this->configManager = $configManager;
         $this->storeCopyConfig = $storeCopyConfig;
+        $this->gridFiltersConfigurationValidator = $gridFiltersConfigurationValidator;
     }
 
     public function copyConfiguration()
@@ -78,6 +83,8 @@ class CopyConfigurationOptionUpdated implements ObserverInterface
             StoreSearchConfig::WIZZY_DISPLAY_ADD_TO_CART_BUTTON,
             StoreSearchConfig::WIZZY_DISPLAY_ADD_TO_WISHLIST_BUTTON,
             StoreSearchConfig::WIZZY_FACETS,
+            StoreSearchConfig::WIZZY_GRID_FILTERS_ENABLED,
+            StoreSearchConfig::WIZZY_GRID_FILTERS_CONFIGURATION,
             StoreSearchConfig::WIZZY_FACET_CATEGORY_DISPLAY,
             StoreSearchConfig::WIZZY_LEFT_FACETS_COLLAPSIBLE,
             StoreSearchConfig::WIZZY_LEFT_FACETS_DEFAULT_COLLAPSIBLE_BEHAVIOUR,
@@ -131,6 +138,12 @@ class CopyConfigurationOptionUpdated implements ObserverInterface
             $oldConfig[$path] = $this->configManager->getStoreConfig($path, $fromStoreId);
         }
 
+        $oldConfig[StoreSearchConfig::WIZZY_GRID_FILTERS_CONFIGURATION] =
+            $this->normalizeGridFiltersConfiguration(
+                $oldConfig[StoreSearchConfig::WIZZY_GRID_FILTERS_CONFIGURATION],
+                $this->decodeFacetsConfiguration($oldConfig[StoreSearchConfig::WIZZY_FACETS])
+            );
+
         foreach ($oldConfig as $path => $value) {
             $this->_configWriter->save(
                 $path,
@@ -147,5 +160,55 @@ class CopyConfigurationOptionUpdated implements ObserverInterface
     public function execute(EventObserver $observer)
     {
         return $this->copyConfiguration();
+    }
+
+    /**
+     * @param mixed $value
+     * @param array $facetsConfiguration
+     * @return mixed
+     * @throws LocalizedException
+     */
+    private function normalizeGridFiltersConfiguration($value, array $facetsConfiguration)
+    {
+        if ($value === null || $value === '') {
+            return $value;
+        }
+
+        if (!is_string($value)) {
+            throw new LocalizedException(__('Grid Filters configuration is invalid.'));
+        }
+
+        $filters = json_decode($value, true);
+        if (!is_array($filters) || json_last_error() !== JSON_ERROR_NONE) {
+            throw new LocalizedException(__('Grid Filters configuration is invalid.'));
+        }
+
+        $normalizedFilters = $this->gridFiltersConfigurationValidator->normalize(
+            $filters,
+            $facetsConfiguration
+        );
+        $normalizedValue = json_encode($normalizedFilters);
+        if ($normalizedValue === false) {
+            throw new LocalizedException(__('Grid Filters configuration is invalid.'));
+        }
+
+        return $normalizedValue;
+    }
+
+    /**
+     * @param mixed $value
+     * @return array
+     */
+    private function decodeFacetsConfiguration($value): array
+    {
+        if (!is_string($value)) {
+            return [];
+        }
+
+        $facetsConfiguration = json_decode($value, true);
+
+        return is_array($facetsConfiguration) && json_last_error() === JSON_ERROR_NONE
+            ? $facetsConfiguration
+            : [];
     }
 }

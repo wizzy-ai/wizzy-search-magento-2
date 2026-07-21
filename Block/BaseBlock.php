@@ -216,6 +216,7 @@ class BaseBlock extends Template
                      'categoryItem' => '#wizzy-facet-category-item',
                      'selectedItem' => '#wizzy-selected-facet-item-common',
                      'selectedCommon' => '#wizzy-selected-facets-block',
+                     'gridFilterCommon' => "#wizzy-grid-facet-block"
                   ],
                   'literals' => [
                      'emptyCategoryPageTitle' => "",
@@ -343,7 +344,16 @@ class BaseBlock extends Template
             'configs' => [
                'displayAsDrawer' => $this->storeSearchConfig->leftFacetsHasToDisplayAsDrawer(),
             ],
+            'view' => [
+               'templates' => [
+                  'literals' => [
+                     'gridMoreButton' => "More +",
+                     'gridLessButton' => "Less -"
+                  ]
+               ]
+            ]
          ],
+         'gridFilters' => $this->storeSearchConfig->getGridFiltersConfiguration(),
         ];
         if ($this->getCustomEndpoint()) {
             $configs['endpoints']['common'] = $this->getCustomEndpoint();

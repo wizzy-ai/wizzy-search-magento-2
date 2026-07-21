@@ -14,6 +14,7 @@
 
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.facets.block" template="Wizzy_Search::filters/facet.phtml"/>
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.facets.block.item" template="Wizzy_Search::filters/facet-item.phtml"/>
+            <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.grid.facet.block" template="Wizzy_Search::filters/wizzy-grid-facet-block.phtml"/>
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.facets.block.selected.item" template="Wizzy_Search::filters/facet-selected-item.phtml"/>
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.facets.selected.block" template="Wizzy_Search::filters/selected-facets.phtml"/>
             <block class="Wizzy\Search\Block\BaseBlock" name="wizzySearch.results.facets.categories" template="Wizzy_Search::filters/category-item.phtml"/>

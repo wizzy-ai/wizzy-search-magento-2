@@ -681,6 +681,30 @@
                     </comment>
                 </field>
 
+                <field id="grid_filters_enabled" translate="label" type="select" sortOrder="6" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Enable Grid Filters?</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        <![CDATA[
+                            Choose yes if you want to display grid filters on the search results page.
+                        ]]>
+                    </comment>
+                </field>
+
+                <field id="grid_filters_configuration" translate="label" type="select" sortOrder="8" showInDefault="0" showInWebsite="0" showInStore="1">
+                    <label>Grid Filters</label>
+                    <frontend_model>Wizzy\Search\Model\Admin\Source\GridFiltersSelection</frontend_model>
+                    <backend_model>Wizzy\Search\Model\Admin\Config\Backend\GridFiltersConfiguration</backend_model>
+                    <comment>
+                        <![CDATA[
+                            Configure grid filters to display on the search results page. "After" values define the product position after which the filter should appear.
+                        ]]>
+                    </comment>
+                    <depends>
+                        <field id="grid_filters_enabled">1</field>
+                    </depends>
+                </field>
+
                 <field id="left_facets_has_to_display_in_drawer" translate="label" type="select" sortOrder="2" showInDefault="0" showInWebsite="0" showInStore="1">
                     <label>Display Inside Drawer?</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>

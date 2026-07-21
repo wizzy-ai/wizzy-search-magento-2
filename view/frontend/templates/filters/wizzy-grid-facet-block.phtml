@@ -1,0 +1,18 @@
+<script type="text/template" id="wizzy-grid-facet-block">
+
+    <div class="wizzy-grid-filters-box wizzy-filters-facet-block facet-block-{{ divKey }} facet-block-{{#isLeft}}left {{#leftFacetCollapsible}}collapsible{{/leftFacetCollapsible}} {{#leftDefaultCollapsed}}{{^isSelected}}collapsed{{/isSelected}}{{/leftDefaultCollapsed}} {{#firstLeftDefaultOpened}}first-opened{{/firstLeftDefaultOpened}}{{/isLeft}}{{^isLeft}}top{{/isLeft}}"          data-key="{{ key }}" {{#parentKey}}data-parentKey="{{parentKey}}" {{/parentKey}}>
+    <div class="wizzy-facet-head facet-head-{{divKey}}" title="{{ title }}">
+            <span class="facet-head-title">{{ title }}</span>
+            <span class="facet-head-right">          </span>
+    </div>
+    <div class="wizzy-facet-body facet-body-{{divKey}}">
+        <ul class="wizzy-facet-list">
+            {{#items}}
+                {{&html}}
+            {{/items}}
+        <button class="wzGridFilters-more-less-btn" style="display: none;">{{#moreBtnText}}{{moreBtnText}}{{/moreBtnText}}</button>
+        </ul>
+    </div>
+    </div>
+
+</script>
