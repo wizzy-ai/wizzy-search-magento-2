@@ -238,6 +238,7 @@ class BaseBlock extends Template
             'view' => [
                'templates' =>[
                   'progress' => '#wizzy-progress',
+                  'promotionBanner' => '#wizzy-promotion-banner',
                   'select' => '#wizzy-common-select',
                   'literals' => [
                      'sortBy' => __('Sort By'),

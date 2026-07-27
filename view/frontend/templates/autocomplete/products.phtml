@@ -17,7 +17,7 @@ $currency = $configs['store']['currency']['symbol'];
         ?>
         <ul class="autocomplete-top-products">
             {{#products}}
-
+            {{^isBanner}}
                 <li class="topproduct-item" title="{{{ name }}}" data-id="{{id}}"
                     {{#groupId}}data-groupId="{{groupId}}"{{/groupId}}>
                     <a href="{{{url}}}" class="topproduct-item-link">
@@ -51,7 +51,10 @@ $currency = $configs['store']['currency']['symbol'];
                         </div><!-- ending of topproduct-item-info -->
                     </a><!-- ending of topproduct-item-link -->
                 </li><!-- ending of topproduct-item -->
-
+            {{/isBanner}}
+             {{#isBanner}}
+               {{&html}}
+             {{/isBanner}}
             {{/products}}
         </ul><!-- ending of autocomplete-top-products -->
     </div><!-- ending of top-products -->
