@@ -69,8 +69,7 @@ class StoreSearchConfig
     public function __construct(
         ConfigManager $configManager,
         GridFiltersConfigurationValidator $gridFiltersConfigurationValidator
-    )
-    {
+    ) {
         $this->configManager = $configManager;
         $this->gridFiltersConfigurationValidator = $gridFiltersConfigurationValidator;
     }
