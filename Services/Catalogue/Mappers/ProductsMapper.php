@@ -635,8 +635,7 @@ class ProductsMapper
         $variationInStock,
         $isForChild = false,
         $knownParentProduct = null
-    )
-    {
+    ) {
         $attributes = [];
         if (isset($mappedProduct['attributes'])) {
             $attributes = $mappedProduct['attributes'];
