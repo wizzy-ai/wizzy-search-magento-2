@@ -26,16 +26,27 @@ class GridFiltersConfiguration extends ArraySerialized
      */
     private $scopeConfig;
 
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ScopeConfigInterface $config
+     * @param TypeListInterface $cacheTypeList
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param array $data
+     * @param Json|null $serializer
+     * @param GridFiltersConfigurationValidator|null $validator
+     */
     public function __construct(
         Context $context,
         Registry $registry,
         ScopeConfigInterface $config,
         TypeListInterface $cacheTypeList,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = [],
-        Json $serializer = null,
-        GridFiltersConfigurationValidator $validator = null
+        ?Json $serializer = null,
+        ?GridFiltersConfigurationValidator $validator = null
     ) {
         $this->validator = $validator ?: new GridFiltersConfigurationValidator();
         $this->scopeConfig = $config;
@@ -52,6 +63,12 @@ class GridFiltersConfiguration extends ArraySerialized
         );
     }
 
+    /**
+     * Validate and normalize grid filters configuration before save.
+     *
+     * @return $this
+     * @throws LocalizedException
+     */
     public function beforeSave()
     {
         $value = $this->getValue();

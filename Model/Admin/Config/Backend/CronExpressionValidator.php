@@ -2,11 +2,61 @@
 
 namespace Wizzy\Search\Model\Admin\Config\Backend;
 
+use Magento\Cron\Model\ScheduleFactory;
+use Magento\Framework\App\Cache\TypeListInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\Config\Value;
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Model\Context;
+use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 
 class CronExpressionValidator extends Value
 {
+    /**
+     * @var ScheduleFactory
+     */
+    private $scheduleFactory;
+
+    /**
+     * @param Context $context
+     * @param Registry $registry
+     * @param ScopeConfigInterface $config
+     * @param TypeListInterface $cacheTypeList
+     * @param ScheduleFactory $scheduleFactory
+     * @param AbstractResource|null $resource
+     * @param AbstractDb|null $resourceCollection
+     * @param array $data
+     */
+    public function __construct(
+        Context $context,
+        Registry $registry,
+        ScopeConfigInterface $config,
+        TypeListInterface $cacheTypeList,
+        ScheduleFactory $scheduleFactory,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
+        array $data = []
+    ) {
+        $this->scheduleFactory = $scheduleFactory;
+        parent::__construct(
+            $context,
+            $registry,
+            $config,
+            $cacheTypeList,
+            $resource,
+            $resourceCollection,
+            $data
+        );
+    }
+
+    /**
+     * Validate cron expression before saving configuration value.
+     *
+     * @return $this
+     * @throws LocalizedException
+     */
     public function beforeSave()
     {
         $value = trim((string)$this->getValue());
@@ -32,10 +82,7 @@ class CronExpressionValidator extends Value
      * Magento has used multiple validators across versions:
      * - Magento\Framework\Stdlib\DateTime\Cron\CronExpression (some versions)
      * - Cron\CronExpression (if the cron-expression library is installed)
-     * - Magento\Cron\Model\Schedule::setCronExpr() (common in 2.4.x)
-     *
-     * This method tries available validators in that order and falls back to a
-     * conservative 5-field syntax check.
+     * - Magento\Cron\Model\Schedule via ScheduleFactory (common in 2.4.x)
      *
      * @param string $expr
      * @return void
@@ -63,53 +110,21 @@ class CronExpressionValidator extends Value
             return;
         }
 
-        // 3) Magento cron Schedule validator (exists in many versions)
-        if (\class_exists(\Magento\Cron\Model\ScheduleFactory::class)) {
-            /** @var \Magento\Cron\Model\ScheduleFactory $scheduleFactory */
-            $scheduleFactory = \Magento\Framework\App\ObjectManager::getInstance()
-                ->get(\Magento\Cron\Model\ScheduleFactory::class);
-            $schedule = $scheduleFactory->create();
-            $schedule->setCronExpr($expr);
+        // 3) Magento cron Schedule validator
+        $schedule = $this->scheduleFactory->create();
+        $schedule->setCronExpr($expr);
 
-            // Force syntax validation per-field (e.g. reject "* a * * *")
-            // We don't care if it "matches", only that it parses without exception.
-            $schedule->matchCronExpression($parts[0], 0); // minute: 0-59
-            $schedule->matchCronExpression($parts[1], 0); // hour: 0-23
-            $schedule->matchCronExpression($parts[2], 1); // day: 1-31
-            $schedule->matchCronExpression($parts[3], 1); // month: 1-12
-            $schedule->matchCronExpression($parts[4], 0); // weekday: 0-6
+        // Force syntax validation per-field (e.g. reject "* a * * *")
+        // We don't care if it "matches", only that it parses without exception.
+        $schedule->matchCronExpression($parts[0], 0); // minute: 0-59
+        $schedule->matchCronExpression($parts[1], 0); // hour: 0-23
+        $schedule->matchCronExpression($parts[2], 1); // day: 1-31
+        $schedule->matchCronExpression($parts[3], 1); // month: 1-12
+        $schedule->matchCronExpression($parts[4], 0); // weekday: 0-6
 
-            // Range validation (Magento matchCronExpression can "return false" for out-of-range
-            // numbers instead of throwing, which would allow a broken schedule to be saved).
-            $this->validateCronExpressionRanges($parts);
-            return;
-        }
-
-        // 4) Fallback validator (no Magento cron classes available)
-        $this->validateCronExpressionFallback($parts);
+        // Range validation (Magento matchCronExpression can "return false" for out-of-range
+        // numbers instead of throwing, which would allow a broken schedule to be saved).
         $this->validateCronExpressionRanges($parts);
-    }
-
-    /**
-     * Fallback 5-field cron validator (syntax-level).
-     *
-     * Supports: "*", numbers, ranges (a-b), lists (a,b,c), steps (e.g. "star-slash-5" or "1-10/2"),
-     * and month/day names (jan-dec, sun-sat) in their respective fields.
-     *
-     * @param string[] $parts
-     * @return void
-     */
-    private function validateCronExpressionFallback(array $parts): void
-    {
-        $monthNames = ['jan','feb','mar','apr','may','jun','jul','aug','sep','oct','nov','dec'];
-        $dowNames = ['sun','mon','tue','wed','thu','fri','sat'];
-
-        // minute, hour, day, month, weekday
-        $this->validateCronField($parts[0], false, null);
-        $this->validateCronField($parts[1], false, null);
-        $this->validateCronField($parts[2], false, null);
-        $this->validateCronField($parts[3], true, $monthNames);
-        $this->validateCronField($parts[4], true, $dowNames);
     }
 
     /**
@@ -162,6 +177,8 @@ class CronExpressionValidator extends Value
     }
 
     /**
+     * Validate ranges and optional names for a single cron field.
+     *
      * @param string $field
      * @param int $min
      * @param int $max
@@ -236,74 +253,6 @@ class CronExpressionValidator extends Value
                 return (int)$nameMap[$key];
             }
         }
-        throw new \InvalidArgumentException('Cron expression contains an invalid token.');
-    }
-
-    /**
-     * @param string $field
-     * @param bool $allowNames
-     * @param array|null $allowedNames Lowercase 3-letter names allowed (if $allowNames)
-     * @return void
-     */
-    private function validateCronField(string $field, bool $allowNames, ?array $allowedNames): void
-    {
-        // Split list parts
-        foreach (\explode(',', $field) as $token) {
-            $token = \trim($token);
-            if ($token === '') {
-                throw new \InvalidArgumentException('Cron expression contains an empty token.');
-            }
-
-            // Step handling: base/step
-            $step = null;
-            if (\strpos($token, '/') !== false) {
-                [$base, $step] = \explode('/', $token, 2);
-                if ($base === '' || $step === '' || !\ctype_digit($step) || (int)$step < 1) {
-                    throw new \InvalidArgumentException('Cron expression contains an invalid step value.');
-                }
-                $token = $base;
-            }
-
-            // Base can be "*", single value, or range
-            if ($token === '*') {
-                continue;
-            }
-
-            if (\strpos($token, '-') !== false) {
-                [$from, $to] = \explode('-', $token, 2);
-                $this->validateCronValue($from, $allowNames, $allowedNames);
-                $this->validateCronValue($to, $allowNames, $allowedNames);
-                continue;
-            }
-
-            $this->validateCronValue($token, $allowNames, $allowedNames);
-        }
-    }
-
-    /**
-     * @param string $value
-     * @param bool $allowNames
-     * @param array|null $allowedNames
-     * @return void
-     */
-    private function validateCronValue(string $value, bool $allowNames, ?array $allowedNames): void
-    {
-        $value = \trim($value);
-        if ($value === '') {
-            throw new \InvalidArgumentException('Cron expression contains an empty value.');
-        }
-
-        if (\ctype_digit($value)) {
-            return;
-        }
-
-        if ($allowNames) {
-            $key = \strtolower(\substr($value, 0, 3));
-            if (\in_array($key, $allowedNames ?: [], true)) {
-                return;
-            }
-        }
-
         throw new \InvalidArgumentException('Cron expression contains an invalid token.');
     }
 }
