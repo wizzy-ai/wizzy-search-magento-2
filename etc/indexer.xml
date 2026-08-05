@@ -38,6 +38,16 @@
         </dependencies>
     </indexer>
 
+    <indexer id="wizzy_bulk_product_prices_indexer" view_id="wizzy_bulk_product_prices_indexer" class="Wizzy\Search\Model\Indexer\BulkProductPrices">
+        <title translate="true">Wizzy Search Bulk Product Prices</title>
+        <description translate="true">
+            Sync all enabled product prices to Wizzy Search via prices save API. Run manually (full reindex only).
+        </description>
+        <dependencies>
+            <indexer id="catalog_product_price" />
+        </dependencies>
+    </indexer>
+
     <indexer id="wizzy_invalidate_unresponsive_sync_indexer" view_id="wizzy_invalidate_unresponsive_sync_indexer" class="Wizzy\Search\Model\Indexer\InvalidateUnresponsiveSyncIndexer">
         <title translate="true">Wizzy Invalidate Unresponsive Sync</title>
         <description translate="true">

@@ -25,6 +25,11 @@ class IndexerManager
         return $this->get('wizzy_products_indexer');
     }
 
+    public function getBulkProductPricesIndexer()
+    {
+        return $this->get('wizzy_bulk_product_prices_indexer');
+    }
+
     public function getCurrenciesIndexer()
     {
         return $this->get('wizzy_currencies_indexer');

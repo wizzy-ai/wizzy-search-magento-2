@@ -22,6 +22,7 @@
     <view id="wizzy_pages_indexer" class="Wizzy\Search\Model\Indexer\Pages" group="indexer"></view>
     <view id="wizzy_currencies_indexer" class="Wizzy\Search\Model\Indexer\Currencies" group="indexer"></view>
     <view id="wizzy_products_prices_indexer" class="Wizzy\Search\Model\Indexer\ProductsPrices" group="indexer"></view>
+    <view id="wizzy_bulk_product_prices_indexer" class="Wizzy\Search\Model\Indexer\BulkProductPrices" group="indexer"></view>
     <view id="wizzy_invalidate_unresponsive_sync_indexer" class="Wizzy\Search\Model\Indexer\InvalidateUnresponsiveSyncIndexer" group="indexer"></view>
     <view id="wizzy_recover_deleted_products_sync_indexer" class="Wizzy\Search\Model\Indexer\RecoverDeletedProducts" group="indexer"></view>
     <view id="wizzy_recover_stale_entities_indexer" class="Wizzy\Search\Model\Indexer\RecoverStaleEntities" group="indexer"></view>

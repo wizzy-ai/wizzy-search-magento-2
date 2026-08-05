@@ -54,6 +54,11 @@ class WizzyAPIEndPoints
     {
         return $this->getProductsBaseAuth() . '/save';
     }
+
+    public function getSaveProductPricesEndpoint()
+    {
+        return $this->getProductsBaseAuth() . '/prices/save';
+    }
     
     public function getDeleteProductsEndpoint()
     {

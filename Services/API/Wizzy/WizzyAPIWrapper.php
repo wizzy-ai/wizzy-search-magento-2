@@ -109,6 +109,23 @@ class WizzyAPIWrapper
         );
     }
 
+    public function saveProductPrices(array $productPrices, $storeId): Response
+    {
+        $credentials = $this->getStoreCredentials($storeId);
+
+        if ($credentials === false) {
+            return $this->responseBuilder->error('Invalid store credentials.', []);
+        }
+
+        return $this->wizzyApiConnector->send(
+            $this->wizzyAPIEndpoints->getSaveProductPricesEndpoint(),
+            'POST',
+            $productPrices,
+            $this->authHeaders->getFromArray($credentials, true),
+            true
+        );
+    }
+
     public function deleteProducts(array $products, $storeId): Response
     {
         $credentials = $this->getStoreCredentials($storeId);

@@ -32,6 +32,21 @@ class Products
         }
     }
 
+    public function savePrices(array $productPrices, $storeId)
+    {
+        $response = $this->wizzyAPIWrapper->saveProductPrices($productPrices, $storeId);
+        if ($response->getStatus()) {
+            return true;
+        } else {
+            $this->output->log([
+               'Message' => 'Product Prices Save API failed',
+               'Total Products' => count($productPrices),
+               'Response' => json_encode($response->getPayload()),
+            ]);
+            return $response;
+        }
+    }
+
     public function delete(array $products, $storeId)
     {
         $response = $this->wizzyAPIWrapper->deleteProducts($products, $storeId);
